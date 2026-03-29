@@ -15,6 +15,7 @@
     <a routerLink="/tours" class="nav-link">Tours</a>
 
     @if (authStore.isAuthenticated$()) {
+      <a routerLink="/profile" class="nav-link">Profile</a>
       <button class="btn btn-logout" (click)="logout()">Logout</button>
     } @else {
       <a routerLink="/login" class="btn btn-login">Login</a>
