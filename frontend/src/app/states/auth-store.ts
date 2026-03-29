@@ -13,10 +13,12 @@ export class AuthStore {
   // Original states
   readonly isAuthenticated = signal(false);
   readonly user = signal<User | null>(null);
+  readonly error = signal<string | null>(null);
 
   // Derived states
   readonly isAuthenticated$ = computed(() => this.isAuthenticated());
   readonly user$ = computed(() => this.user());
+  readonly error$ = computed(() => this.error());
 
   // Functions
   logout(): void {
@@ -28,7 +30,8 @@ export class AuthStore {
     const foundUser = this.users.find(u => u.name === user.name && u.password === user.password);
 
     if (!foundUser) {
-      throw new Error('Invalid credentials');
+      this.error.set('Invalid credentials')
+      return;
     }
 
     this.isAuthenticated.set(true);
