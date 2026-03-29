@@ -32,25 +32,6 @@
   color: #38bdf8;
 }
 
-.search-bar {
-  width: 100%;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #475569;
-  border-radius: 6px;
-  background-color: #334155;
-  color: #f1f5f9;
-  font-size: 0.95rem;
-  outline: none;
-}
-
-.search-bar::placeholder {
-  color: #94a3b8;
-}
-
-.search-bar:focus {
-  border-color: #38bdf8;
-}
-
 .nav-link {
   color: #f1f5f9;
   text-decoration: none;
