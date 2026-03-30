@@ -1,1 +1,22 @@
-<p>tours works!</p>
+<div class="tours-layout">
+  <div class="tours-sidebar">
+    <!-- Left panel -->
+    @if(tourLogsStore.showLogs$() === false){
+      <!-- New Tour -->
+      <app-new-tour></app-new-tour>
+      <div class="horizontal-divider"></div>
+      <!-- Saved Tours -->
+      <app-saved-tours></app-saved-tours>
+    } @else {
+      <!-- Tour Logs (if selected) -->
+      <app-tour-logs></app-tour-logs>
+    }
+  </div>
+
+  <div class="vertical-divider"></div>
+
+  <div class="map">
+    <!-- Map -->
+    <app-map></app-map>
+  </div>
+</div>

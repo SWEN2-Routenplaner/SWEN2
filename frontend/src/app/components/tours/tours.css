@@ -1,0 +1,24 @@
+.tours-layout {
+  display: flex;
+  height: 100%;
+}
+
+.tours-sidebar {
+  width: 25%;
+}
+
+.vertical-divider {
+  width: 1px;
+  background-color: #000000;
+  flex-shrink: 0;
+}
+
+.horizontal-divider {
+  height: 1px;
+  background-color: #000000;
+  margin: 1rem 0;
+}
+
+.map {
+  width: 75%;
+}
