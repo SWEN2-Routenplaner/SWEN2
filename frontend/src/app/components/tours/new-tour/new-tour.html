@@ -16,29 +16,35 @@
         <img src="icons/plus.png" alt="" height="18" width="18" />
       </button>
 
-      <button class="btn-icon" title="Bike">
+      <button class="btn-icon" title="Bike"
+              (click)="toggleTransportMode('bike')"
+              [class.active]="selectedMode() === 'bike'">
         <!-- Bike icon -->
-        <img src="icons/bicycle.png" alt="" height="18" width="18" />
+        <img src="icons/bicycle.png" alt="" height="18" width="18"/>
       </button>
 
-      <button class="btn-icon" title="Car">
+      <button class="btn-icon" title="Car"
+              (click)="toggleTransportMode('car')"
+              [class.active]="selectedMode() === 'car'">
         <!-- Car icon -->
-        <img src="icons/car.png" alt="" height="18" width="18" />
+        <img src="icons/car.png" alt="" height="18" width="18"/>
       </button>
 
-      <button class="btn-icon" title="Walking">
+      <button class="btn-icon" title="Walking"
+              (click)="toggleTransportMode('walk')"
+              [class.active]="selectedMode() === 'walk'">
         <!-- Walking icon -->
-        <img src="icons/walker.png" alt="" height="18" width="18" />
+          <img src="icons/walker.png" alt="" height="18" width="18"/>
       </button>
     </div>
 
-    <button class="btn-expand" (click)="expanded = !expanded" [title]="expanded ? 'Collapse' : 'Expand'">
+    <button class="btn-expand" (click)="toggleExpanded()" [title]="expanded() ? 'Collapse' : 'Expand'">
       <!-- Expand icon -->
       <img src ="icons/down.png" alt="" height="18" width="18" />
     </button>
   </div>
 
-  @if (expanded) {
+  @if (expanded()) {
     <div class="extra-fields">
       <div class="field">
         <label>Tour Name</label>
