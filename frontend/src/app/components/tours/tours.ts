@@ -15,5 +15,6 @@ import {TourLogsStore} from '../../states/tour-logs-store';
 })
 export class ToursComponent{
   activeTourStore = inject(ActiveTourStore);
+  toursStore = inject(ActiveTourStore);
   tourLogsStore = inject(TourLogsStore);
 }

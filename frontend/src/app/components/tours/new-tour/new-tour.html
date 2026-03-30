@@ -1,1 +1,43 @@
-<p>new-tour works!</p>
+<div class="new-tour">
+  <div class="field">
+    <label>From</label>
+    <input type="text" placeholder="Start location" />
+  </div>
+
+  <div class="field">
+    <label>To</label>
+    <input type="text" placeholder="End location" />
+  </div>
+
+  <div class="actions-row">
+    <div class="transport-buttons">
+      <button class="btn-icon" title="Add waypoint">+</button>
+      <button class="btn-icon" title="Bike">
+        <!-- Bike icon -->
+      </button>
+      <button class="btn-icon" title="Car">
+        <!-- Car icon -->
+      </button>
+      <button class="btn-icon" title="Walking">
+        <!-- Walking icon -->
+      </button>
+    </div>
+
+    <button class="btn-expand" (click)="expanded = !expanded" [title]="expanded ? 'Collapse' : 'Expand'">
+      <!-- Expand icon -->
+    </button>
+  </div>
+
+  @if (expanded) {
+    <div class="extra-fields">
+      <div class="field">
+        <label>Tour Name</label>
+        <input type="text" placeholder="Enter tour name" />
+      </div>
+      <div class="field">
+        <label>Tour Description</label>
+        <textarea rows="3" placeholder="Enter tour description"></textarea>
+      </div>
+    </div>
+  }
+</div>
