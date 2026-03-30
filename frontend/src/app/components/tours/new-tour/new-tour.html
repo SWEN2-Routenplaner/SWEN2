@@ -11,20 +11,30 @@
 
   <div class="actions-row">
     <div class="transport-buttons">
-      <button class="btn-icon" title="Add waypoint">+</button>
+      <button class="btn-icon" title="Add waypoint">
+        <!-- Plus icon -->
+        <img src="icons/plus.png" alt="" height="18" width="18" />
+      </button>
+
       <button class="btn-icon" title="Bike">
         <!-- Bike icon -->
+        <img src="icons/bicycle.png" alt="" height="18" width="18" />
       </button>
+
       <button class="btn-icon" title="Car">
         <!-- Car icon -->
+        <img src="icons/car.png" alt="" height="18" width="18" />
       </button>
+
       <button class="btn-icon" title="Walking">
         <!-- Walking icon -->
+        <img src="icons/walker.png" alt="" height="18" width="18" />
       </button>
     </div>
 
     <button class="btn-expand" (click)="expanded = !expanded" [title]="expanded ? 'Collapse' : 'Expand'">
       <!-- Expand icon -->
+      <img src ="icons/down.png" alt="" height="18" width="18" />
     </button>
   </div>
 

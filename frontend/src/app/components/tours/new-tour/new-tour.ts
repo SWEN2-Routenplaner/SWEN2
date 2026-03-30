@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-new-tour',
-  imports: [],
+  imports: [
+    NgOptimizedImage
+  ],
   templateUrl: './new-tour.html',
   styleUrl: './new-tour.css',
   standalone: true
