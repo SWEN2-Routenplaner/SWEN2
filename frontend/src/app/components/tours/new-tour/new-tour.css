@@ -81,3 +81,11 @@
   background-color: #e0f2fe;
   border-color: #3b82f6;
 }
+
+.btn-save.disabled {
+  background-color: #ff4d4d;
+}
+
+.btn-save.enabled {
+  background-color: #80ff80;
+}

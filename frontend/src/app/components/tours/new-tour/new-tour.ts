@@ -1,21 +1,52 @@
-import { Component } from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {signal} from '@angular/core';
-
-type TransportMode = 'car' | 'bike' | 'walk' | null;
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {ToursStore} from '../../../states/tours-store';
+import {ActiveTourStore} from '../../../states/active-tour-store';
+import {Tour} from '../../../models/tour.model';
+import {TransportMode} from '../../../models/tour.model';
 
 @Component({
   selector: 'app-new-tour',
   imports: [
-    NgOptimizedImage
+    NgOptimizedImage,
+    ReactiveFormsModule
   ],
   templateUrl: './new-tour.html',
   styleUrl: './new-tour.css',
   standalone: true
 })
 export class NewTourComponent {
+  toursStore = inject(ToursStore)
+  activeTourStore = inject(ActiveTourStore)
+
+  message = signal('');
   expanded = signal(false);
   selectedMode = signal<TransportMode>(null);
+
+  tourForm = new FormGroup({
+    from: new FormControl(''),
+    to: new FormControl(''),
+    transportMode: new FormControl(''),
+    name: new FormControl(''),
+    description: new FormControl(''),
+  })
+
+  private formValue = toSignal(this.tourForm.valueChanges, {initialValue: this.tourForm.value});
+
+  // activates save button if all necessary fields are filled
+  validInput = computed(()=> {
+    // need to be defined for validInput to be reactive on new inputs
+    const form = this.formValue();
+    const mode = this.selectedMode();
+
+    if (form.from && form.to && mode) {
+      return true;
+    }
+    return false;
+  })
 
   toggleTransportMode(mode: TransportMode): void {
     // unselect if already selected
@@ -23,6 +54,7 @@ export class NewTourComponent {
       this.selectedMode.set(null);
     }else{
       this.selectedMode.set(mode);
+      this.tourForm.patchValue({transportMode: mode});
     }
   }
 
@@ -31,6 +63,33 @@ export class NewTourComponent {
   }
 
   saveTour(): void {
-    console.log('Save tour');
+    if(this.validInput()){
+      const rawData = this.tourForm.getRawValue();
+      // remove html tags and trim whitespaces
+      const sanitize = (value: string) => value
+        .replace(/<[^>]*>/g, '')
+        .trim();
+
+      // create a cleaned object
+      const tour = {
+        ...rawData,
+        from: sanitize(rawData.from || 'Invalid Location'),
+        to: sanitize(rawData.to || 'Invalid Location'),
+        transportMode: this.selectedMode(),
+        name: sanitize(rawData.name || 'New Tour'),
+        description: sanitize(rawData.description || ''),
+        id: this.toursStore.getNextId()
+      }
+
+      this.toursStore.addTour(tour)
+
+      this.tourForm.reset();
+
+      this.selectedMode.set(null);
+      this.expanded.set(false);
+      this.message.set('Tour saved!');
+    }else{
+      this.message.set('Fill in all fields!');
+    }
   }
 }

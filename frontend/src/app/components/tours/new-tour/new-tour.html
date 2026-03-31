@@ -1,12 +1,12 @@
-<div class="new-tour">
+<div class="new-tour" [formGroup]="tourForm">
   <div class="field">
     <label>From</label>
-    <input type="text" placeholder="Start location" />
+    <input type="text" formControlName="from" placeholder="Start location" />
   </div>
 
   <div class="field">
     <label>To</label>
-    <input type="text" placeholder="End location" />
+    <input type="text" formControlName="to" placeholder="End location" />
   </div>
 
   <div class="actions-row">
@@ -38,8 +38,17 @@
       </button>
     </div>
 
+
     <div class="action-buttons">
-      <button class="btn-save" (click)="saveTour()">
+      <!-- Message -->
+      @if (message()) {
+        <span class="message">{{ message() }}</span>
+      }
+
+      <button class="btn-save"
+              (click)="saveTour()"
+              [class.disabled]="!validInput()"
+              [class.enabled]="validInput()"]>
         <!-- Save icon -->
         <img src="icons/save.png" alt="" height="18" width="18" />
       </button>
@@ -59,11 +68,11 @@
     <div class="extra-fields">
       <div class="field">
         <label>Tour Name</label>
-        <input type="text" placeholder="Enter tour name" />
+        <input type="text" formControlName="name" placeholder="Enter tour name" />
       </div>
       <div class="field">
         <label>Tour Description</label>
-        <textarea rows="3" placeholder="Enter tour description"></textarea>
+        <textarea formControlName="description" rows="3" placeholder="Enter tour description"></textarea>
       </div>
     </div>
   }
