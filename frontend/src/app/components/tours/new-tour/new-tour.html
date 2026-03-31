@@ -4,6 +4,17 @@
     <input type="text" formControlName="from" placeholder="Start location" />
   </div>
 
+  <!-- $index tracks the index of each row (if removed)-->
+  @for (stops of intermediateStops(); track $index) {
+    <div class="field stop-field">
+      <label>Stop {{ $index + 1 }}</label>
+      <input type="text" [value]="stops" (input)="updateStop($index, $event)" placeholder="Intermediate stop" />
+      <button class="btn-icon btn-remove-stop" title="Remove stop" (click)="removeStop($index)">
+        <img src="icons/minus.png" alt="" height="18" width="18" />
+      </button>
+    </div>
+  }
+
   <div class="field">
     <label>To</label>
     <input type="text" formControlName="to" placeholder="End location" />
@@ -11,7 +22,7 @@
 
   <div class="actions-row">
     <div class="transport-buttons">
-      <button class="btn-icon" title="Add waypoint">
+      <button class="btn-icon" title="Add waypoint" (click)="addStop()">
         <!-- Plus icon -->
         <img src="icons/plus.png" alt="" height="18" width="18" />
       </button>
