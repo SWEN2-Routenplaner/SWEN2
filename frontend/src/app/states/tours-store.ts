@@ -5,6 +5,7 @@ import {Tour} from '../models/tour.model';
 export class ToursStore {
   // Mock Tours
   private tours = signal <Tour[]>([]);
+  readonly allTours = this.tours.asReadonly();
 
   // Load mock tours on init
   constructor() {
@@ -16,6 +17,7 @@ export class ToursStore {
   //Derived states (View Model/Computed)
   addTour(tour: Tour): void {
     this.tours.update(tours => [...tours, tour]);
+    // log whole tour
     console.log("saved tour " + tour.id + " to tours array")
   }
 
@@ -43,8 +45,8 @@ export class ToursStore {
 
   loadMockTours(): void {
     this.tours.set([
-      {id: 1, from: 'Berlin', to: 'Munich', transportMode: "bike", name: 'Berlin-Munich', description: 'A short tour from Berlin to Munich'},
-      {id: 2, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin'},
+      {id: 1, from: 'Berlin', to: 'Munich', transportMode: "bike", name: 'Berlin-Munich', description: 'A short tour from Berlin to Munich', intermediateStops: []},
+      {id: 2, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
     ])
   }
 }

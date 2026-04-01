@@ -1,5 +1,7 @@
 import {Injectable, computed, signal, model} from '@angular/core';
 import {Tour} from '../models/tour.model';
+import {Observable} from 'rxjs';
+import {toObservable} from '@angular/core/rxjs-interop';
 
 @Injectable({providedIn: 'root'})
 export class ActiveTourStore {
@@ -7,5 +9,5 @@ export class ActiveTourStore {
   readonly activeTour = signal<Tour | null>(null);
 
   // Derived states (View Model/Computed)
-  readonly activeTour$ = computed(() => this.activeTour());
+  readonly activeTour$ = toObservable(this.activeTour);
 }
