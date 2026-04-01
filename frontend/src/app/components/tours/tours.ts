@@ -6,10 +6,11 @@ import {TourLogsComponent} from '../tour-logs/tour-logs';
 import {ActiveTourStore} from '../../states/active-tour-store';
 import {TourLogsStore} from '../../states/tour-logs-store';
 import {ToursMetaStore} from './tours-meta-store';
+import {UpdateTourComponent} from './update-tour/update-tour';
 
 @Component({
   selector: 'app-tours',
-  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent],
+  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent, UpdateTourComponent],
   providers: [ToursMetaStore],
   templateUrl: './tours.html',
   styleUrl: './tours.css',
