@@ -1,9 +1,9 @@
 <div class="update-tour" [formGroup]="tourForm">
   <div class="control-section">
-    <button class="btn-back"
+    <button class="btn btn-back"
             (click)="back()">
       <!-- Back icon -->
-      Back
+      <strong>Back</strong>
     </button>
   </div>
   <div class="field">
@@ -22,7 +22,7 @@
              [class.error]="errors().includes('stop-' + $index)"
              [class.correct]="corrects().includes('stop-' + $index)"
              placeholder="Intermediate stop" />
-      <button class="btn-icon btn-remove-stop" title="Remove stop" (click)="removeStop($index)">
+      <button class="btn btn-remove-stop" title="Remove stop" (click)="removeStop($index)">
         <img src="icons/minus.png" alt="" height="18" width="18" />
       </button>
     </div>
@@ -52,12 +52,12 @@
 
   <div class="actions-row">
     <div class="transport-buttons">
-      <button class="btn-icon" title="Add waypoint" (click)="addStop()">
+      <button class="btn" title="Add waypoint" (click)="addStop()">
         <!-- Plus icon -->
         <img src="icons/plus.png" alt="" height="18" width="18" />
       </button>
 
-      <button class="btn-icon" title="Bike"
+      <button class="btn" title="Bike"
               (click)="toggleTransportMode('bike')"
               [class.active]="selectedMode() === 'bike'"
               [class.error]="errors().includes( 'transportMode')"
@@ -66,7 +66,7 @@
         <img src="icons/bicycle.png" alt="" height="18" width="18"/>
       </button>
 
-      <button class="btn-icon" title="Car"
+      <button class="btn" title="Car"
               (click)="toggleTransportMode('car')"
               [class.active]="selectedMode() === 'car'"
               [class.error]="errors().includes( 'transportMode')"
@@ -75,7 +75,7 @@
         <img src="icons/car.png" alt="" height="18" width="18"/>
       </button>
 
-      <button class="btn-icon" title="Walking"
+      <button class="btn" title="Walking"
               (click)="toggleTransportMode('walk')"
               [class.active]="selectedMode() === 'walk'"
               [class.error]="errors().includes( 'transportMode')"
@@ -92,12 +92,17 @@
         <span class="message">{{ message() }}</span>
       }
 
-      <button class="btn-save"
+      <button class="btn btn-save"
               (click)="saveTour()"
               [class.disabled]="!tourForm.valid"
               [class.enabled]="tourForm.valid">
         <!-- Save icon -->
         <img src="icons/save.png" alt="" height="18" width="18" />
+      </button>
+
+      <button class="btn btn-delete"
+              (click)="deleteTour()">
+        <img src="icons/delete.png" alt="" height="18" width="18" />
       </button>
     </div>
   </div>

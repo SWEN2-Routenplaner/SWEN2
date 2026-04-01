@@ -128,6 +128,15 @@ export class UpdateTourComponent implements OnInit{
     })
   }
 
+  deleteTour(){
+    const id: number | null = this.toursMetaStore.selectedId();
+    if(id){
+      //
+      this.toursStore.deleteTour(id);
+      this.toursMetaStore.setSelectedSite("default")
+    }
+  }
+
   back(){
     this.toursMetaStore.setSelectedSite("default")
   }
