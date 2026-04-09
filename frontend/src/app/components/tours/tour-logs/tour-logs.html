@@ -1,0 +1,7 @@
+<div>
+  @if(tourLogsStore.mode() === 'edit' || tourLogsStore.mode() === 'new'){
+    <app-update-tour-log></app-update-tour-log>
+    <div class="horizontal-divider"></div>
+  }
+  <app-saved-tour-logs></app-saved-tour-logs>
+</div>

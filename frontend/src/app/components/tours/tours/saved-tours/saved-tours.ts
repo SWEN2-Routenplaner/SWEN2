@@ -1,10 +1,10 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {ActiveTourStore} from '../../../states/active-tour-store';
-import {ToursStore} from '../../../states/tours-store';
+import {ActiveTourStore} from '../../../../states/active-tour-store';
+import {ToursStore} from '../../../../states/tours.store';
 import {Observable} from 'rxjs';
-import {Tour} from '../../../models/tour.model';
+import {Tour} from '../../../../models/tour.model';
 import {toObservable} from '@angular/core/rxjs-interop';
-import {ToursMetaStore} from '../tours-meta-store';
+import {ToursMetaStore} from '../../tours-meta.store';
 
 @Component({
   selector: 'app-saved-tours',

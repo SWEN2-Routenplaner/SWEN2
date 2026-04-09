@@ -23,7 +23,6 @@ export class AuthStore {
   /*
   * Functions
   * */
-
   logout(): void {
     this.isAuthenticated.set(false);
     this.user.set(null);
