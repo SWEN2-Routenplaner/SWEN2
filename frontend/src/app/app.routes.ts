@@ -5,7 +5,7 @@ import {LoginComponent} from './components/login/login';
 import {RegisterComponent} from './components/register/register';
 import {ProfileComponent} from './components/profile/profile';
 import {TourLogsComponent} from './components/tours/tour-logs/tour-logs';
-import {UpdateTourComponent} from './components/tours/edit-tour/update-tour';
+import {UpdateTourComponent} from './components/tours/edit-tour/edit-tour';
 import {DefaultComponent} from './components/tours/default/default';
 
 export const routes: Routes = [

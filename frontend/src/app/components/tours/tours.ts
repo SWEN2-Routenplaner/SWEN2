@@ -6,7 +6,7 @@ import {TourLogsComponent} from './tour-logs/tour-logs';
 import {ActiveTourStore} from '../../states/active-tour-store';
 import {TourLogsStore} from '../../states/tour-logs-store';
 import {ToursMetaStore} from './tours-meta-store';
-import {UpdateTourComponent} from './edit-tour/update-tour';
+import {UpdateTourComponent} from './edit-tour/edit-tour';
 import {DefaultComponent} from './default/default';
 import {RouterOutlet} from '@angular/router';
 

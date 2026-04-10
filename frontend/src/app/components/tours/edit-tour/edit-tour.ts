@@ -6,13 +6,13 @@ import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Val
 import {Router, ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-update-tour',
+  selector: 'app-edit-tour',
   imports: [
     FormsModule,
     ReactiveFormsModule
   ],
-  templateUrl: './update-tour.html',
-  styleUrl: './update-tour.css',
+  templateUrl: './edit-tour.html',
+  styleUrl: './edit-tour.css',
   standalone: true
 })
 export class UpdateTourComponent{
@@ -23,7 +23,7 @@ export class UpdateTourComponent{
   readonly errors = signal<string[]>([]);
   readonly corrects = signal<string[]>([]);
   readonly message = signal<string>('');
-  readonly id = signal<number>(0);
+  id: number | null = null;
 
   tourForm = new FormGroup({
     from: new FormControl('',{validators:[Validators.required], nonNullable: true}),
@@ -36,10 +36,10 @@ export class UpdateTourComponent{
 
   // Load Selected Tour on init
   constructor(route: ActivatedRoute){
-    this.id.set(Number(route.snapshot.params['id']));
+    this.id = Number(route.snapshot.params['id']);
 
     if(this.id){
-      const activeTour = this.toursStore.getTourById(this.id());
+      const activeTour = this.toursStore.getTourById(this.id);
       if(activeTour){
         const stopsArray = this.tourForm.controls.intermediateStops;
         activeTour.intermediateStops?.forEach(stop => {
@@ -48,7 +48,7 @@ export class UpdateTourComponent{
         this.tourForm.patchValue(activeTour);
         this.selectedMode.set(activeTour.transportMode);
       }else{
-        console.error("Tour" , this.id() ,"  not found");
+        console.error("Tour" , this.id ,"  not found");
         this.router.navigate(['/tours']);
       }
     }else{
@@ -87,9 +87,8 @@ export class UpdateTourComponent{
     this.setErrorsAndCorrects();
     if(this.tourForm.valid){
       const tour = this.tourForm.getRawValue() as Tour;
-      const id: number | null = this.toursMetaStore.selectedId();
-      if(id){
-        tour.id = id;
+      if(this.id){
+        tour.id = this.id;
         this.toursStore.updateTour(tour);
         this.message.set('Tour updated successfully!');
       }else{
