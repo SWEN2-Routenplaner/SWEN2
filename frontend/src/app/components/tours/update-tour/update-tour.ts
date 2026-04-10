@@ -12,6 +12,7 @@ import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Val
   ],
   templateUrl: './update-tour.html',
   styleUrl: './update-tour.css',
+  standalone: true
 })
 export class UpdateTourComponent implements OnInit{
   toursStore = inject(ToursStore);
