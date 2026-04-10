@@ -3,22 +3,27 @@ import {ToursMetaStore} from '../tours-meta-store';
 import {ToursStore} from '../../../states/tours-store';
 import {Tour, TransportMode} from '../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-update-tour',
+  selector: 'app-edit-tour',
   imports: [
     FormsModule,
     ReactiveFormsModule
   ],
-  templateUrl: './update-tour.html',
-  styleUrl: './update-tour.css',
+  templateUrl: './edit-tour.html',
+  styleUrl: './edit-tour.css',
+  standalone: true
 })
-export class UpdateTourComponent implements OnInit{
+export class UpdateTourComponent{
   toursStore = inject(ToursStore);
   toursMetaStore = inject(ToursMetaStore);
-  errors = signal<string[]>([]);
-  corrects = signal<string[]>([]);
-  message = signal<string>('');
+  router = inject(Router);
+
+  readonly errors = signal<string[]>([]);
+  readonly corrects = signal<string[]>([]);
+  readonly message = signal<string>('');
+  id: number | null = null;
 
   tourForm = new FormGroup({
     from: new FormControl('',{validators:[Validators.required], nonNullable: true}),
@@ -30,10 +35,11 @@ export class UpdateTourComponent implements OnInit{
   })
 
   // Load Selected Tour on init
-  ngOnInit(): void {
-    const activeTourId: number | null = this.toursMetaStore.selectedId();
-    if(activeTourId != null){
-      const activeTour = this.toursStore.getTourById(activeTourId);
+  constructor(route: ActivatedRoute){
+    this.id = Number(route.snapshot.params['id']);
+
+    if(this.id){
+      const activeTour = this.toursStore.getTourById(this.id);
       if(activeTour){
         const stopsArray = this.tourForm.controls.intermediateStops;
         activeTour.intermediateStops?.forEach(stop => {
@@ -42,9 +48,12 @@ export class UpdateTourComponent implements OnInit{
         this.tourForm.patchValue(activeTour);
         this.selectedMode.set(activeTour.transportMode);
       }else{
-        console.error("Tour not found");
-        return;
+        console.error("Tour" , this.id ,"  not found");
+        this.router.navigate(['/tours']);
       }
+    }else{
+      this.router.navigate(['/tours']);
+      console.error("no id provided");
     }
   }
 
@@ -78,9 +87,8 @@ export class UpdateTourComponent implements OnInit{
     this.setErrorsAndCorrects();
     if(this.tourForm.valid){
       const tour = this.tourForm.getRawValue() as Tour;
-      const id: number | null = this.toursMetaStore.selectedId();
-      if(id){
-        tour.id = id;
+      if(this.id){
+        tour.id = this.id;
         this.toursStore.updateTour(tour);
         this.message.set('Tour updated successfully!');
       }else{
@@ -133,11 +141,11 @@ export class UpdateTourComponent implements OnInit{
     if(id){
       //
       this.toursStore.deleteTour(id);
-      this.toursMetaStore.setSelectedSite("default")
+      this.router.navigate(['/tours']);
     }
   }
 
   back(){
-    this.toursMetaStore.setSelectedSite("default")
+    this.router.navigate(['/tours']);
   }
 }

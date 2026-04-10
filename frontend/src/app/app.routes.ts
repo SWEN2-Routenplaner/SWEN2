@@ -4,12 +4,23 @@ import {HomeComponent} from './components/home/home';
 import {LoginComponent} from './components/login/login';
 import {RegisterComponent} from './components/register/register';
 import {ProfileComponent} from './components/profile/profile';
+import {TourLogsComponent} from './components/tours/tour-logs/tour-logs';
+import {UpdateTourComponent} from './components/tours/edit-tour/edit-tour';
+import {DefaultComponent} from './components/tours/default/default';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'profile', component: ProfileComponent},
   {path: 'home', component: HomeComponent},
-  {path: 'tours', component: ToursComponent},
+  {
+    path: 'tours',
+    component: ToursComponent,
+    children: [
+      { path: '', component: DefaultComponent },
+      { path: 'tourlogs/:id', component: TourLogsComponent },
+      { path: 'edit/:id', component: UpdateTourComponent }
+      ]
+  },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: '**', redirectTo: 'home'}
