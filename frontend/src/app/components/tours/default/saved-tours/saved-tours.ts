@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {Tour} from '../../../../models/tour.model';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {ToursMetaStore} from '../../tours-meta-store';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-saved-tours',
@@ -16,6 +17,7 @@ import {ToursMetaStore} from '../../tours-meta-store';
 export class SavedToursComponent {
   toursStore = inject(ToursStore);
   toursMetaStore = inject(ToursMetaStore);
+  router = inject(Router);
 
   activeTourId = signal<number | null>(null)
   tours = this.toursStore.allTours;
@@ -31,12 +33,10 @@ export class SavedToursComponent {
 
   // Loads EditTourComponent into the DOM
   editTour(id:number){
-    this.toursMetaStore.setSelectedSite("edit")
-    this.toursMetaStore.setSelectedId(id)
+    this.router.navigate(['/tours', 'edit', id]);
   // Loads TourLogsComponent into the DOM
   }
   showLogs(id:number){
-    this.toursMetaStore.setSelectedSite("logs")
-    this.toursMetaStore.setSelectedId(id)
+    this.router.navigate(['/tours', 'tourlogs', id]);
   }
 }

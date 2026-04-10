@@ -1,15 +1,6 @@
 <div class="tours-layout">
   <div class="tours-sidebar">
-    <!-- Left panel -->
-    @if(toursMetaStore.selectedSite() === "default"){
-      <app-default></app-default>
-    } @else if(toursMetaStore.selectedSite() === "logs"){
-      <!-- Tour Logs (if selected) -->
-      <app-tour-logs></app-tour-logs>
-    } @else if(toursMetaStore.selectedSite() === "edit"){
-      <!-- Edit Tour (if selected) -->
-      <app-update-tour></app-update-tour>
-    }
+    <router-outlet></router-outlet>
   </div>
 
   <div class="vertical-divider"></div>

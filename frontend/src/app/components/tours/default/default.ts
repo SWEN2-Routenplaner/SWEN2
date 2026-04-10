@@ -12,6 +12,6 @@ import {SavedToursComponent} from './saved-tours/saved-tours';
   styleUrl: './default.css',
   standalone: true
 })
-export class Default {
+export class DefaultComponent {
 
 }

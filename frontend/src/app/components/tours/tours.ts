@@ -6,12 +6,13 @@ import {TourLogsComponent} from './tour-logs/tour-logs';
 import {ActiveTourStore} from '../../states/active-tour-store';
 import {TourLogsStore} from '../../states/tour-logs-store';
 import {ToursMetaStore} from './tours-meta-store';
-import {UpdateTourComponent} from './update-tour/update-tour';
-import {Default} from './default/default';
+import {UpdateTourComponent} from './edit-tour/update-tour';
+import {DefaultComponent} from './default/default';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-tours',
-  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent, UpdateTourComponent, Default],
+  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent, UpdateTourComponent, DefaultComponent, RouterOutlet],
   providers: [ToursMetaStore],
   templateUrl: './tours.html',
   styleUrl: './tours.css',
