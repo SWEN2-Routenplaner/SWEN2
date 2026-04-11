@@ -73,6 +73,9 @@ export class UpdateTourLogComponent {
         if(activeLog){
           this.toursId = activeLog.tourId;
           this.tourLogForm.patchValue(activeLog);
+        }else{
+          console.error("Tour Log not found");
+          this.router.navigate(['/tours']);
         }
         break;
         case 'create':
