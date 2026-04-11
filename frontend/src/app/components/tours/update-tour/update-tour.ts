@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {ToursStore} from '../../../../states/tours.store';
-import {Tour, TransportMode} from '../../../../models/tour.model';
+import {ToursStore} from '../../../states/tours.store';
+import {Tour, TransportMode} from '../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
