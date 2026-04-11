@@ -5,6 +5,7 @@
       <!-- Back icon -->
       <strong>Back</strong>
     </button>
+    <div class="tour-name">{{getTourName(this.toursId)}}</div>
   </div>
   <div class="field">
     <label>Difficulty</label>
@@ -26,4 +27,50 @@
       }
     </select>
   </div>
+  <div class="field">
+    <label>Total Distance</label>
+    <input type="number" formControlName="totalDistance" placeholder="Total distance"
+           [class.error]="errors().includes( 'totalDistance')"
+           [class.correct]="corrects().includes( 'totalDistance')"/>
+  </div>
+  <div class="field">
+    <label>Total Time</label>
+    <input type="number" formControlName="totalTime" placeholder="Total time"
+           [class.error]="errors().includes( 'totalTime')"
+           [class.correct]="corrects().includes( 'totalTime')"/>
+  </div>
+  <div class="actions-row">
+    <div class="action-buttons right">
+      @if (message()) {
+        <span class="message">{{ message() }}</span>
+      }
+
+      <button class="btn btn-save"
+        (click)="saveTourLog()"
+        [class.disabled]="!tourLogForm.valid"
+        [class.enabled]="tourLogForm.valid">
+        <img src="icons/save.png" alt="" height="18" width="18"/>
+      </button>
+      <button class="btn btn-delete"
+        (click)="deleteTourLog()">
+        <img src="icons/delete.png" alt="" height="18" width="18"/>
+      </button>
+      <button class="btn btn-expand" (click)="toggleExpanded()" [title]="expanded() ? 'Collapse' : 'Expand'">
+        <!-- Expand icon -->
+        @if (expanded()) {
+          <img src ="icons/up.png" alt="" height="18" width="18" />
+        }@else{
+          <img src ="icons/down.png" alt="" height="18" width="18" />
+        }
+      </button>
+    </div>
+  </div>
+  @if (expanded()) {
+    <div class="extra-fields">
+      <div class="field">
+        <label>Log Comment</label>
+        <textarea formControlName="comment" rows="3" placeholder="enter a comment"></textarea>
+      </div>
+    </div>
+  }
 </div>

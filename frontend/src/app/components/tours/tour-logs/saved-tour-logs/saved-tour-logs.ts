@@ -1,11 +1,14 @@
 import {Component, inject, signal} from '@angular/core';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {Difficulty} from '../../../../models/tour-log.model';
+import {Difficulty, TourLog} from '../../../../models/tour-log.model';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-saved-tour-logs',
-  imports: [],
+  imports: [
+    DatePipe
+  ],
   templateUrl: './saved-tour-logs.html',
   styleUrl: './saved-tour-logs.css',
   standalone: true
@@ -15,11 +18,18 @@ export class SavedTourLogs {
   router = inject(Router)
 
   activeTourLogId = signal<number | null>(null);
-  tourlogs = this.tourLogsStore.allTours;
   tourId: number | null = null;
 
   constructor(route: ActivatedRoute){
     this.tourId = Number(route.snapshot.params['id']);
+  }
+
+  getTourLogs(){
+    if(this.tourId){
+      return this.tourLogsStore.getLogsByTourId(this.tourId)
+    }else{
+      return []
+    }
   }
 
   // sets activeTourLogId to specified id or set to null if already selected

@@ -4,16 +4,20 @@ import {Difficulty, Rating, TourLog} from '../models/tour-log.model';
 @Injectable({ providedIn: 'root'})
 export class TourLogsStore {
   private tourLogs = signal<TourLog[]>([]);
-  readonly allTours = this.tourLogs.asReadonly();
+  readonly allLogs = this.tourLogs.asReadonly();
 
   //Load mock tour logs on init
   constructor() {
     this.loadMockTourLogs();
   }
 
+  getLogsByTourId(tourId: number): TourLog[] {
+    return this.tourLogs().filter(log => log.tourId === tourId);
+  }
   addTourLog(tourLog: TourLog): void {
     this.tourLogs.update(tourLogs => [...tourLogs, tourLog]);
     console.log("saved tour log " + tourLog.id + " to tour logs array")
+    console.log(this.tourLogs())
   }
 
   getTourLogById(id: number): TourLog | undefined {
