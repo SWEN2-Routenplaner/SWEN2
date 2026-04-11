@@ -1,0 +1,128 @@
+.update-tour {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field input,
+.field textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  outline: none;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #38bdf8;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transport-buttons,
+.action-buttons{
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.btn:hover{
+  background: #e2e8f0;
+}
+
+.extra-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.75rem;
+}
+
+
+.btn.active {
+  background-color: #e0f2fe;
+  border-color: #3b82f6;
+}
+
+.btn-save.disabled {
+  background-color: #FFA2A2;
+}
+
+.btn-save.enabled {
+  background-color: #7BF1A8;
+}
+
+.btn-save.enabled:hover{
+  background-color: #05DF72;
+}
+
+.btn-delete{
+  background-color: #FFA2A2;
+}
+
+.btn-delete:hover{
+  background-color: #FF7373;
+}
+
+.btn-back {
+  display: flex;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  background: #A2F4FD;
+}
+
+.btn-back:hover {
+  background: #42D3F2;
+}
+
+.control-section{
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.message{
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.error{
+  background-color: #FFC9C9;
+}
+
+.correct{
+  background-color: #C9FFC9;
+}

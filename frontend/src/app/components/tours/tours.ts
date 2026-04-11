@@ -10,7 +10,7 @@ import {UpdateTourComponent} from './tours/update-tour/update-tour';
 
 @Component({
   selector: 'app-tours',
-  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent, UpdateTourComponent],
+  imports: [MapComponent, NewTourComponent, SavedToursComponent, TourLogsComponent, UpdateTourComponent, DefaultComponent, RouterOutlet],
   providers: [ToursMetaStore],
   templateUrl: './tours.html',
   styleUrl: './tours.css',

@@ -1,19 +1,6 @@
 <div class="tours-layout">
   <div class="tours-sidebar">
-    <!-- Left panel -->
-    @if(toursMetaStore.selectedSite() === "default"){
-      <!-- New Tour -->
-      <app-new-tour></app-new-tour>
-      <div class="horizontal-divider"></div>
-      <!-- Saved Tours -->
-      <app-saved-tours></app-saved-tours>
-    } @else if(toursMetaStore.selectedSite() === "logs"){
-      <!-- Tour Logs (if selected) -->
-      <app-tour-logs></app-tour-logs>
-    } @else if(toursMetaStore.selectedSite() === "edit"){
-      <!-- Edit Tour (if selected) -->
-      <app-update-tour></app-update-tour>
-    }
+    <router-outlet></router-outlet>
   </div>
 
   <div class="vertical-divider"></div>
