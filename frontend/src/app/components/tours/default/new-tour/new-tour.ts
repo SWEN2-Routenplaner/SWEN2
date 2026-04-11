@@ -3,10 +3,8 @@ import {NgOptimizedImage} from '@angular/common';
 import {signal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {ToursStore} from '../../../../states/tours-store';
-import {ActiveTourStore} from '../../../../states/active-tour-store';
-import {Tour} from '../../../../models/tour.model';
 import {TransportMode} from '../../../../models/tour.model';
+import {ToursStore} from '../../../../states/tours.store';
 
 @Component({
   selector: 'app-new-tour',
@@ -20,7 +18,6 @@ import {TransportMode} from '../../../../models/tour.model';
 })
 export class NewTourComponent {
   toursStore = inject(ToursStore)
-  activeTourStore = inject(ActiveTourStore)
 
   message = signal('');
   expanded = signal(false);

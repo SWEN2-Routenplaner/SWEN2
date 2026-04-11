@@ -1,7 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {TourLogsMetaStore} from '../tour-logs-meta.store';
 import {Difficulty} from '../../../../models/tour-log.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-saved-tour-logs',
@@ -12,7 +12,7 @@ import {Difficulty} from '../../../../models/tour-log.model';
 })
 export class SavedTourLogs {
   tourLogsStore = inject(TourLogsStore);
-  tourLogsMetaStore = inject(TourLogsMetaStore);
+  router = inject(Router)
 
   activeTourLogId = signal<number | null>(null);
   tourlogs = this.tourLogsStore.allTours;
@@ -27,8 +27,7 @@ export class SavedTourLogs {
   }
 
   editTourLog(id:number){
-    this.tourLogsMetaStore.setSelectedLogId(id);
-    this.tourLogsMetaStore.setMode("edit");
+    this.router.navigate(['/tours', 'tourlogs', 'edit', id]);
   }
 
   protected readonly Difficulty = Difficulty;

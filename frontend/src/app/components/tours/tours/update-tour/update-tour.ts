@@ -1,8 +1,8 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {ToursMetaStore} from '../../tours-meta.store';
 import {ToursStore} from '../../../../states/tours.store';
 import {Tour, TransportMode} from '../../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-update-tour',
@@ -13,12 +13,13 @@ import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Val
   templateUrl: './update-tour.html',
   styleUrl: './update-tour.css',
 })
-export class UpdateTourComponent implements OnInit{
+export class UpdateTourComponent{
   toursStore = inject(ToursStore);
-  toursMetaStore = inject(ToursMetaStore);
   errors = signal<string[]>([]);
   corrects = signal<string[]>([]);
   message = signal<string>('');
+  router = inject(Router);
+  id: number | null = null;
 
   tourForm = new FormGroup({
     from: new FormControl('',{validators:[Validators.required], nonNullable: true}),
@@ -30,10 +31,10 @@ export class UpdateTourComponent implements OnInit{
   })
 
   // Load Selected Tour on init
-  ngOnInit(): void {
-    const activeTourId: number | null = this.toursMetaStore.selectedId();
-    if(activeTourId != null){
-      const activeTour = this.toursStore.getTourById(activeTourId);
+  constructor(route: ActivatedRoute) {
+    this.id = Number(route.snapshot.params['id']);
+    if(this.id){
+      const activeTour = this.toursStore.getTourById(this.id);
       if(activeTour){
         const stopsArray = this.tourForm.controls.intermediateStops;
         activeTour.intermediateStops?.forEach(stop => {
@@ -78,7 +79,7 @@ export class UpdateTourComponent implements OnInit{
     this.setErrorsAndCorrects();
     if(this.tourForm.valid){
       const tour = this.tourForm.getRawValue() as Tour;
-      const id: number | null = this.toursMetaStore.selectedId();
+      const id: number | null = this.id;
       if(id){
         tour.id = id;
         this.toursStore.updateTour(tour);
@@ -129,15 +130,14 @@ export class UpdateTourComponent implements OnInit{
   }
 
   deleteTour(){
-    const id: number | null = this.toursMetaStore.selectedId();
-    if(id){
+    if(this.id){
       //
-      this.toursStore.deleteTour(id);
-      this.toursMetaStore.setSelectedSite("default")
+      this.toursStore.deleteTour(this.id);
+      this.router.navigate(['/tours']);
     }
   }
 
   back(){
-    this.toursMetaStore.setSelectedSite("default")
+    this.router.navigate(['/tours']);
   }
 }

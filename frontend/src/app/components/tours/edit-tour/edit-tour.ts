@@ -1,9 +1,8 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {ToursMetaStore} from '../tours-meta-store';
-import {ToursStore} from '../../../states/tours-store';
 import {Tour, TransportMode} from '../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, ActivatedRoute} from '@angular/router';
+import {ToursStore} from '../../../states/tours.store';
 
 @Component({
   selector: 'app-edit-tour',
@@ -17,7 +16,6 @@ import {Router, ActivatedRoute} from '@angular/router';
 })
 export class UpdateTourComponent{
   toursStore = inject(ToursStore);
-  toursMetaStore = inject(ToursMetaStore);
   router = inject(Router);
 
   readonly errors = signal<string[]>([]);
@@ -137,7 +135,7 @@ export class UpdateTourComponent{
   }
 
   deleteTour(){
-    const id: number | null = this.toursMetaStore.selectedId();
+    const id: number | null = this.id;
     if(id){
       //
       this.toursStore.deleteTour(id);

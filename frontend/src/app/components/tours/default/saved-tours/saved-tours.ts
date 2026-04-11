@@ -1,10 +1,9 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {ActiveTourStore} from '../../../../states/active-tour-store';
-import {ToursStore} from '../../../../states/tours-store';
+import {ToursStore} from '../../../../states/tours.store';
 import {Observable} from 'rxjs';
 import {Tour} from '../../../../models/tour.model';
 import {toObservable} from '@angular/core/rxjs-interop';
-import {ToursMetaStore} from '../../tours-meta-store';
 import {Router} from '@angular/router';
 
 @Component({
@@ -16,7 +15,6 @@ import {Router} from '@angular/router';
 })
 export class SavedToursComponent {
   toursStore = inject(ToursStore);
-  toursMetaStore = inject(ToursMetaStore);
   router = inject(Router);
 
   activeTourId = signal<number | null>(null)
