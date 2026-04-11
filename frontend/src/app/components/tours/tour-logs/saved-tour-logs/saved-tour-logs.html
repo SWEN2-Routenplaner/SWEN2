@@ -1,0 +1,59 @@
+<div class="saved-tour-logs">
+  @for (tourLog of tourlogs(); track tourLog.id) {
+    <div class="tour-log-item"
+         [class.active]="activeTourLogId() === tourLog.id"
+         (click)="selectTourLog(tourLog.id)">
+      <div class="actions-row">
+        <span>{{tourLog.date.getDay()}}/{{tourLog.date.getMonth()}}/{{tourLog.date.getFullYear()}}</span>
+
+        <div class="right">
+          @if(tourLog.rating === 1) {
+              1<img src="icons/star.png" alt="" height="18" width="18"/>
+            }@else if(tourLog.rating === 2) {
+              2<img src="icons/star.png" alt="" height="18" width="18"/>
+            }@else if(tourLog.rating === 3) {
+              3<img src="icons/star.png" alt="" height="18" width="18"/>
+            }@else if(tourLog.rating === 4) {
+              4<img src="icons/star.png" alt="" height="18" width="18"/>
+            }@else if(tourLog.rating === 5) {
+              5<img src="icons/star.png" alt="" height="18" width="18"/>
+            }
+
+            @if (tourLog.difficulty === Difficulty.Easy) {
+              <img src="icons/green_circle.png" alt="" height="18" width="18">
+            } @else if (tourLog.difficulty === Difficulty.Medium) {
+              <img src="icons/blue_circle.png" alt="" height="18" width="18">
+            } @else if (tourLog.difficulty === Difficulty.Hard) {
+              <img src="icons/red_circle.png" alt="" height="18" width="18">
+            }
+          </div>
+      </div>
+      @if(activeTourLogId() === tourLog.id) {
+      <div class="extra-fields">
+        <div class="field-group">
+          <div class="field ">
+            <label>Duration</label>
+            <span>{{tourLog.totalTime}} minutes</span>
+          </div>
+          <div class="field right">
+            {{Difficulty[tourLog.difficulty]}}
+          </div>
+        </div>
+        <div class="field">
+          <label>Distance</label>
+          <span>{{tourLog.totalDistance}} km</span>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <span>{{tourLog.comment}}</span>
+        </div>
+        <div class="buttons">
+          <button (click)="editTourLog(tourLog.id)">Edit</button>
+        </div>
+      </div>
+      }
+    </div>
+  } @empty {
+    <p class="empty-message">No logs found.</p>
+  }
+</div>

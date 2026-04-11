@@ -1,14 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {MapComponent} from '../map/map';
-import {NewTourComponent} from './default/new-tour/new-tour';
-import {SavedToursComponent} from './default/saved-tours/saved-tours';
+import {NewTourComponent} from './tours/new-tour/new-tour';
+import {SavedToursComponent} from './tours/saved-tours/saved-tours';
 import {TourLogsComponent} from './tour-logs/tour-logs';
 import {ActiveTourStore} from '../../states/active-tour-store';
-import {TourLogsStore} from '../../states/tour-logs-store';
-import {ToursMetaStore} from './tours-meta-store';
-import {UpdateTourComponent} from './edit-tour/edit-tour';
-import {DefaultComponent} from './default/default';
-import {RouterOutlet} from '@angular/router';
+import {TourLogsMetaStore} from './tour-logs/tour-logs-meta.store';
+import {ToursMetaStore} from './tours-meta.store';
+import {UpdateTourComponent} from './tours/update-tour/update-tour';
 
 @Component({
   selector: 'app-tours',
@@ -21,7 +19,7 @@ import {RouterOutlet} from '@angular/router';
 export class ToursComponent{
   activeTourStore = inject(ActiveTourStore);
   toursStore = inject(ActiveTourStore);
-  tourLogsStore = inject(TourLogsStore);
+  tourLogsStore = inject(TourLogsMetaStore);
   toursMetaStore = inject(ToursMetaStore);
 
 }

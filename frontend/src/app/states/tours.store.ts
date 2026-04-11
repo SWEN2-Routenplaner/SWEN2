@@ -37,6 +37,10 @@ export class ToursStore {
     this.tours.update(tours => tours.filter(tour => tour.id !== id));
   }
 
+  //////////////////////////
+  /// MOCK DELETE LATER! ///
+  //////////////////////////
+
   getNextId(): number {
     // search for the max id in the tours array
     const maxId = Math.max(...this.tours().map(tour => tour.id));

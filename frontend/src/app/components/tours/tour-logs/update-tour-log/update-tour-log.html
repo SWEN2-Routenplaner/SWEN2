@@ -1,0 +1,19 @@
+<div class="update-tour-log" [formGroup]="tourLogForm">
+  <div class="control-section">
+    <button class="btn btn-back"
+            (click)="back()">
+      <!-- Back icon -->
+      <strong>Back</strong>
+    </button>
+  </div>
+  <div class="field">
+    <label>Difficulty</label>
+    <select formControlName="difficulty"
+    [class.error]="errors().includes( 'difficulty')"
+    [class.correct]="corrects().includes( 'difficulty')">
+      @for(difficulty of difficultyOptions; track difficulty.value){
+        <option [value]="difficulty.value">{{difficulty.label}}</option>
+      }
+    </select>
+  </div>
+</div>
