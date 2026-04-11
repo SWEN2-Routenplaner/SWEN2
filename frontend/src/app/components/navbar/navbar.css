@@ -1,45 +1,70 @@
-.navbar {
+.header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 0 1.5rem;
   height: 60px;
   background-color: #1e293b;
   color: #f1f5f9;
+  position: relative;
+  z-index: 1000;
 }
 
-.navbar-left,
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.navbar-center {
-  flex: 1;
-  max-width: 480px;
-  margin: 0 1.5rem;
-}
-
-.home-icon {
+.logo a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
   color: #f1f5f9;
   display: flex;
   align-items: center;
-  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #38bdf8;
+  }
 }
 
-.home-icon:hover {
-  color: #38bdf8;
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  a {
+    color: #f1f5f9;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+
+    &:hover, &:focus {
+      color: #38bdf8;
+    }
+  }
 }
 
-.nav-link {
-  color: #f1f5f9;
-  text-decoration: none;
-  font-size: 0.95rem;
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #f1f5f9;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+  }
+
+  &:hover .bar {
+    background-color: #38bdf8;
+  }
 }
 
-.nav-link:hover {
-  color: #38bdf8;
+.mobile-nav {
+  display: none;
 }
 
 .btn {
@@ -49,26 +74,64 @@
   cursor: pointer;
   text-decoration: none;
   border: none;
+  transition: background-color 0.2s ease;
 }
 
 .btn-login {
   background-color: #38bdf8;
   color: #0f172a;
+
+  &:hover {
+    background-color: #7dd3fc;
+  }
 }
 
 .btn-register {
   background-color: #10b981;
-}
-
-.btn-login:hover {
-  background-color: #7dd3fc;
+  color: #ffffff;
 }
 
 .btn-logout {
   background-color: #ef4444;
-  color: #fff;
+  color: #ffffff;
+
+  &:hover {
+    background-color: #f87171;
+  }
 }
 
-.btn-logout:hover {
-  background-color: #f87171;
+@media (max-width: 768px) {
+  .desktop-nav, .desktop-search {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #1e293b;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    a {
+      color: #f1f5f9;
+      text-decoration: none;
+      font-size: 1.1rem;
+      width: 100%;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #38bdf8;
+      }
+    }
+  }
 }

@@ -1,5 +1,5 @@
-<nav class="navbar">
-  <div class="navbar-left">
+<nav class="header">
+  <div class="logo">
     <a routerLink="/home" class="home-icon" aria-label="Home">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
@@ -7,19 +7,35 @@
     </a>
   </div>
 
-  <div class="navbar-center">
-    <app-search/>
+  <div class="navbar-center desktop-search">
+    <app-search></app-search>
   </div>
 
-  <div class="navbar-right">
-    <a routerLink="/tours" class="nav-link">Tours</a>
-
-    @if (authStore.isAuthenticated$()) {
-      <a routerLink="/profile" class="nav-link">Profile</a>
-      <button class="btn btn-logout" (click)="logout()">Logout</button>
-    } @else {
-      <a routerLink="/login" class="btn btn-login">Login</a>
-      <a routerLink="/register" class="btn btn-register">Register</a>
+  <div class="desktop-nav">
+    @for (link of navLinks(); track link.path) {
+      <a [routerLink]="link.path">{{ link.label }}</a>
     }
   </div>
+
+  <button
+    class="menu-toggle"
+    (click)="toggleMenu()"
+    aria-label="Toggle navigation">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+
+  @if (isMobileMenuOpen()) {
+    <div class="mobile-nav">
+
+      <div class="mobile-search">
+        <app-search></app-search>
+      </div>
+
+      @for (link of navLinks(); track link.path) {
+        <a [routerLink]="link.path" (click)="toggleMenu()">{{ link.label }}</a>
+      }
+    </div>
+  }
 </nav>
