@@ -23,7 +23,8 @@ export const routes: Routes = [
       { path: 'tourlogs', component: TourLogsComponent,
         children: [
           { path: ':id', component: SavedTourLogs },
-          { path: 'edit/:id', component: UpdateTourLogComponent },
+          { path: 'edit/:logId', component: UpdateTourLogComponent },
+          { path: 'create/:tourId', component: UpdateTourLogComponent },
       ]}
       ]
   },

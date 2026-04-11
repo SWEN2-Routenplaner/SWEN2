@@ -1,11 +1,15 @@
 <div class="saved-tour-logs">
-  @for (tourLog of tourlogs(); track tourLog.id) {
+  <div class="buttons">
+    <button (click)="newTourLog()">New</button>
+    <button (click)="back()">Back</button>
+  </div>
+  <div class="horizontal-divider"></div>
+  @for (tourLog of getTourLogs(); track tourLog.id) {
     <div class="tour-log-item"
          [class.active]="activeTourLogId() === tourLog.id"
          (click)="selectTourLog(tourLog.id)">
       <div class="actions-row">
-        <span>{{tourLog.date.getDay()}}/{{tourLog.date.getMonth()}}/{{tourLog.date.getFullYear()}}</span>
-
+        <span>{{ tourLog.date | date: 'dd/MM/yyyy' }}</span>
         <div class="right">
           @if(tourLog.rating === 1) {
               1<img src="icons/star.png" alt="" height="18" width="18"/>

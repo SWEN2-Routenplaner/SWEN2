@@ -40,6 +40,7 @@ export class UpdateTourLogComponent {
   errors = signal<string[]>([]);
   corrects = signal<string[]>([]);
   message = signal<string>('');
+  expanded = signal(false);
 
   tourLogForm = new FormGroup({
     difficulty: new FormControl<Difficulty | null>(null, {
@@ -58,40 +59,58 @@ export class UpdateTourLogComponent {
   })
 
   constructor(route: ActivatedRoute){
-    this.logId = Number(route.snapshot.params['id']);
-
-    // Edit Mode
-    if(this.logId){
-      const activeLog: TourLog | undefined = this.tourLogsStore.getTourLogById(this.logId);
-      if(activeLog){
-        this.toursId = activeLog.tourId;
-        this.tourLogForm.patchValue(activeLog);
-        this.mode.set('edit');
-      }
-    // Error! no active tour or log (No tour for reference!)
-    }else if(!this.toursId || !this.logId){
-      console.error("Error! no active tour or log");
-      this.router.navigate(['/tours']);
-      // Create Mode
-    }else{
+    // determine mode from params
+    if(route.snapshot.params['tourId']){
       this.mode.set('create');
+    }else if(route.snapshot.params['logId']){
+      this.mode.set('edit');
+    }
+
+    switch (this.mode()) {
+      case 'edit':
+        this.logId = Number(route.snapshot.params['logId']);
+        const activeLog: TourLog | undefined = this.tourLogsStore.getTourLogById(this.logId);
+        if(activeLog){
+          this.toursId = activeLog.tourId;
+          this.tourLogForm.patchValue(activeLog);
+        }
+        break;
+        case 'create':
+          this.toursId = Number(route.snapshot.params['tourId']);
+          break;
+        default:
+          console.error("Error! no active tour or log");
+          this.router.navigate(['/tours']);
     }
   }
 
-  getTourName(tourId: number){
-    const tour = this.toursStore.getTourById(tourId);
-    return tour?.name;
+  getTourName(tourId: number|null){
+    if(tourId){
+      const tour = this.toursStore.getTourById(tourId);
+      return tour?.name;
+    }else{
+      return null;
+    }
   }
 
   saveTourLog(){
     this.setErrorsAndCorrects();
     if(this.tourLogForm.valid){
-      const tourLog = this.tourLogForm.getRawValue() as TourLog;
+      const rawData = this.tourLogForm.getRawValue();
+
+      const tourLog: TourLog = {
+        ...rawData,
+        difficulty: Number(rawData.difficulty),
+        rating: Number(rawData.rating)
+      } as TourLog;
 
       switch (this.mode()) {
         case 'edit':
           if(this.logId && this.toursId){
             tourLog.id = this.logId;
+            tourLog.tourId = this.toursId;
+            tourLog.date = new Date();
+            console.log(tourLog);
             this.tourLogsStore.updateTourLog(tourLog);
             this.message.set('Tour Log updated successfully!');
           }
@@ -100,14 +119,22 @@ export class UpdateTourLogComponent {
           if(this.toursId){
             tourLog.tourId = this.toursId;
             tourLog.id = this.tourLogsStore.getNextId();
+            tourLog.date = new Date();
             this.tourLogsStore.addTourLog(tourLog);
-            this.message.set('Tour Log created successfully!');
+            this.router.navigate(['/tours','tourlogs', this.toursId]);
           }
           break;
         default:
           console.error("Error! no active tour or log");
           break;
       }
+    }
+  }
+
+  deleteTourLog(){
+    if(this.logId && this.toursId){
+      this.tourLogsStore.deleteTourLog(this.logId);
+      this.router.navigate(['/tours','tourlogs', this.toursId]);
     }
   }
 
@@ -141,7 +168,6 @@ export class UpdateTourLogComponent {
 
   back(){
     if(this.toursId){
-      console.log(this.toursId)
       this.router.navigate(['/tours','tourlogs', this.toursId]);
     }else{
       console.error("Error! no active tour");
@@ -149,4 +175,7 @@ export class UpdateTourLogComponent {
     }
   }
 
+  protected toggleExpanded() {
+    this.expanded.update(expanded => !expanded);
+  }
 }
