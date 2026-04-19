@@ -1,0 +1,31 @@
+<div class="tours-layout">
+
+  <mat-card class="tours-sidebar desktop-only">
+    <router-outlet></router-outlet>
+  </mat-card>
+
+  <div class="map">
+    <!-- Map -->
+    <app-map></app-map>
+  </div>
+
+</div>
+
+<ion-modal
+  [isOpen]="isModalOpen()"
+  [breakpoints]="breakpoints"
+  [initialBreakpoint]="initialBreakpoint"
+  [handle]="true"
+  [showBackdrop]="false"
+  [backdropDismiss]="false"
+  [focusTrap]="false"
+  (ionModalDidDismiss)="handleModalDismiss()"
+>
+  <ng-template>
+    <ion-content scroll-y="false">
+      <div class="router-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

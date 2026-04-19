@@ -1,103 +1,73 @@
-.header {
+.navbar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.5rem;
-  height: 60px;
-  background-color: #1e293b;
-  color: #f1f5f9;
-  position: relative;
-  z-index: 1000;
+  margin: 10px;
 }
 
-.logo a {
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-decoration: none;
-  color: #f1f5f9;
+.input-field {
+  flex: 1;
+  border: none;
+  outline: none; /* Removes the blue ring when clicking */
+  font-size: 16px;
+  height: 32px;
+}
+.input-container {
   display: flex;
   align-items: center;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #38bdf8;
-  }
+  background: white;
+  padding: 4px 8px;
+  padding-left: 16px;
+  border-radius: 25px;
+  width: 350px;
+  height: 40px; /* Explicitly set to match button */
+  box-sizing: border-box;
 }
 
-.desktop-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  a {
-    color: #f1f5f9;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s ease;
-
-    &:hover, &:focus {
-      color: #38bdf8;
-    }
-  }
+::ng-deep .maps-search .mat-mdc-form-field-subscript-wrapper {
+  display: none;
 }
 
 .menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
+  display: none !important;
+}
 
-  .bar {
-    width: 25px;
-    height: 3px;
-    background-color: #f1f5f9;
-    border-radius: 2px;
-    transition: background-color 0.3s ease;
-  }
+button {
+  background: white;
+}
 
-  &:hover .bar {
-    background-color: #38bdf8;
-  }
+.account-icon-button {
+  background: white !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Override Angular Material MDC icon button internal constraints */
+::ng-deep .account-icon-button.mat-mdc-icon-button {
+  --mdc-icon-button-state-layer-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+::ng-deep .account-icon-button .mat-mdc-button-touch-target {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .mobile-nav {
   display: none;
-}
-
-.btn {
-  padding: 0.35rem 0.9rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: none;
-  border: none;
-  transition: background-color 0.2s ease;
-}
-
-.btn-login {
-  background-color: #38bdf8;
-  color: #0f172a;
-
-  &:hover {
-    background-color: #7dd3fc;
-  }
-}
-
-.btn-register {
-  background-color: #10b981;
-  color: #ffffff;
-}
-
-.btn-logout {
-  background-color: #ef4444;
-  color: #ffffff;
-
-  &:hover {
-    background-color: #f87171;
-  }
 }
 
 @media (max-width: 768px) {
@@ -105,8 +75,12 @@
     display: none;
   }
 
+  .input-container {
+    padding-left: 8px;
+  }
+
   .menu-toggle {
-    display: flex;
+    display: block !important;
   }
 
   .mobile-nav {

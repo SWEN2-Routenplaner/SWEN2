@@ -2,6 +2,10 @@ import {Component, computed, inject, signal} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../states/auth.store';
 import { Search } from './search/search';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {FormsModule} from '@angular/forms';
 
 interface NavLink {
   path: string;
@@ -10,7 +14,7 @@ interface NavLink {
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, Search],
+  imports: [RouterLink, Search, MatInput, MatLabel, MatFormField, MatButton, MatIcon, MatIconButton, FormsModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
   standalone: true
@@ -18,6 +22,7 @@ interface NavLink {
 export class NavbarComponent {
   authStore = inject(AuthStore);
   isMobileMenuOpen = signal(false);
+  searchQuery = signal('')
 
   private baseLinks: NavLink[] = [
     { path: '/tours', label: 'Tours' }

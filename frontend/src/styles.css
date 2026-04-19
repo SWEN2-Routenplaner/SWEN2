@@ -5,4 +5,25 @@
 html, body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
+}
+
+ion-app {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
 }

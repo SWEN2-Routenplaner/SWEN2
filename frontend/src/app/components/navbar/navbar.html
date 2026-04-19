@@ -1,41 +1,17 @@
-<nav class="header">
-  <div class="logo">
-    <a routerLink="/home" class="home-icon" aria-label="Home">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-      </svg>
-    </a>
-  </div>
+<div class="navbar-container">
+  <div class="navbar-left">
+    <div class="input-container mat-elevation-z3">
+      <button mat-icon-button class="mobile-only"><mat-icon>menu</mat-icon></button>
 
-  <div class="navbar-center desktop-search">
-    <app-search></app-search>
-  </div>
-
-  <div class="desktop-nav">
-    @for (link of navLinks(); track link.path) {
-      <a [routerLink]="link.path">{{ link.label }}</a>
-    }
-  </div>
-
-  <button
-    class="menu-toggle"
-    (click)="toggleMenu()"
-    aria-label="Toggle navigation">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-  </button>
-
-  @if (isMobileMenuOpen()) {
-    <div class="mobile-nav">
-
-      <div class="mobile-search">
-        <app-search></app-search>
-      </div>
-
-      @for (link of navLinks(); track link.path) {
-        <a [routerLink]="link.path" (click)="toggleMenu()">{{ link.label }}</a>
+      <input class="input-field" placeholder="Search for Tours and Places" [(ngModel)]="searchQuery">
+      @if (searchQuery()){
+        <button mat-icon-button (click)="searchQuery.set('')"><mat-icon>close</mat-icon></button>
       }
+      <div class="divider"></div>
+      <button mat-icon-button color="primary"><mat-icon>search</mat-icon></button>
     </div>
-  }
-</nav>
+  </div>
+  <div class="navbar-right">
+    <button mat-icon-button class="mat-elevation-z3 account-icon-button"><mat-icon>person</mat-icon></button>
+  </div>
+</div>

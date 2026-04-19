@@ -1,0 +1,52 @@
+.tours-layout {
+  display: flex;
+  height: 100%;
+}
+
+.tours-sidebar {
+  position: absolute;
+  top: 58px;
+  margin: 10px;
+  width: 25%;
+  min-width: 300px;
+  overflow-y: auto;
+  border-radius: 25px;
+  background: white;
+  z-index: 10;
+}
+
+.map {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+app-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.router-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+ion-modal {
+  --border-radius: 25px 25px 0 0;
+}
+
+@media (max-width: 768px) {
+  .tours-layout {
+    flex-direction: column;
+  }
+
+  /* Sidebar is hidden via .desktop-only in styles.css */
+  
+  .map {
+    height: 100%;
+    width: 100%;
+  }
+}
