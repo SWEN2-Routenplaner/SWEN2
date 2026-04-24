@@ -1,5 +1,64 @@
-img {
-  width: 100%;
+#map {
   height: 100%;
-  object-fit: cover;
+  width: 100%;
+  position: relative;
+  display: block;
+  z-index: 0;
 }
+
+.map-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+}
+
+.zoom-group {
+  border: none !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 25px !important;
+  background-color: white !important;
+  overflow: hidden;
+}
+
+.zoom-group mat-button-toggle {
+  background-color: white !important;
+  color: #333 !important;
+  width: 40px;
+  height: 40px;
+}
+
+/* Remove the default selected/focus overlay of toggle buttons to keep them looking like action buttons */
+::ng-deep .zoom-group .mat-button-toggle-button {
+  border-radius: 0 !important;
+}
+
+::ng-deep .zoom-group .mat-button-toggle-checked {
+  background-color: white !important;
+}
+
+::ng-deep .zoom-group .mat-button-toggle-focus-overlay {
+  display: none !important;
+}
+
+::ng-deep .zoom-group .mat-button-toggle-label-content {
+  line-height: 40px !important;
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent !important;
+}
+
+.map-button {
+  background-color: white !important;
+  color: #333 !important;
+}
+
+.center-button {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+}
+

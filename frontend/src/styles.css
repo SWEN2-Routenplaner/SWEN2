@@ -1,11 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+}
+
+/* Ensure Leaflet tiles are not affected by global image styles and are positioned correctly */
+.leaflet-container .leaflet-tile {
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 ion-app {
@@ -16,6 +25,12 @@ ion-app {
 
 .mobile-only {
   display: none !important;
+}
+
+.horizontal-divider {
+  height: 1px;
+  background-color: #000000;
+  margin: 1rem 0;
 }
 
 @media (max-width: 768px) {

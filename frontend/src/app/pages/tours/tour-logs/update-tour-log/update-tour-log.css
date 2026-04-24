@@ -40,7 +40,6 @@
   justify-content: space-between;
 }
 
-.transport-buttons,
 .action-buttons{
   display: flex;
   gap: 0.4rem;
@@ -76,11 +75,6 @@
   padding-top: 0.75rem;
 }
 
-
-.btn.active {
-  background-color: #e0f2fe;
-  border-color: #3b82f6;
-}
 
 .btn-save.disabled {
   background-color: #FFA2A2;

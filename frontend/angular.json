@@ -26,11 +26,19 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images",
+                "output": "assets/"
               }
             ],
             "styles": [
               "src/material-theme.scss",
               "src/styles.css",
+              {
+                "input": "node_modules/leaflet/dist/leaflet.css"
+              },
               {
                 "input": "node_modules/@ionic/angular/css/core.css"
               },

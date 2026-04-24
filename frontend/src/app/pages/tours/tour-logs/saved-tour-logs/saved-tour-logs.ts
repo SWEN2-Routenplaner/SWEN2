@@ -42,21 +42,21 @@ export class SavedTourLogs {
   }
 
   editTourLog(id:number){
-    this.router.navigate(['/tours', 'tourlogs', 'edit', id]);
+    this.router.navigate(['', 'tourlogs', 'edit', id]);
   }
 
   protected readonly Difficulty = Difficulty;
 
   protected newTourLog() {
     if(this.tourId){
-      this.router.navigate(['/tours', 'tourlogs', 'create', this.tourId]);
+      this.router.navigate(['', 'tourlogs', 'create', this.tourId]);
     }else{
       console.error("Error! no active tour");
-      this.router.navigate(['/tours']);
+      this.router.navigate(['']);
     }
   }
 
   protected back() {
-    this.router.navigate(['/tours']);
+    this.router.navigate(['']);
   }
 }

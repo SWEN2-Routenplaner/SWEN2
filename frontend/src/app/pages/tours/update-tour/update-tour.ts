@@ -133,11 +133,11 @@ export class UpdateTourComponent{
     if(this.id){
       //
       this.toursStore.deleteTour(this.id);
-      this.router.navigate(['/tours']);
+      this.router.navigate(['']);
     }
   }
 
   back(){
-    this.router.navigate(['/tours']);
+    this.router.navigate(['']);
   }
 }

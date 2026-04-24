@@ -51,6 +51,19 @@ export class ToursStore {
     this.tours.set([
       {id: 1, from: 'Berlin', to: 'Munich', transportMode: "bike", name: 'Berlin-Munich', description: 'A short tour from Berlin to Munich', intermediateStops: []},
       {id: 2, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 3, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 4, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 5, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 6, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 7, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 8, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 9, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 10, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 11, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 12, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 13, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 14, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
+      {id: 15, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
     ])
   }
 }

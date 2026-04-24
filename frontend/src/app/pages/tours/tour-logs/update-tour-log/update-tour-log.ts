@@ -75,7 +75,7 @@ export class UpdateTourLogComponent {
           this.tourLogForm.patchValue(activeLog);
         }else{
           console.error("Tour Log not found");
-          this.router.navigate(['/tours']);
+          this.router.navigate(['']);
         }
         break;
         case 'create':
@@ -83,7 +83,7 @@ export class UpdateTourLogComponent {
           break;
         default:
           console.error("Error! no active tour or log");
-          this.router.navigate(['/tours']);
+          this.router.navigate(['']);
     }
   }
 
@@ -124,7 +124,7 @@ export class UpdateTourLogComponent {
             tourLog.id = this.tourLogsStore.getNextId();
             tourLog.date = new Date();
             this.tourLogsStore.addTourLog(tourLog);
-            this.router.navigate(['/tours','tourlogs', this.toursId]);
+            this.router.navigate(['','tourlogs', this.toursId]);
           }
           break;
         default:
@@ -139,7 +139,7 @@ export class UpdateTourLogComponent {
   deleteTourLog(){
     if(this.logId && this.toursId){
       this.tourLogsStore.deleteTourLog(this.logId);
-      this.router.navigate(['/tours','tourlogs', this.toursId]);
+      this.router.navigate(['','tourlogs', this.toursId]);
     }
   }
 
@@ -173,10 +173,10 @@ export class UpdateTourLogComponent {
 
   back(){
     if(this.toursId){
-      this.router.navigate(['/tours','tourlogs', this.toursId]);
+      this.router.navigate(['','tourlogs', this.toursId]);
     }else{
       console.error("Error! no active tour");
-      this.router.navigate(['/tours']);
+      this.router.navigate(['']);
     }
   }
 

@@ -11,12 +11,8 @@ import {SavedTourLogs} from './pages/tours/tour-logs/saved-tour-logs/saved-tour-
 import {UpdateTourComponent} from './pages/tours/update-tour/update-tour';
 
 export const routes: Routes = [
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'profile', component: ProfilePage},
-  {path: 'home', component: HomePage},
   {
-    path: 'tours',
-    component: ToursPage,
+    path: '', component: ToursPage,
     children: [
       { path: '', component: DefaultComponent },
       { path: 'edit/:id', component: UpdateTourComponent},
@@ -25,10 +21,10 @@ export const routes: Routes = [
           { path: ':id', component: SavedTourLogs },
           { path: 'edit/:logId', component: UpdateTourLogComponent },
           { path: 'create/:tourId', component: UpdateTourLogComponent },
-      ]}
-      ]
+        ]}
+    ]
   },
-  {path: 'login', component: LoginPage},
-  {path: 'register', component: RegisterPage},
-  {path: '**', redirectTo: 'home'}
+  {path: 'profile', component: ProfilePage},
+  {path: 'home', component: HomePage},
+  {path: '**', redirectTo: ''}
 ];

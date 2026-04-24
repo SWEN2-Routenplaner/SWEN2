@@ -31,10 +31,10 @@ export class SavedToursComponent {
 
   // Loads EditTourComponent into the DOM
   editTour(id:number){
-    this.router.navigate(['/tours', 'edit', id]);
+    this.router.navigate(['', 'edit', id]);
   // Loads TourLogsComponent into the DOM
   }
   showLogs(id:number){
-    this.router.navigate(['/tours', 'tourlogs', id]);
+    this.router.navigate(['', 'tourlogs', id]);
   }
 }

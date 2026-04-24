@@ -25,11 +25,6 @@
   border-color: #3b82f6;
 }
 
-.tour-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 .actions-row {
   display: flex;
   align-items: center;
@@ -90,24 +85,4 @@
   flex-direction: row;
   gap: 10px;
   margin-left: auto;
-}
-.left{
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-
-.btn:hover{
-  background: #e2e8f0;
-}
-
-.btn-back {
-  display: flex;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  background: #A2F4FD;
-}
-
-.btn-back:hover {
-  background: #42D3F2;
 }

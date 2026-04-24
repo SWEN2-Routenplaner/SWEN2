@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1100;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,15 +26,6 @@
   width: 500px;
   height: 40px; /* Explicitly set to match button */
   box-sizing: border-box;
-}
-
-::ng-deep .maps-search .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-
-}
-
-.menu-toggle {
-  display: none !important;
 }
 
 button {
@@ -65,46 +56,8 @@ button {
   height: 40px !important;
 }
 
-.mobile-nav {
-  display: none;
-}
-
 @media (max-width: 768px) {
-  .desktop-nav, .desktop-search {
-    display: none;
-  }
-
   .input-container {
     width: 350px;
-  }
-
-  .menu-toggle {
-    display: block !important;
-  }
-
-  .mobile-nav {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    background-color: #1e293b;
-    padding: 1.5rem;
-    gap: 1.5rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-
-    a {
-      color: #f1f5f9;
-      text-decoration: none;
-      font-size: 1.1rem;
-      width: 100%;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: #38bdf8;
-      }
-    }
   }
 }
