@@ -25,7 +25,6 @@
     "@angular/router": "^21.1.0",
     "@ionic/angular": "^8.8.4",
     "leaflet": "^1.9.4",
-    "meilisearch": "^0.55.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
