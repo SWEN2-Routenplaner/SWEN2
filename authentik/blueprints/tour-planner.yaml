@@ -8,11 +8,13 @@ entries:
       name: "Tour Planner Provider"
     attrs:
       client_id: "tour-planner"
-      client_secret: "BmCrVHqfVKrQxwQkTEjMB7HvN6uy4Bto5AnggZNii/c="
+      client_secret: "testsecret"
       client_type: "confidential"
       authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
       authentication_flow: !Find [authentik_flows.flow, [slug, default-authentication-flow]]
-      redirect_uris: "http://localhost:8080/login/oauth2/code/authentik"
+      redirect_uris: |
+        http://localhost:8080/login/oauth2/code/authentik
+        http://127.0.0.1:8080/login/oauth2/code/authentik
       property_mappings:
         - !Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]
         - !Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]

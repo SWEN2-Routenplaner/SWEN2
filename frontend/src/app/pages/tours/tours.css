@@ -9,7 +9,7 @@
   top: 50px;
   margin: 10px;
   width: 400px;
-  height: calc(100vh - 70px);
+  max-height: calc(100vh - 70px);
   border-radius: 25px;
   background: white;
   z-index: 1010;
