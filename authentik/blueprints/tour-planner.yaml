@@ -1,0 +1,34 @@
+version: 1
+metadata:
+  name: "Tour Planner Backend"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: tourplanner-provider
+    identifiers:
+      name: "Tour Planner Provider"
+    attrs:
+      client_id: "tour-planner"
+      client_secret: "testsecret"
+      client_type: "confidential"
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, default-authentication-flow]]
+      redirect_uris: |
+        http://localhost:8080/login/oauth2/code/authentik
+        http://127.0.0.1:8080/login/oauth2/code/authentik
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      access_token_validity: "hours=1"
+      refresh_token_validity: "days=30"
+      sub_mode: "hashed_user_id"
+
+  - model: authentik_core.application
+    id: tourplanner-app
+    identifiers:
+      slug: "tour-planner"
+    attrs:
+      name: "Tour Planner"
+      provider: !KeyOf tourplanner-provider
+      policy_engine_mode: "any"

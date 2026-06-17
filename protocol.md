@@ -58,5 +58,20 @@ The following flow describes the typical user interaction path:
 ### Wireframe
 ![Wireframe](wireframe.png)
 
+### Authentication (Authentik)
+A functional integration between the Spring Boot backend and Authentik (OIDC) has been established. 
+
+**Critical Integration Note (Spring Boot 3.2+ / Java 21):**
+During the initial setup, the token exchange phase repeatedly failed with `invalid_token_response`, `unsupported_grant_type`, and `invalid_grant` errors. 
+
+**Root Cause:**
+1.  **Java 21 HTTP Client Incompatibility:** Spring Boot 3.2+ uses a new `JdkClientHttpRequestFactory` by default. Authentik's internal web server (Gunicorn) rejects the token POST requests made by this new client as malformed (`Invalid HTTP request received`).
+2.  **Redirect Body Drops:** If the provider URLs in `application.properties` do not explicitly include trailing slashes (e.g., `/token` instead of `/token/`), Authentik issues a 301 redirect. This redirect causes the Java HTTP client to drop the POST body (containing the `grant_type`), leading to an `unsupported_grant_type` error.
+
+**Solution Applied:**
+*   **Trailing Slashes:** All `spring.security.oauth2.client.provider` URIs must explicitly match Authentik's discovery metadata, including trailing slashes.
+*   **Custom RestClient:** The `SecurityConfig.java` was updated to explicitly override the `OAuth2AccessTokenResponseClient`. It now uses a custom `RestClient` backed by the classic `SimpleClientHttpRequestFactory`. This forces Spring to use standard HTTP/1.1 requests, which Authentik's router correctly parses. 
+*   **Message Converters:** The custom `RestClient` must explicitly register `FormHttpMessageConverter` and `OAuth2AccessTokenResponseHttpMessageConverter` to prevent internal `NullPointerExceptions` during JSON parsing.
+
 ## Current Project State
 The project currently has a functional frontend with state management for tours and authentication. The backend is in its initial setup phase with a basic Spring Boot application.

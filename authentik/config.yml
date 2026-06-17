@@ -1,0 +1,23 @@
+# authentik configuration file
+# See https://goauthentik.io/docs/installation/configuration/
+
+error_reporting:
+  enabled: true
+
+# email:
+#   host: localhost
+#   port: 25
+#   use_tls: false
+#   use_ssl: false
+#   username: ""
+#   password: ""
+#   from: "authentik@localhost"
+
+postgresql:
+  host: postgresql
+  user: authentik
+  name: authentik
+  # password is provided via environment variable AUTHENTIK_POSTGRESQL__PASSWORD
+
+redis:
+  host: redis

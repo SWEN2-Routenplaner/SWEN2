@@ -11,6 +11,24 @@
     </div>
   </div>
   <div class="navbar-right">
-    <button mat-icon-button class="mat-elevation-z3 account-icon-button"><mat-icon>person</mat-icon></button>
+    <button mat-icon-button class="mat-elevation-z3 account-icon-button" [matMenuTriggerFor]="userMenu">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      @if (authStore.isAuthenticated$()) {
+        <div class="user-menu-header">
+          <span>{{ authStore.user$()?.username || 'User' }}</span>
+        </div>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      } @else {
+        <button mat-menu-item (click)="login()">
+          <mat-icon>login</mat-icon>
+          Login
+        </button>
+      }
+    </mat-menu>
   </div>
 </div>

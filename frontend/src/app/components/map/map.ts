@@ -24,7 +24,7 @@ export class MapComponent {
     }
     // 1. Initialize the map object
     this.map = L.map('map', {
-      center: [51.505, -0.09], // Latitude, Longitude
+      center: [48.2202037,16.2972429], // Latitude, Longitude
       zoom: 13,
       zoomControl: false // Disable default zoom control
     });

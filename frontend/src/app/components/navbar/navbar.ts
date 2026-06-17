@@ -5,6 +5,7 @@ import { Search } from './search/search';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {FormsModule} from '@angular/forms';
 
 interface NavLink {
@@ -14,7 +15,7 @@ interface NavLink {
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, Search, MatInput, MatLabel, MatFormField, MatButton, MatIcon, MatIconButton, FormsModule],
+  imports: [RouterLink, Search, MatInput, MatLabel, MatFormField, MatButton, MatIcon, MatIconButton, FormsModule, MatMenu, MatMenuItem, MatMenuTrigger],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
   standalone: true
@@ -37,6 +38,10 @@ export class NavbarComponent {
 
   logout(): void {
     this.authStore.logout();
+  }
+
+  login(): void {
+    this.authStore.login();
   }
 
   toggleMenu() {

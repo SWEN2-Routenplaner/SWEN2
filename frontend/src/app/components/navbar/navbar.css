@@ -28,10 +28,6 @@
   box-sizing: border-box;
 }
 
-button {
-  background: white;
-}
-
 .account-icon-button {
   background: white !important;
   width: 40px !important;
@@ -60,4 +56,12 @@ button {
   .input-container {
     width: 350px;
   }
+}
+
+.user-menu-header {
+  padding: 12px 16px;
+  font-weight: bold;
+  color: var(--mat-sys-on-surface);
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 4px;
 }
