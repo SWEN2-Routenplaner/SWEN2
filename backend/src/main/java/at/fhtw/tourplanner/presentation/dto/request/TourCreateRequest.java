@@ -1,6 +1,6 @@
 package at.fhtw.tourplanner.presentation.dto.request;
 
-import at.fhtw.tourplanner.business_layer.model.TransportType;
+import at.fhtw.tourplanner.business.model.TransportType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
