@@ -1,4 +1,4 @@
-package at.fhtw.tourplanner.business_layer.model;
+package at.fhtw.tourplanner.business.model;
 
 public enum TransportType {
     CAR,
