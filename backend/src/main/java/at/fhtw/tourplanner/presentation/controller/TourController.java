@@ -2,16 +2,22 @@ package at.fhtw.tourplanner.presentation.controller;
 
 import at.fhtw.tourplanner.business.service.TourService;
 import at.fhtw.tourplanner.presentation.dto.request.TourCreateRequest;
+import at.fhtw.tourplanner.presentation.dto.response.ExportResult;
+import at.fhtw.tourplanner.presentation.dto.response.ImportSummary;
 import at.fhtw.tourplanner.presentation.dto.response.TourResponse;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -23,10 +29,10 @@ public class TourController {
 
     @GetMapping
     public ResponseEntity<List<TourResponse>> listTours(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String query,
             @AuthenticationPrincipal Jwt jwt){
         String owner = jwt.getSubject();
-        return ResponseEntity.ok(tourService.listTours(owner,name));
+        return ResponseEntity.ok(tourService.listTours(owner,query));
     }
 
     @PostMapping
@@ -42,7 +48,7 @@ public class TourController {
     @GetMapping("/{tourId}")
     public ResponseEntity<TourResponse> getTour(
             @PathVariable Long tourId,
-            @AuthenticationPrincipal Jwt jwt) {
+            @AuthenticationPrincipal Jwt jwt) throws AccessDeniedException {
         return ResponseEntity.ok(tourService.getTour(jwt.getSubject(), tourId));
     }
 
@@ -50,27 +56,36 @@ public class TourController {
     public ResponseEntity<TourResponse> updateTour(
             @PathVariable Long tourId,
             @Valid @RequestBody TourCreateRequest request,
-            @AuthenticationPrincipal Jwt jwt) {
+            @AuthenticationPrincipal Jwt jwt) throws AccessDeniedException {
         return ResponseEntity.ok(tourService.updateTour(jwt.getSubject(), tourId, request));
     }
 
     @DeleteMapping("/{tourId}")
     public ResponseEntity<Void> deleteTour(
             @PathVariable Long tourId,
-            @AuthenticationPrincipal Jwt jwt) {
+            @AuthenticationPrincipal Jwt jwt) throws AccessDeniedException {
         tourService.deleteTour(jwt.getSubject(), tourId);
         return ResponseEntity.noContent().build();
     }
 
     // TODO: Implement export
-    @GetMapping
-    public ResponseEntity<Resource> exportTours() {
-        return ResponseEntity.noContent().build();
+    @GetMapping("/export")
+    public ResponseEntity<Resource> exportTours(
+            @RequestParam(defaultValue = "json") String format,
+            @AuthenticationPrincipal Jwt jwt) {
+        ExportResult result = tourService.exportTours(jwt.getSubject(), format);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"tours." + format + "\"")
+                .contentType(result.mediaType())
+                .body((Resource) result.resource());
     }
 
     // TODO: Implement import
-    public ResponseEntity<Resource> importTours() {
-        return ResponseEntity.noContent().build();
+    @PostMapping(value="/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ImportSummary> importTours(
+            @RequestParam("file")MultipartFile file,
+            @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(tourService.importTours(jwt.getSubject(), file));
     }
 
 }

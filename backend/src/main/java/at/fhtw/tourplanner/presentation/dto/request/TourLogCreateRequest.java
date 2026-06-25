@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record TourLogCreateRequest (
-        @NotNull LocalDateTime datetime,
+        @NotNull LocalDateTime dateTime,
         String comment,
         @Min(1) @Max(5) Integer difficulty,
         @Positive Double totalDistance,
