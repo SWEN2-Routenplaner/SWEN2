@@ -48,6 +48,14 @@
           <span>{{tourLog.totalDistance}} km</span>
         </div>
         <div class="field">
+          <label>Child-Friendly</label>
+          @if(tourLog.totalDistance < 5 && tourLog.difficulty === Difficulty.Easy && tourLog.totalTime < 120) {
+            <span>Yes</span>
+          } @else {
+            <span>No</span>
+          }
+        </div>
+        <div class="field">
           <label>Description</label>
           <span>{{tourLog.comment}}</span>
         </div>

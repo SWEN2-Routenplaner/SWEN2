@@ -5,6 +5,7 @@
          (click)="selectTour(tour.id)">
       <div class="actions-row">
         <span><strong class="tour-name">{{tour.name}}</strong></span>
+        <span>{{calculatePopularity(tour.id)}}</span>
         <!-- display mode -->
         @if(tour.transportMode === 'bike'){
           <img src="icons/bicycle.png" alt="" height="18" width="18"/>
