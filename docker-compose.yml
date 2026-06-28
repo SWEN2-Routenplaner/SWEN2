@@ -50,7 +50,7 @@ services:
       - ./authentik/media:/media
       - ./authentik/custom-templates:/templates
       - ./authentik/config.yml:/etc/authentik/config.yml
-      - ./authentik/blueprints:/blueprints
+      - ./authentik/blueprints:/blueprints/custom
     env_file:
       - .env
     ports:
@@ -78,7 +78,7 @@ services:
       - ./authentik/certs:/certs
       - ./authentik/custom-templates:/templates
       - ./authentik/config.yml:/etc/authentik/config.yml
-      - ./authentik/blueprints:/blueprints
+      - ./authentik/blueprints:/blueprints/custom
     env_file:
       - .env
     depends_on:

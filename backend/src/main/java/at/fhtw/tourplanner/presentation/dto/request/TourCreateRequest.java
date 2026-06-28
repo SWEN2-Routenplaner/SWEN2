@@ -9,8 +9,6 @@ public record TourCreateRequest(
         String description,
         @NotBlank String from,
         @NotBlank String to,
-        @NotNull TransportType transportType,
-        Double distance,
-        Long estimatedDuration
+        @NotNull TransportType transportType
 ) {
 }
