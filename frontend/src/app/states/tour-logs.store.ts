@@ -63,8 +63,8 @@ export class TourLogsStore {
         date: new Date('2026-03-22'),
         comment: 'Perfect weather conditions. Trail was well maintained.',
         difficulty: Difficulty.Easy,
-        totalDistance: 12.5,
-        totalTime: 210,
+        totalDistance: 4.0,
+        totalTime: 100,
         rating: Rating.EXCELLENT
       },
       {

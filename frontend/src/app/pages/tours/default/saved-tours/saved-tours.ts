@@ -10,6 +10,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {DatePipe} from '@angular/common';
 
+
+
 @Component({
   selector: 'app-saved-tours',
   imports: [
@@ -95,5 +97,22 @@ export class SavedToursComponent {
     if (confirm('Are you sure you want to delete this tour log?')) {
       this.tourLogsStore.deleteTourLog(logId);
     }
+  }
+  //Calculates popularity of a tour based on the number of logs associated with it
+  calculatePopularity(tourId: number): string {
+    const logs = this.tourLogsStore.getLogsByTourId(tourId);
+    if(logs.length === 0) {
+      return "No logs yet";
+    }
+    if(logs.length < 3) {
+      return "Not very popular";
+    }
+    if(logs.length < 5) {
+      return "Somewhat popular";
+    }
+    if(logs.length < 10) {
+      return "Popular";
+    }
+    return "Very popular";
   }
 }

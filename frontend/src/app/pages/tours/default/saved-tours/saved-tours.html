@@ -20,6 +20,9 @@
           <span class="tour-name">{{tour.name}}</span>
         </mat-panel-title>
 
+        <mat-panel-description>
+          <span>Popularity: {{calculatePopularity(tour.id)}}</span>
+        </mat-panel-description>
         <!-- Kebab Menu replacing Arrow Chevron -->
         <div class="header-menu-container">
           <button mat-icon-button 
@@ -40,6 +43,7 @@
               <span>Delete</span>
             </button>
           </mat-menu>
+
         </div>
       </mat-expansion-panel-header>
 
