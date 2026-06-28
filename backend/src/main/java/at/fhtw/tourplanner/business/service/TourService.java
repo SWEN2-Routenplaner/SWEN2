@@ -1,6 +1,8 @@
 package at.fhtw.tourplanner.business.service;
 
 import at.fhtw.tourplanner.dataaccess.entity.TourEntity;
+import at.fhtw.tourplanner.dataaccess.entity.TourLogEntity;
+import at.fhtw.tourplanner.dataaccess.repository.TourLogRepository;
 import at.fhtw.tourplanner.dataaccess.repository.TourRepository;
 import at.fhtw.tourplanner.exception.ResourceNotFoundException;
 import at.fhtw.tourplanner.presentation.dto.request.TourCreateRequest;
@@ -23,6 +25,7 @@ public class TourService {
 
     private final TourRepository tourRepository;
     private final RouteService routeService;
+    private final TourLogRepository tourLogRepository;
 
     public List<TourResponse> listTours(String owner, String query) {
         log.debug("Listing tours for owner '{}' (query='{}')", owner, query);
@@ -88,11 +91,13 @@ public class TourService {
     public ExportResult exportTours(String owner, String format) {
         log.info("Exporting tours for owner '{}' as '{}'", owner, format);
         List<TourEntity> tours = tourRepository.findAllByOwner(owner);
-        return tourImportExportService.export(tours, format);
+        List<TourLogEntity> tourLogs = tourLogRepository.searchByOwner(owner, "");
+        return tourImportExportService.export(tours, tourLogs, format);
     }
+
     public ImportSummary importTours(String owner, MultipartFile file) {
         log.info("Importing tours for owner '{}' from file '{}'", owner, file.getOriginalFilename());
-        return tourImportExportService.importFile(owner, file, tourRepository);
+        return tourImportExportService.importFile(owner, file); // TODO: Implement; Should call the functions for saving in tourRepository and tourLogRepository
     }
 
 

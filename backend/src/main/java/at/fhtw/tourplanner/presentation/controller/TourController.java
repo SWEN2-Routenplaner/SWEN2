@@ -31,8 +31,8 @@ public class TourController {
     @GetMapping
     public ResponseEntity<List<TourResponse>> listTours(
             @RequestParam(required = false) String query,
-            @AuthenticationPrincipal Jwt jwt){
-        String owner = jwt.getSubject();
+            @AuthenticationPrincipal OidcUser principal){
+        String owner = principal.getSubject();
         return ResponseEntity.ok(tourService.listTours(owner,query));
     }
 
