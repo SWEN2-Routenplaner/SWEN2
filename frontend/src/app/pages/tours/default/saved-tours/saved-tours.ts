@@ -10,8 +10,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {DatePipe} from '@angular/common';
 
-
-
 @Component({
   selector: 'app-saved-tours',
   imports: [
