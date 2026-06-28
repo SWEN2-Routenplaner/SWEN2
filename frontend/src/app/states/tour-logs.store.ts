@@ -60,6 +60,7 @@ export class TourLogsStore {
         this.errorState.set('Failed to load tour log');
         this.loading.set(false);
         console.error(err);
+
       }
     });
     // then return from up-to-date local state
