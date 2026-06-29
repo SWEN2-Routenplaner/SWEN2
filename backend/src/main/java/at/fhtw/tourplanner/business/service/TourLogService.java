@@ -42,24 +42,22 @@ public class TourLogService {
         return toResponse(saved);
     }
 
-    public TourLogResponse getLog(String owner, Long tourId, Long logId) {
-        log.debug("Fetching log id={} for tour id={} (owner '{}')", logId, tourId, owner);
-        verifyTourExists(tourId);
-        return toResponse(findLog(tourId, logId));
+    public TourLogResponse getLog(String owner, Long logId) {
+        TourLogEntity entity = findLogById(logId);
+        log.debug("Fetching log id={} for tour id={} (owner '{}')", logId, entity.getTour().getId(), owner);
+        return toResponse(entity);
     }
 
-    public TourLogResponse updateLog(String owner, Long tourId, Long logId, @Valid TourLogCreateRequest request) {
-        log.info("Updating log id={} for tour id={} (owner '{}')", logId, tourId, owner);
-        verifyTourExists(tourId);
-        TourLogEntity existing = findLog(tourId, logId);
+    public TourLogResponse updateLog(String owner, Long logId, @Valid TourLogCreateRequest request) {
+        TourLogEntity existing = findLogById(logId);
+        log.info("Updating log id={} for tour id={} (owner '{}')", logId, existing.getTour().getId(), owner);
         applyRequest(existing, request);
         return toResponse(tourLogRepository.save(existing));
     }
 
-    public void deleteLog(String owner, Long tourId, Long logId) {
-        log.info("Deleting log id={} for tour id={} (owner '{}')", logId, tourId, owner);
-        verifyTourExists(tourId);
-        TourLogEntity entity = findLog(tourId, logId);
+    public void deleteLog(String owner, Long logId) {
+        TourLogEntity entity = findLogById(logId);
+        log.info("Deleting log id={} for tour id={} (owner '{}')", logId, entity.getTour().getId(), owner);
         tourLogRepository.deleteById(entity.getId());
     }
 
@@ -78,7 +76,14 @@ public class TourLogService {
         }
     }
 
-    // TODO: consider removing the tourId since logId is unique
+    private TourLogEntity findLogById(Long logId) {
+        return tourLogRepository.findById(logId)
+                .orElseThrow(() -> {
+                    log.warn("TourLog not found with id={}", logId);
+                    return new ResourceNotFoundException("TourLog not found with id: " + logId);
+                });
+    }
+
     private TourLogEntity findLog(Long tourId, Long logId) {
         return tourLogRepository.findByIdAndTourId(logId, tourId)
                 .orElseThrow(() -> {
@@ -107,6 +112,7 @@ public class TourLogService {
     private TourLogResponse toResponse(TourLogEntity entity) {
         return new TourLogResponse(
                 entity.getId(),
+                entity.getTour().getId(),
                 entity.getDateTime(),
                 entity.getComment(),
                 entity.getDifficulty(),

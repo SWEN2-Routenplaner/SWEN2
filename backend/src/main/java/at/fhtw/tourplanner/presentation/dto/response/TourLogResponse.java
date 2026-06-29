@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record TourLogResponse(
         Long id,
+        Long tourId,
         LocalDateTime dateTime,
         String comment,
         Integer difficulty,

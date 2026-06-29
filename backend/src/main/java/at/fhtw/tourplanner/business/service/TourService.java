@@ -12,8 +12,11 @@ import at.fhtw.tourplanner.presentation.dto.response.TourResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -26,6 +29,7 @@ public class TourService {
     private final TourRepository tourRepository;
     private final RouteService routeService;
     private final TourLogRepository tourLogRepository;
+    private final ImageStorageService imageStorageService;
 
     public List<TourResponse> listTours(String owner, String query) {
         log.debug("Listing tours for owner '{}' (query='{}')", owner, query);
@@ -83,6 +87,35 @@ public class TourService {
         TourEntity tour = findAndVerifyOwner(owner, tourId);
         tourRepository.deleteById(tour.getId());
     }
+
+    public TourResponse uploadImage(String owner, Long tourId, MultipartFile file) throws AccessDeniedException {
+        log.info("Uploading image for tour id={} (owner '{}')", tourId, owner);
+        TourEntity tour = findAndVerifyOwner(owner, tourId);
+
+        String previousImage = tour.getImagePath();
+        String storedFileName = imageStorageService.store(tourId, file);
+        tour.setImagePath(storedFileName);
+        TourEntity saved = tourRepository.save(tour);
+
+        // remove the replaced image so we don't leave orphans on the filesystem
+        if (previousImage != null && !previousImage.equals(storedFileName)) {
+            imageStorageService.delete(previousImage);
+        }
+        return toResponse(saved);
+    }
+
+    public ImageResource getImage(String owner, Long tourId) throws AccessDeniedException {
+        TourEntity tour = findAndVerifyOwner(owner, tourId);
+        String imagePath = tour.getImagePath();
+        if (imagePath == null || imagePath.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tour has no image");
+        }
+        Resource resource = imageStorageService.load(imagePath);
+        String contentType = imageStorageService.probeContentType(imagePath);
+        return new ImageResource(resource, contentType);
+    }
+
+    public record ImageResource(Resource resource, String contentType) {}
 
     // TODO: implement TourImportExportService
     TourImportExportService tourImportExportService;

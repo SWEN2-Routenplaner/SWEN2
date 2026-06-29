@@ -46,6 +46,7 @@ public class SearchService {
     private TourLogResponse toResponse(TourLogEntity entity) {
         return new TourLogResponse(
                 entity.getId(),
+                entity.getTour().getId(),
                 entity.getDateTime(),
                 entity.getComment(),
                 entity.getDifficulty(),
