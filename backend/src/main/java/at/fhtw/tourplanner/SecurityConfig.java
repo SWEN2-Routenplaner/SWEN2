@@ -31,6 +31,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.RestClient;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.jwt.JwtDecoderFactory;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.client.oidc.authentication.OidcIdTokenValidator;
 import java.util.Arrays;
 
 @Configuration
@@ -90,6 +94,24 @@ public class SecurityConfig {
         
         client.setRestClient(restClient);
         return client;
+    }
+
+    @Bean
+    public JwtDecoderFactory<ClientRegistration> jwtDecoderFactory() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(10000); // 10 seconds
+        requestFactory.setReadTimeout(10000);    // 10 seconds
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        
+        return clientRegistration -> {
+            String jwkSetUri = clientRegistration.getProviderDetails().getJwkSetUri();
+            NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+                    .restOperations(restTemplate)
+                    .build();
+            
+            jwtDecoder.setJwtValidator(new OidcIdTokenValidator(clientRegistration));
+            return jwtDecoder;
+        };
     }
 
     @Bean
