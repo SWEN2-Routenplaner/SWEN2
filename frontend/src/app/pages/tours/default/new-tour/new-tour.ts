@@ -1,16 +1,23 @@
-import {Component, computed, inject} from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
-import {signal} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Component, computed, inject, signal} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {TransportMode} from '../../../../models/tour.model';
 import {ToursStore} from '../../../../states/tours.store';
+import {ActiveTourStore} from '../../../../states/active-tour-store';
+import {Router} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-new-tour',
   imports: [
-    NgOptimizedImage,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './new-tour.html',
   styleUrl: './new-tour.css',
@@ -18,17 +25,20 @@ import {ToursStore} from '../../../../states/tours.store';
 })
 export class NewTourComponent {
   toursStore = inject(ToursStore)
+  activeTourStore = inject(ActiveTourStore)
+  router = inject(Router)
 
   message = signal('');
-  expanded = signal(false);
+  saving = signal(false);
+  saveSuccess = signal(false);
   selectedMode = signal<TransportMode>(null);
   intermediateStops = signal<string[]>([]);
 
   tourForm = new FormGroup({
-    from: new FormControl(''),
-    to: new FormControl(''),
-    transportMode: new FormControl(''),
-    name: new FormControl(''),
+    from: new FormControl('', {validators: [Validators.required], nonNullable: true}),
+    to: new FormControl('', {validators: [Validators.required], nonNullable: true}),
+    transportMode: new FormControl<string | null>('', {validators: [Validators.required], nonNullable: true}),
+    name: new FormControl('', {validators: [Validators.required], nonNullable: true}),
     description: new FormControl(''),
   })
 
@@ -36,21 +46,22 @@ export class NewTourComponent {
 
   // activates save button if all necessary fields are filled
   validInput = computed(()=> {
-    // need to be defined for validInput to be reactive on new inputs
     const form = this.formValue();
     const mode = this.selectedMode();
 
-    if (form.from && form.to && mode) {
+    if (form.from && form.to && mode && form.name) {
       return true;
     }
     return false;
   })
 
   addStop(): void {
+    if (this.saving() || this.saveSuccess()) return;
     this.intermediateStops.update(stops => [...stops, '']);
   }
 
   removeStop(index: number): void {
+    if (this.saving() || this.saveSuccess()) return;
     this.intermediateStops.update(stops => stops.filter((_, i) => i !== index));
   }
 
@@ -60,21 +71,20 @@ export class NewTourComponent {
   }
 
   toggleTransportMode(mode: TransportMode): void {
+    if (this.saving() || this.saveSuccess()) return;
     // unselect if already selected
     if(this.selectedMode() === mode){
       this.selectedMode.set(null);
+      this.tourForm.patchValue({transportMode: null});
     }else{
       this.selectedMode.set(mode);
       this.tourForm.patchValue({transportMode: mode});
     }
   }
 
-  toggleExpanded(): void {
-    this.expanded.update(expanded => !expanded);
-  }
-
   saveTour(): void {
-    if(this.validInput()){
+    if(this.validInput() && !this.saving() && !this.saveSuccess()){
+      this.saving.set(true);
       const rawData = this.tourForm.getRawValue();
       // remove html tags and trim whitespaces
       const sanitize = (value: string) => value
@@ -94,15 +104,22 @@ export class NewTourComponent {
       }
 
       this.toursStore.addTour(tour)
+      this.activeTourStore.activeTour.set(tour);
 
-      this.tourForm.reset();
-
-      this.selectedMode.set(null);
-      this.intermediateStops.set([]);
-      this.expanded.set(false);
-      this.message.set('Tour saved!');
-    }else{
-      this.message.set('Fill in all fields!');
+      setTimeout(() => {
+        this.saving.set(false);
+        this.saveSuccess.set(true);
+        setTimeout(() => {
+          this.tourForm.reset();
+          this.selectedMode.set(null);
+          this.intermediateStops.set([]);
+          this.router.navigate(['/']);
+        }, 800);
+      }, 600);
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -1,7 +1,6 @@
 <div class="saved-tour-logs">
   <div class="buttons">
     <button (click)="newTourLog()">New</button>
-    <button (click)="back()">Back</button>
   </div>
   <div class="horizontal-divider"></div>
   @for (tourLog of getTourLogs(); track tourLog.id) {

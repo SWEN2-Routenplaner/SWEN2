@@ -1,30 +1,97 @@
-import {AfterViewInit, Component, HostListener, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, HostListener, signal, ViewChild, inject, effect} from '@angular/core';
 import {MapComponent} from '../../components/map/map';
-import {RouterOutlet} from '@angular/router';
+import {RouterOutlet, Router, RouterLink} from '@angular/router';
 import {MatCard} from '@angular/material/card';
 import {IonContent, IonModal} from '@ionic/angular/standalone';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {ActiveTourStore} from '../../states/active-tour-store';
 
 @Component({
   selector: 'app-tours',
-  imports: [MapComponent, RouterOutlet, MatCard, IonModal, IonContent],
+  imports: [MapComponent, RouterOutlet, MatCard, IonModal, IonContent, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './tours.html',
   styleUrl: './tours.css',
   standalone: true
 })
 export class ToursPage implements AfterViewInit {
+  router = inject(Router);
+  activeTourStore = inject(ActiveTourStore);
   @ViewChild(IonModal) modal!: IonModal;
   isModalOpen = signal(false);
 
-  readonly breakpoints = [0.02, 0.3, 0.95];
+  constructor() {
+    effect(() => {
+      const active = this.activeTourStore.activeTour();
+      if (active && window.innerWidth <= 768) {
+        this.expandModalFully();
+      }
+    });
+  }
+
+  isDefaultRoute(): boolean {
+    return this.router.url === '/' || this.router.url === '';
+  }
+
+  goBack(): void {
+    window.history.back();
+  }
+
+  getSidebarTitle(): string {
+    const url = this.router.url;
+    if (url === '/' || url === '') {
+      return 'Tours';
+    }
+    if (url.includes('/create')) {
+      return url.includes('/tourlogs') ? 'Create Log' : 'Create Tour';
+    }
+    if (url.includes('/edit/')) {
+      return url.includes('/tourlogs') ? 'Edit Log' : 'Edit Tour';
+    }
+    if (url.includes('/tourlogs')) {
+      return 'Tour Logs';
+    }
+    return 'Tourplanner';
+  }
+
+  breakpoints = [0.02, 0.3, 0.925];
   readonly initialBreakpoint = this.breakpoints[0];
+
+  updateBreakpoints() {
+    const h = window.innerHeight;
+    // Searchbar is 40px high and has 10px top margin (bottom is at 50px).
+    // Adjust to h - 50 to make the gap visually match the top margin.
+    const maxB = h > 0 ? (h - 50) / h : 0.925;
+    this.breakpoints = [0.02, 0.3, parseFloat(maxB.toFixed(3))];
+    
+    const el = (this.modal as any)?.el || (this.modal as any)?.nativeElement || this.modal;
+    if (el) {
+      el.breakpoints = this.breakpoints;
+      if (el.breakpointsChanged) {
+        el.breakpointsChanged(this.breakpoints);
+      }
+    }
+  }
 
   @HostListener('window:resize')
   onResize() {
-    if (window.innerWidth > 768) this.isModalOpen.set(false); else this.isModalOpen.set(true);
+    if (window.innerWidth > 768) {
+      if (this.isModalOpen()) {
+        this.isModalOpen.set(false);
+        const el = (this.modal as any)?.el || (this.modal as any)?.nativeElement || this.modal;
+        if (el && typeof el.dismiss === 'function') {
+          el.dismiss();
+        }
+      }
+    } else {
+      this.updateBreakpoints();
+      this.isModalOpen.set(true);
+    }
   }
 
   ngAfterViewInit() {
     if (window.innerWidth <= 768) {
+      this.updateBreakpoints();
       this.forceInitAndOpen();
     }
   }
@@ -54,12 +121,24 @@ export class ToursPage implements AfterViewInit {
   }
 
   toggleBreakpoint() {
-    this.modal.getCurrentBreakpoint().then(current => {
-      if (current && current <= this.breakpoints[0]) {
-        this.modal.setCurrentBreakpoint(this.breakpoints[1]);
-      } else {
-        this.modal.setCurrentBreakpoint(this.breakpoints[0]);
-      }
-    });
+    const el = (this.modal as any)?.el || (this.modal as any)?.nativeElement || this.modal;
+    if (el && typeof el.getCurrentBreakpoint === 'function') {
+      el.getCurrentBreakpoint().then((current: number | undefined) => {
+        // If collapsed or undefined, expand it; otherwise, collapse it
+        if (current === undefined || current <= this.breakpoints[0] + 0.01) {
+          el.setCurrentBreakpoint(this.breakpoints[1]);
+        } else {
+          el.setCurrentBreakpoint(this.breakpoints[0]);
+        }
+      });
+    }
+  }
+
+  expandModalFully() {
+    const el = (this.modal as any)?.el || (this.modal as any)?.nativeElement || this.modal;
+    if (el && typeof el.setCurrentBreakpoint === 'function') {
+      el.setCurrentBreakpoint(this.breakpoints[2]);
+    }
   }
 }
+

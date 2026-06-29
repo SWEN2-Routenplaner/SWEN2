@@ -1,6 +1,20 @@
 <div class="tours-layout">
 
   <mat-card class="tours-sidebar desktop-only">
+    <div class="sidebar-header">
+      @if (!isDefaultRoute()) {
+        <button class="btn-back" (click)="goBack()" title="Back">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
+      <h2 class="sidebar-title">{{ getSidebarTitle() }}</h2>
+      @if (isDefaultRoute()) {
+        <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+    </div>
+
     <div class="sidebar-scroll-container">
       <router-outlet></router-outlet>
     </div>
@@ -14,10 +28,11 @@
 </div>
 
 <ion-modal
+  class="mobile-only"
   [isOpen]="isModalOpen()"
   [breakpoints]="breakpoints"
   [initialBreakpoint]="initialBreakpoint"
-  [handle]="true"
+  [handle]="false"
   [expandToScroll]="false"
   [showBackdrop]="false"
   [backdropDismiss]="false"
@@ -26,11 +41,31 @@
   (ionModalDidDismiss)="handleModalDismiss()"
 >
   <ng-template>
-    <div (click)="toggleBreakpoint()" style="height: 16px; background: white; flex-shrink: 0; border-radius: 25px 25px 0 0; cursor: pointer;"></div>
+    <!-- Custom Drag handle (clickable) -->
+    <div (click)="toggleBreakpoint()" class="custom-drag-handle">
+      <div class="custom-handle-pill"></div>
+    </div>
+    
+    <!-- Mobile header -->
+    <div class="sidebar-header">
+      @if (!isDefaultRoute()) {
+        <button class="btn-back" (click)="goBack()" title="Back">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
+      <h2 class="sidebar-title">{{ getSidebarTitle() }}</h2>
+      @if (isDefaultRoute()) {
+        <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+    </div>
+
     <ion-content>
       <div class="router-wrapper">
         <router-outlet></router-outlet>
       </div>
+
     </ion-content>
   </ng-template>
 </ion-modal>

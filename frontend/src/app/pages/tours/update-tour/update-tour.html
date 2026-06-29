@@ -1,109 +1,136 @@
 <div class="update-tour" [formGroup]="tourForm">
-  <div class="control-section">
-    <button class="btn btn-back"
-            (click)="back()">
-      <!-- Back icon -->
-      <strong>Back</strong>
-    </button>
-  </div>
-  <div class="field">
-    <label>From</label>
-    <input type="text" formControlName="from" placeholder="Start location"
-           [class.error]="errors().includes( 'from')"
-           [class.correct]="corrects().includes( 'from')"/>
-  </div>
+  
+  <!-- Tour Name -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Tour Name</mat-label>
+    <input matInput formControlName="name" placeholder="Enter tour name" />
+    @if (tourForm.controls.name.touched && tourForm.controls.name.invalid) {
+      <mat-error>Tour name is required</mat-error>
+    }
+  </mat-form-field>
 
-  <!-- $index tracks the index of each row (if removed)-->
-  @for (stops of getStops().controls; track $index) {
-    <div class="field stop-field">
-      <label>Stop {{ $index + 1 }}</label>
-      <input type="text"
-             [formControl]="getStops().controls[$index]"
-             [class.error]="errors().includes('stop-' + $index)"
-             [class.correct]="corrects().includes('stop-' + $index)"
-             placeholder="Intermediate stop" />
-      <button class="btn btn-remove-stop" title="Remove stop" (click)="removeStop($index)">
-        <img src="icons/minus.png" alt="" height="18" width="18" />
-      </button>
-    </div>
-  }
+  <!-- Tour Description -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Tour Description</mat-label>
+    <textarea matInput formControlName="description" rows="3" placeholder="Enter tour description"></textarea>
+  </mat-form-field>
+  
+  <!-- From Field -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>From</mat-label>
+    <input matInput formControlName="from" placeholder="Start location" />
+    @if (tourForm.controls.from.touched && tourForm.controls.from.invalid) {
+      <mat-error>Start location is required</mat-error>
+    }
+  </mat-form-field>
 
-  <div class="field">
-    <label>To</label>
-    <input type="text" formControlName="to" placeholder="End location"
-           [class.error]="errors().includes( 'to')"
-           [class.correct]="corrects().includes( 'to')"/>
-  </div>
-
-  <div class="extra-fields">
-    <div class="field">
-      <label>Tour Name</label>
-      <input type="text" formControlName="name" placeholder="Enter tour name"
-             [class.error]="errors().includes( 'name')"
-             [class.correct]="corrects().includes( 'name')"/>
-    </div>
-    <div class="field">
-      <label>Tour Description</label>
-      <textarea formControlName="description" rows="3" placeholder="Enter tour description"
-                [class.correct]="corrects().includes( 'description')">
-      </textarea>
-    </div>
+  <!-- Intermediate Stops List -->
+  <div class="stops-container">
+    @if (getStops().controls.length > 0) {
+      <span class="stops-section-title">Stops</span>
+    }
+    
+    @for (stops of getStops().controls; track $index) {
+      <div class="stop-row">
+        <mat-form-field appearance="outline" class="stop-form-field">
+          <mat-label>Stop {{ $index + 1 }}</mat-label>
+          <input matInput [formControl]="getStops().controls[$index]" placeholder="Intermediate stop" />
+          @if (getStops().controls[$index].touched && getStops().controls[$index].invalid) {
+            <mat-error>Stop location is required</mat-error>
+          }
+        </mat-form-field>
+        
+        <button mat-icon-button class="btn-remove-stop" type="button" title="Remove stop" (click)="removeStop($index)">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+      </div>
+    }
   </div>
 
-  <div class="actions-row">
-    <div class="transport-buttons">
-      <button class="btn" title="Add waypoint" (click)="addStop()">
-        <!-- Plus icon -->
-        <img src="icons/plus.png" alt="" height="18" width="18" />
-      </button>
+  <!-- To Field -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>To</mat-label>
+    <input matInput formControlName="to" placeholder="End location" />
+    @if (tourForm.controls.to.touched && tourForm.controls.to.invalid) {
+      <mat-error>End location is required</mat-error>
+    }
+  </mat-form-field>
 
-      <button class="btn" title="Bike"
-              (click)="toggleTransportMode('bike')"
-              [class.active]="selectedMode() === 'bike'"
-              [class.error]="errors().includes( 'transportMode')"
-              [class.correct]="corrects().includes( 'transportMode')">
-        <!-- Bike icon -->
-        <img src="icons/bicycle.png" alt="" height="18" width="18"/>
-      </button>
-
-      <button class="btn" title="Car"
-              (click)="toggleTransportMode('car')"
-              [class.active]="selectedMode() === 'car'"
-              [class.error]="errors().includes( 'transportMode')"
-              [class.correct]="corrects().includes( 'transportMode')">
-        <!-- Car icon -->
-        <img src="icons/car.png" alt="" height="18" width="18"/>
-      </button>
-
-      <button class="btn" title="Walking"
+  <!-- Transport Mode Selection Grid -->
+  <div class="transport-section">
+    <span class="section-label">Transport Mode</span>
+    <div class="transport-buttons-row">
+      <button class="transport-btn" type="button" title="Walking"
               (click)="toggleTransportMode('walk')"
               [class.active]="selectedMode() === 'walk'"
-              [class.error]="errors().includes( 'transportMode')"
-              [class.correct]="corrects().includes( 'transportMode')">
-        <!-- Walking icon -->
-        <img src="icons/walker.png" alt="" height="18" width="18"/>
-      </button>
-    </div>
-
-
-    <div class="action-buttons">
-      <!-- Message -->
-      @if (message()) {
-        <span class="message">{{ message() }}</span>
-      }
-
-      <button class="btn btn-save"
-              (click)="saveTour()"
-              [class.disabled]="!tourForm.valid"
-              [class.enabled]="tourForm.valid">
-        <!-- Save icon -->
-        <img src="icons/save.png" alt="" height="18" width="18" />
+              aria-label="Walk">
+        <mat-icon>directions_walk</mat-icon>
+        <span>Walk</span>
       </button>
 
-      <button class="btn btn-delete"
-              (click)="deleteTour()">
-        <img src="icons/delete.png" alt="" height="18" width="18" />
+      <button class="transport-btn" type="button" title="Bike"
+              (click)="toggleTransportMode('bike')"
+              [class.active]="selectedMode() === 'bike'"
+              aria-label="Bike">
+        <mat-icon>directions_bike</mat-icon>
+        <span>Bike</span>
+      </button>
+
+      <button class="transport-btn" type="button" title="Car"
+              (click)="toggleTransportMode('car')"
+              [class.active]="selectedMode() === 'car'"
+              aria-label="Car">
+        <mat-icon>directions_car</mat-icon>
+        <span>Car</span>
       </button>
     </div>
   </div>
+
+  <!-- Form Actions: Waypoint, Save, Delete -->
+  <div class="form-actions-row">
+    <button mat-stroked-button class="btn-action-outline" type="button" (click)="addStop()" [disabled]="saving() || saveSuccess()" title="Add stop">
+      <mat-icon>add</mat-icon>
+      <span>Add Stop</span>
+    </button>
+    
+    <div class="actions-right">
+      @if (confirmDelete()) {
+        <div class="delete-confirm-panel">
+          <span class="confirm-text">Are you sure you want to delete this tour?</span>
+          <div class="confirm-buttons">
+            <button mat-flat-button class="btn-confirm-yes" type="button" (click)="deleteTour()">Yes, Delete</button>
+            <button mat-stroked-button class="btn-confirm-no" type="button" (click)="cancelDelete()">Cancel</button>
+          </div>
+        </div>
+      } @else {
+        <button mat-stroked-button class="btn-delete-large"
+                type="button"
+                (click)="triggerDelete()"
+                [disabled]="saving() || saveSuccess()"
+                title="Delete tour">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+
+        <button mat-flat-button class="btn-save-large"
+                type="button"
+                (click)="saveTour()"
+                [disabled]="!tourForm.valid || saving() || saveSuccess()"
+                [class.success]="saveSuccess()"
+                title="Save changes">
+          @if (saveSuccess()) {
+            <mat-icon>check</mat-icon>
+            <span>Saved</span>
+          } @else if (saving()) {
+            <mat-icon class="spinning">hourglass_empty</mat-icon>
+            <span>Saving</span>
+          } @else {
+            <mat-icon>save</mat-icon>
+            <span>Save</span>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
 </div>
