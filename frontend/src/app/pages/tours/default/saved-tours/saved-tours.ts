@@ -30,6 +30,7 @@ export class SavedToursComponent {
   activeTourStore = inject(ActiveTourStore);
   tourLogsStore = inject(TourLogsStore);
   router = inject(Router);
+  tourLogsStore = inject(TourLogsStore);
 
   activeTourId = computed(() => this.activeTourStore.activeTour()?.id ?? null);
   tours = this.toursStore.allTours;
