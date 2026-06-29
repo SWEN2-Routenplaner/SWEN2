@@ -77,6 +77,11 @@
   .map-controls {
     bottom: calc(2vh + 20px);
   }
+  ::ng-deep .leaflet-bottom.leaflet-right {
+    left: 10px !important;
+    right: auto !important;
+    bottom: 30px !important;
+  }
 }
 
 
