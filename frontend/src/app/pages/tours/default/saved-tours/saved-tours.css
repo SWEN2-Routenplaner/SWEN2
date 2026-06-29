@@ -1,47 +1,60 @@
-.saved-tours {
+.saved-tours-accordion {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
+  padding: 0 !important;
 }
 
-.tour-item {
+.tour-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.tour-panel.mat-expanded {
+  background: transparent !important;
+}
+
+/* Disable Material expansion margins and padding to align flat with the sidebar container */
+::ng-deep .saved-tours-accordion .mat-expansion-panel {
+  margin: 0 !important;
+}
+
+::ng-deep .saved-tours-accordion .mat-expansion-panel-header {
+  padding: 0 1rem !important;
+}
+
+::ng-deep .saved-tours-accordion .mat-expansion-panel-content .mat-expansion-panel-body {
+  padding: 0 1rem !important;
+}
+
+/* Adjust title layout for icon and text alignment */
+.tour-title-layout {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  background: #f8fafc;
-  color: #334155;
-  padding: 0.5rem 0.75rem;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.tour-item:hover {
-  background: #e2e8f0;
-}
-
-.tour-item.active {
-  background-color: #e0f2fe;
-  border-color: #3b82f6;
+.transport-icon {
+  color: #64748b;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .tour-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.actions-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
 }
 
 .extra-fields {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  border-top: 1px solid #e2e8f0;
-  padding-top: 0.75rem;
+  padding: 0.25rem 0 1rem 0; /* Clean vertical spacing, flat alignment */
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 .field {
@@ -51,21 +64,21 @@
 }
 
 .field label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #475569;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .field span {
-  font-size: 0.9rem;
+  color: #000000;
 }
 
 .empty-message {
   color: #64748b;
   font-size: 0.9rem;
-  padding: 0.5rem;
+  padding: 1rem 0;
 }
 
 .buttons {
@@ -73,16 +86,289 @@
   flex-direction: row;
   justify-content: flex-start;
   gap: 10px;
+  margin-top: 0.25rem;
 }
 
-.buttons button{
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+/* Align the kebab menu container to the right */
+.header-menu-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.kebab-button {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  color: #64748b !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.kebab-button:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  color: #1e293b !important;
+}
+
+.kebab-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+/* --- Tour Logs Expandable Panel Styles --- */
+
+.logs-expansion-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-top: 1.5rem !important;
+  border-top: 1px dashed #cbd5e1 !important;
+  border-radius: 0 !important;
+}
+
+/* Ensure the header expands full-width and is borderless */
+::ng-deep .extra-fields .logs-expansion-panel .mat-expansion-panel-header {
+  padding: 0.75rem 0 !important;
+  height: auto !important;
+  background: transparent !important;
+}
+
+::ng-deep .extra-fields .logs-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
+  padding: 0.5rem 0 0 0 !important;
+}
+
+.logs-expansion-title-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logs-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   cursor: pointer;
 }
 
-.buttons button:hover{
-  background: #e2e8f0;
+.logs-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.expand-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  color: #64748b;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logs-expansion-panel.mat-expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.add-log-button {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  color: #475569 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-log-button:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  cursor: pointer;
+}
+
+.add-log-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.logs-accordion {
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Individual Log Expansion Panel */
+.log-panel {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.log-panel.mat-expanded {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Override padding for nested logs expansion panel */
+::ng-deep .logs-accordion .mat-expansion-panel-header {
+  padding: 0 0.75rem !important;
+  height: 40px !important;
+}
+
+::ng-deep .logs-accordion .mat-expansion-panel-content .mat-expansion-panel-body {
+  padding: 0 0.75rem 0.75rem 0.75rem !important;
+}
+
+.log-title-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-right: 8px;
+}
+
+.log-date {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.log-metadata {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.log-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d97706; /* Nice warm rating color */
+  background: #fef3c7;
+  padding: 1px 6px;
+  border-radius: 12px;
+}
+
+.log-rating .star-icon {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+  line-height: 13px;
+  color: #d97706;
+}
+
+/* Difficulty Indicators */
+.log-difficulty {
+  display: inline-flex;
+  align-items: center;
+}
+
+.log-difficulty .difficulty-dot {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+}
+
+.log-difficulty.difficulty-easy {
+  color: #22c55e;
+}
+
+.log-difficulty.difficulty-medium {
+  color: #3b82f6;
+}
+
+.log-difficulty.difficulty-hard {
+  color: #ef4444;
+}
+
+/* Log Options Kebab */
+.log-menu-container {
+  display: flex;
+  align-items: center;
+}
+
+.log-kebab-button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  color: #64748b !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.log-kebab-button:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  color: #1e293b !important;
+  cursor: pointer;
+}
+
+.log-kebab-button mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+/* Expanded Log Details */
+.log-expanded-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+.log-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.log-field.full-width {
+  grid-column: span 2;
+}
+
+.log-field label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.log-field span {
+  font-size: 0.8rem;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.empty-logs-message {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-style: italic;
+  padding: 0.5rem 0;
+  margin: 0;
 }

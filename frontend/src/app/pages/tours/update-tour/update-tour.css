@@ -1,128 +1,358 @@
 .update-tour {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 1rem;
+  padding: 1.25rem 1rem;
 }
 
-.field {
+.full-width {
+  width: 100%;
+}
+
+/* Material form-field custom override to make it fit inside compact sidebar */
+::ng-deep .update-tour .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .update-tour .mat-mdc-text-field-wrapper {
+  background-color: #f8fafc !important; /* Premium light slate-gray */
+  border-radius: 10px !important;       /* Smooth rounded corners */
+  transition: box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+::ng-deep .update-tour .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15) !important; /* Soft slate-gray glow */
+  background-color: #ffffff !important;                       /* White on focus */
+}
+
+::ng-deep .update-tour .mdc-notched-outline__leading,
+::ng-deep .update-tour .mdc-notched-outline__notch,
+::ng-deep .update-tour .mdc-notched-outline__trailing {
+  border-color: #cbd5e1 !important; /* Border color matching theme */
+}
+
+::ng-deep .update-tour .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .update-tour .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .update-tour .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #64748b !important; /* Slate gray active borders */
+}
+
+/* Floating Label styling */
+::ng-deep .update-tour .mat-mdc-form-field .mat-mdc-floating-label {
+  color: #64748b !important;
+}
+
+::ng-deep .update-tour .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #1e293b !important;
+}
+
+/* Error States */
+::ng-deep .update-tour .mat-mdc-form-field.mat-form-field-invalid .mdc-notched-outline__leading,
+::ng-deep .update-tour .mat-mdc-form-field.mat-form-field-invalid .mdc-notched-outline__notch,
+::ng-deep .update-tour .mat-mdc-form-field.mat-form-field-invalid .mdc-notched-outline__trailing {
+  border-color: #f87171 !important; /* Soft red-coral border */
+}
+
+::ng-deep .update-tour .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-floating-label {
+  color: #ef4444 !important; /* Muted red error text */
+}
+
+/* Stops container and rows */
+.stops-container {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
 }
 
-.field label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #475569;
+.stops-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.stop-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.stop-form-field {
+  flex: 1;
+}
+
+.btn-remove-stop {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  color: #94a3b8 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  margin-top: 10px !important; /* Center with the 56px input box */
+  transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.btn-remove-stop:hover {
+  background-color: #fee2e2 !important; /* Red hover background */
+  color: #ef4444 !important;
+}
+
+.btn-remove-stop mat-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 1 !important;
+}
+
+/* Transport Mode Section */
+.transport-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.field input,
-.field textarea {
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.9rem;
-  outline: none;
-  resize: vertical;
-}
-
-.field input:focus,
-.field textarea:focus {
-  border-color: #38bdf8;
-}
-
-.actions-row {
+.transport-buttons-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.transport-buttons,
-.action-buttons{
+.transport-btn {
+  flex: 1;
   display: flex;
-  gap: 0.4rem;
-}
-
-.btn{
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  border: none;
+  border-radius: 10px;
   background: #f8fafc;
+  color: #64748b;
   cursor: pointer;
-  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.transport-btn:hover {
+  background-color: #f1f5f9;
   color: #334155;
 }
 
-.btn:hover{
-  background: #e2e8f0;
+.transport-btn.active {
+  background-color: #1e293b;
+  color: white;
 }
 
-.extra-fields {
+.transport-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.transport-btn span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Action Rows */
+.form-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+  gap: 0.75rem;
+}
+
+.actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 !important;
+}
+
+.btn-action-outline {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 40px !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  padding: 0 1rem !important;
+}
+
+.btn-action-outline:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.btn-delete-large {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 40px !important;
+  border-color: #fca5a5 !important; /* Soft red border by default */
+  color: #ef4444 !important;        /* Red icon and text by default */
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  flex: 1 !important;
+  white-space: nowrap !important;
+  padding: 0 0.75rem !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease !important;
+}
+
+.btn-delete-large:hover {
+  background-color: #fee2e2 !important; /* Soft red filled on hover */
+  border-color: #ef4444 !important;
+}
+
+.btn-save-large {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 40px !important;
+  background-color: #1e293b !important; /* Premium deep slate */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  flex: 1.2 !important;
+  white-space: nowrap !important;
+  padding: 0 0.75rem !important;
+  transition: background-color 0.2s ease, transform 0.1s ease !important;
+}
+
+.btn-save-large:not([disabled]):hover {
+  background-color: #0f172a !important; /* Darker slate */
+}
+
+.btn-save-large[disabled] {
+  opacity: 0.5 !important;
+  background-color: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+}
+
+.btn-save-large.success {
+  background-color: #10b981 !important; /* Green success */
+  color: #ffffff !important;
+}
+
+/* Spinning animation for saving state */
+.spinning {
+  animation: spin 1.5s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Delete confirmation panel layout */
+.delete-confirm-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  border-top: 1px solid #e2e8f0;
-  padding-top: 0.75rem;
+  gap: 0.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  padding: 0.75rem;
+  border-radius: 10px;
+  width: 100%;
+  animation: fadeIn 0.2s ease;
 }
 
-
-.btn.active {
-  background-color: #e0f2fe;
-  border-color: #3b82f6;
+.confirm-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #991b1b;
+  text-align: center;
 }
 
-.btn-save.disabled {
-  background-color: #FFA2A2;
-}
-
-.btn-save.enabled {
-  background-color: #7BF1A8;
-}
-
-.btn-save.enabled:hover{
-  background-color: #05DF72;
-}
-
-.btn-delete{
-  background-color: #FFA2A2;
-}
-
-.btn-delete:hover{
-  background-color: #FF7373;
-}
-
-.btn-back {
+.confirm-buttons {
   display: flex;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  background: #A2F4FD;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.btn-back:hover {
-  background: #42D3F2;
+.confirm-buttons button {
+  flex: 1;
+  height: 32px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
 }
 
-.control-section{
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.75rem;
+.btn-confirm-yes {
+  background-color: #ef4444 !important;
+  color: white !important;
 }
 
-.message{
-  font-size: 0.9rem;
-  padding: 0.5rem;
+.btn-confirm-yes:hover {
+  background-color: #dc2626 !important;
 }
 
-.error{
-  background-color: #FFC9C9;
+.btn-confirm-no {
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
 }
 
-.correct{
-  background-color: #C9FFC9;
+.btn-confirm-no:hover {
+  background-color: #f1f5f9 !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ensure text and icon inside Material button label are aligned side-by-side */
+::ng-deep .update-tour .btn-action-outline .mdc-button__label,
+::ng-deep .update-tour .btn-delete-large .mdc-button__label,
+::ng-deep .update-tour .btn-save-large .mdc-button__label {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+::ng-deep .update-tour .btn-action-outline mat-icon,
+::ng-deep .update-tour .btn-delete-large mat-icon,
+::ng-deep .update-tour .btn-save-large mat-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
 }

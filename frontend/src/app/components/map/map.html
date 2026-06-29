@@ -5,12 +5,13 @@
     <mat-icon>my_location</mat-icon>
   </button>
 
-  <mat-button-toggle-group vertical class="zoom-group">
-    <mat-button-toggle value="in" (click)="zoomIn()" aria-label="Zoom in">
+  <div class="zoom-group">
+    <button (click)="zoomIn()" aria-label="Zoom in">
       <mat-icon>add</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="out" (click)="zoomOut()" aria-label="Zoom out">
+    </button>
+    <div class="zoom-divider"></div>
+    <button (click)="zoomOut()" aria-label="Zoom out">
       <mat-icon>remove</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
+    </button>
+  </div>
 </div>

@@ -1,24 +1,37 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {ToursStore} from '../../../states/tours.store';
+import {ActiveTourStore} from '../../../states/active-tour-store';
 import {Tour, TransportMode} from '../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-update-tour',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './update-tour.html',
   styleUrl: './update-tour.css',
 })
 export class UpdateTourComponent{
   toursStore = inject(ToursStore);
+  activeTourStore = inject(ActiveTourStore);
   errors = signal<string[]>([]);
   corrects = signal<string[]>([]);
   message = signal<string>('');
   router = inject(Router);
+  saving = signal(false);
+  saveSuccess = signal(false);
+  confirmDelete = signal(false);
   id: number | null = null;
 
   tourForm = new FormGroup({
@@ -53,6 +66,7 @@ export class UpdateTourComponent{
   selectedMode = signal<string | null>('');
 
   toggleTransportMode(mode: TransportMode): void {
+    if (this.saving() || this.saveSuccess()) return;
     // unselect if already selected
     if(this.selectedMode() === mode){
       this.selectedMode.set(null);
@@ -68,27 +82,42 @@ export class UpdateTourComponent{
   }
 
   removeStop(index:number){
+    if (this.saving() || this.saveSuccess()) return;
     this.getStops().removeAt(index);
   }
 
   addStop(){
+    if (this.saving() || this.saveSuccess()) return;
     this.getStops().push(new FormControl('',{validators:[Validators.required],nonNullable: true}));
   }
 
   saveTour(){
     this.setErrorsAndCorrects();
-    if(this.tourForm.valid){
+    if(this.tourForm.valid && !this.saving() && !this.saveSuccess()){
+      this.saving.set(true);
       const tour = this.tourForm.getRawValue() as Tour;
       const id: number | null = this.id;
       if(id){
         tour.id = id;
         this.toursStore.updateTour(tour);
-        this.message.set('Tour updated successfully!');
+        
+        // Update active tour store if this was the active tour
+        const currentActive = this.activeTourStore.activeTour();
+        if (currentActive?.id === id) {
+          this.activeTourStore.activeTour.set(tour);
+        }
+
+        setTimeout(() => {
+          this.saving.set(false);
+          this.saveSuccess.set(true);
+          setTimeout(() => {
+            this.router.navigate(['']);
+          }, 800);
+        }, 600);
       }else{
         console.error("Tour not found");
+        this.saving.set(false);
       }
-    }else{
-      this.message.set('Please fill in all fields!');
     }
   }
 
@@ -129,9 +158,21 @@ export class UpdateTourComponent{
     })
   }
 
+  triggerDelete(){
+    this.confirmDelete.set(true);
+  }
+
+  cancelDelete(){
+    this.confirmDelete.set(false);
+  }
+
   deleteTour(){
     if(this.id){
-      //
+      // Clear active tour if it is deleted
+      const currentActive = this.activeTourStore.activeTour();
+      if (currentActive?.id === this.id) {
+        this.activeTourStore.activeTour.set(null);
+      }
       this.toursStore.deleteTour(this.id);
       this.router.navigate(['']);
     }

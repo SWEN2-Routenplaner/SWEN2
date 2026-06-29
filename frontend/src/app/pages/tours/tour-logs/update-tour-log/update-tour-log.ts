@@ -4,11 +4,21 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {TourLogsStore} from '../../../../states/tour-logs.store';
 import {Difficulty, Rating, TourLog} from '../../../../models/tour-log.model';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-update-tour-log',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './update-tour-log.html',
   styleUrl: './update-tour-log.css',
@@ -40,7 +50,9 @@ export class UpdateTourLogComponent {
   errors = signal<string[]>([]);
   corrects = signal<string[]>([]);
   message = signal<string>('');
-  expanded = signal(false);
+  saving = signal(false);
+  saveSuccess = signal(false);
+  confirmDelete = signal(false);
 
   tourLogForm = new FormGroup({
     difficulty: new FormControl<Difficulty | null>(null, {
@@ -98,7 +110,8 @@ export class UpdateTourLogComponent {
 
   saveTourLog(){
     this.setErrorsAndCorrects();
-    if(this.tourLogForm.valid){
+    if(this.tourLogForm.valid && !this.saving() && !this.saveSuccess()){
+      this.saving.set(true);
       const rawData = this.tourLogForm.getRawValue();
 
       const tourLog: TourLog = {
@@ -113,9 +126,15 @@ export class UpdateTourLogComponent {
             tourLog.id = this.logId;
             tourLog.tourId = this.toursId;
             tourLog.date = new Date();
-            console.log(tourLog);
             this.tourLogsStore.updateTourLog(tourLog);
-            this.message.set('Tour Log updated successfully!');
+            
+            setTimeout(() => {
+              this.saving.set(false);
+              this.saveSuccess.set(true);
+              setTimeout(() => {
+                this.router.navigate(['']);
+              }, 800);
+            }, 600);
           }
           break;
         case 'create':
@@ -124,22 +143,36 @@ export class UpdateTourLogComponent {
             tourLog.id = this.tourLogsStore.getNextId();
             tourLog.date = new Date();
             this.tourLogsStore.addTourLog(tourLog);
-            this.router.navigate(['','tourlogs', this.toursId]);
+            
+            setTimeout(() => {
+              this.saving.set(false);
+              this.saveSuccess.set(true);
+              setTimeout(() => {
+                this.router.navigate(['']);
+              }, 800);
+            }, 600);
           }
           break;
         default:
           console.error("Error! no active tour or log");
+          this.saving.set(false);
           break;
       }
-    }else{
-      this.message.set('Please fill in all fields!');
     }
+  }
+
+  triggerDelete(){
+    this.confirmDelete.set(true);
+  }
+
+  cancelDelete(){
+    this.confirmDelete.set(false);
   }
 
   deleteTourLog(){
     if(this.logId && this.toursId){
       this.tourLogsStore.deleteTourLog(this.logId);
-      this.router.navigate(['','tourlogs', this.toursId]);
+      this.router.navigate(['']);
     }
   }
 
@@ -172,15 +205,6 @@ export class UpdateTourLogComponent {
   }
 
   back(){
-    if(this.toursId){
-      this.router.navigate(['','tourlogs', this.toursId]);
-    }else{
-      console.error("Error! no active tour");
-      this.router.navigate(['']);
-    }
-  }
-
-  protected toggleExpanded() {
-    this.expanded.update(expanded => !expanded);
+    this.router.navigate(['']);
   }
 }

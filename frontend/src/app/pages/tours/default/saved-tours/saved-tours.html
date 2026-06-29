@@ -1,48 +1,156 @@
-<div class="saved-tours">
-  @for(tour of tours(); track tour.id){
-    <div class="tour-item"
-         [class.active]="activeTourId() === tour.id"
-         (click)="selectTour(tour.id)">
-      <div class="actions-row">
-        <span><strong class="tour-name">{{tour.name}}</strong></span>
-        <!-- display mode -->
-        @if(tour.transportMode === 'bike'){
-          <img src="icons/bicycle.png" alt="" height="18" width="18"/>
-        }@else if(tour.transportMode === 'car'){
-          <img src="icons/car.png" alt="" height="18" width="18"/>
-        }@else if(tour.transportMode === 'walk'){
-          <img src="icons/walker.png" alt="" height="18" width="18"/>
-        }
-      </div>
-      @if(activeTourId() === tour.id){
-        <div class="extra-fields">
-          <div class="field">
-            <label>Route</label>
-            <span>
-              {{tour.from}} →
-              @for(stop of tour.intermediateStops; track stop){
-                {{stop}} →
-              }
-              {{tour.to}}</span>
-          </div>
-          <div class="field">
-            <label>Description</label>
-            <span>
-              @if(tour.description === ''){
-                No description yet!
-              }@else{
-                {{tour.description}}
-              }
-            </span>
-          </div>
-          <div class="buttons">
-            <button (click)="editTour(tour.id)">Edit</button>
-            <button (click)="showLogs(tour.id)">Logs</button>
-          </div>
+<mat-accordion class="saved-tours-accordion" multi="false">
+  @for (tour of tours(); track tour.id) {
+    <mat-expansion-panel 
+      [expanded]="activeTourId() === tour.id"
+      (opened)="onPanelOpened(tour.id)"
+      (closed)="onPanelClosed(tour.id)"
+      hideToggle="true"
+      class="tour-panel">
+      
+      <mat-expansion-panel-header>
+        <mat-panel-title class="tour-title-layout">
+          <!-- Icon and Title -->
+          @if (tour.transportMode === 'bike') {
+            <mat-icon class="transport-icon">directions_bike</mat-icon>
+          } @else if (tour.transportMode === 'car') {
+            <mat-icon class="transport-icon">directions_car</mat-icon>
+          } @else if (tour.transportMode === 'walk') {
+            <mat-icon class="transport-icon">directions_walk</mat-icon>
+          }
+          <span class="tour-name">{{tour.name}}</span>
+        </mat-panel-title>
+
+        <!-- Kebab Menu replacing Arrow Chevron -->
+        <div class="header-menu-container">
+          <button mat-icon-button 
+                  [matMenuTriggerFor]="tourMenu" 
+                  (click)="$event.stopPropagation()"
+                  class="kebab-button"
+                  aria-label="Tour options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          
+          <mat-menu #tourMenu="matMenu">
+            <button mat-menu-item (click)="editTour(tour.id)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="deleteTour(tour.id)">
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
         </div>
-      }
-    </div>
+      </mat-expansion-panel-header>
+
+      <!-- Panel content (expanded details) -->
+      <div class="extra-fields">
+        <div class="field">
+          <label>Route</label>
+          <span>
+            {{tour.from}} →
+            @for (stop of tour.intermediateStops; track stop) {
+              {{stop}} →
+            }
+            {{tour.to}}
+          </span>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <span>
+            @if (tour.description === '') {
+              No description yet!
+            } @else {
+              {{tour.description}}
+            }
+          </span>
+        </div>
+        <!-- Tour Logs Expandable Panel -->
+        <mat-expansion-panel class="logs-expansion-panel" hideToggle="true" (click)="$event.stopPropagation()">
+          <mat-expansion-panel-header class="logs-expansion-header">
+            <mat-panel-title class="logs-expansion-title-layout">
+              <div class="logs-title-group">
+                <mat-icon class="expand-icon">expand_more</mat-icon>
+                <span class="logs-title">Logs ({{ getTourLogs(tour.id).length }})</span>
+              </div>
+              <button mat-icon-button (click)="createTourLog(tour.id, $event)" aria-label="Add log" class="add-log-button">
+                <mat-icon>add</mat-icon>
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-accordion class="logs-accordion" multi="false">
+            @for (log of getTourLogs(tour.id); track log.id) {
+              <mat-expansion-panel class="log-panel" hideToggle="true">
+                <mat-expansion-panel-header class="log-panel-header" (click)="$event.stopPropagation()">
+                  <mat-panel-title class="log-title-layout">
+                    <span class="log-date">{{ log.date | date: 'dd/MM/yyyy' }}</span>
+                    <div class="log-metadata">
+                      <!-- Star Rating -->
+                      <span class="log-rating">
+                        {{ log.rating }}<mat-icon class="star-icon">star</mat-icon>
+                      </span>
+
+                      <!-- Difficulty Dot -->
+                      <span class="log-difficulty" [class]="getDifficultyClass(log.difficulty)">
+                        <mat-icon class="difficulty-dot">fiber_manual_record</mat-icon>
+                      </span>
+                    </div>
+                  </mat-panel-title>
+
+                  <!-- Kebab Menu for Log Actions -->
+                  <div class="log-menu-container">
+                    <button mat-icon-button 
+                            [matMenuTriggerFor]="logMenu" 
+                            (click)="$event.stopPropagation()"
+                            class="log-kebab-button"
+                            aria-label="Log options">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    
+                    <mat-menu #logMenu="matMenu">
+                      <button mat-menu-item (click)="editTourLog(log.id)">
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit</span>
+                      </button>
+                      <button mat-menu-item (click)="deleteTourLog(log.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-expansion-panel-header>
+
+                <div class="log-expanded-details">
+                  <div class="log-field">
+                    <label>Duration</label>
+                    <span>{{ log.totalTime }} mins</span>
+                  </div>
+                  <div class="log-field">
+                    <label>Distance</label>
+                    <span>{{ log.totalDistance }} km</span>
+                  </div>
+                  <div class="log-field full-width">
+                    <label>Comment</label>
+                    <span>
+                      @if (log.comment === '') {
+                        No comment.
+                      } @else {
+                        {{ log.comment }}
+                      }
+                    </span>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            } @empty {
+              <p class="empty-logs-message">No logs found for this tour.</p>
+            }
+          </mat-accordion>
+        </mat-expansion-panel>
+      </div>
+
+    </mat-expansion-panel>
   } @empty {
     <p class="empty-message">No tours found.</p>
   }
-</div>
+</mat-accordion>
