@@ -1,20 +1,10 @@
-export enum Difficulty { Easy= 1, Medium =2, Hard =3 }
-
-export enum Rating {
-  POOR = 1,
-  FAIR = 2,
-  GOOD = 3,
-  VERY_GOOD = 4,
-  EXCELLENT = 5
-}
-
 export type TourLog = {
   id: number;
   tourId: number;
-  date: Date;
+  date: string;
   comment: string;
-  difficulty: Difficulty;
+  difficulty: number;
   totalDistance: number;
   totalTime: number;
-  rating: Rating;
+  rating: number;
 }

@@ -7,4 +7,6 @@ export type Tour = {
   to: string;
   name: string;
   description: string;
+  distance: number;
+  estimatedDuration: number;
 }

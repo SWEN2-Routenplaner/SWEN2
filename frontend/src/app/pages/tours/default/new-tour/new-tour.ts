@@ -83,7 +83,9 @@ export class NewTourComponent {
         transportMode: this.selectedMode(),
         name: sanitize(rawData.name || 'New Tour'),
         description: sanitize(rawData.description || ''),
-        id: this.toursStore.getNextId()
+        id: this.toursStore.getNextId(),
+        distance: 0,
+        estimatedDuration: 0,
       }
 
       this.toursStore.addTour(tour)

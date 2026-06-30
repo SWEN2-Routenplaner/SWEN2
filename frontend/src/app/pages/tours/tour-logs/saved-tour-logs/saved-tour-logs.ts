@@ -1,6 +1,5 @@
 import {Component, inject, signal} from '@angular/core';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {Difficulty, TourLog} from '../../../../models/tour-log.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 
@@ -44,8 +43,6 @@ export class SavedTourLogs {
   editTourLog(id:number){
     this.router.navigate(['', 'tourlogs', 'edit', id]);
   }
-
-  protected readonly Difficulty = Difficulty;
 
   protected newTourLog() {
     if(this.tourId){

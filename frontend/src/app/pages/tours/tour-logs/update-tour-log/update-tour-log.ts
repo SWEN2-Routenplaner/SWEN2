@@ -2,7 +2,7 @@ import {Component, inject, signal} from '@angular/core';
 import {ToursStore} from '../../../../states/tours.store';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {Difficulty, Rating, TourLog} from '../../../../models/tour-log.model';
+import {TourLog} from '../../../../models/tour-log.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -27,17 +27,17 @@ import {MatIconModule} from '@angular/material/icon';
 export class UpdateTourLogComponent {
 
   difficultyOptions = [
-    {value: Difficulty.Easy, label: 'Easy'},
-    {value: Difficulty.Medium, label: 'Medium'},
-    {value: Difficulty.Hard, label: 'Hard'},
+    {value: 1, label: 'Easy'},
+    {value: 2, label: 'Medium'},
+    {value: 3, label: 'Hard'},
   ];
 
   ratingOptions = [
-    {value: Rating.POOR, label: 'Poor'},
-    {value: Rating.FAIR, label: 'Fair'},
-    {value: Rating.GOOD, label: 'Good'},
-    {value: Rating.VERY_GOOD, label: 'Very Good'},
-    {value: Rating.EXCELLENT, label: 'Excellent'},
+    {value: 1, label: 'Poor'},
+    {value: 2, label: 'Fair'},
+    {value: 3, label: 'Good'},
+    {value: 4, label: 'Very Good'},
+    {value: 5, label: 'Excellent'},
   ]
 
   toursStore = inject(ToursStore);
@@ -55,7 +55,7 @@ export class UpdateTourLogComponent {
   confirmDelete = signal(false);
 
   tourLogForm = new FormGroup({
-    difficulty: new FormControl<Difficulty | null>(null, {
+    difficulty: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true}),
     totalDistance: new FormControl<number | null>(null,{
@@ -64,7 +64,7 @@ export class UpdateTourLogComponent {
     totalTime: new FormControl<number | null>(null,{
       validators: [Validators.required],
       nonNullable: true}),
-    rating: new FormControl<Rating | null>(null, {
+    rating: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true}),
     comment: new FormControl(''),
@@ -125,9 +125,8 @@ export class UpdateTourLogComponent {
           if(this.logId && this.toursId){
             tourLog.id = this.logId;
             tourLog.tourId = this.toursId;
-            tourLog.date = new Date();
             this.tourLogsStore.updateTourLog(tourLog);
-            
+
             setTimeout(() => {
               this.saving.set(false);
               this.saveSuccess.set(true);
@@ -141,9 +140,8 @@ export class UpdateTourLogComponent {
           if(this.toursId){
             tourLog.tourId = this.toursId;
             tourLog.id = this.tourLogsStore.getNextId();
-            tourLog.date = new Date();
             this.tourLogsStore.addTourLog(tourLog);
-            
+
             setTimeout(() => {
               this.saving.set(false);
               this.saveSuccess.set(true);
