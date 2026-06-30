@@ -95,10 +95,11 @@
                       </span>
 
                       <!-- Difficulty Dot -->
+                      
                       <span class="log-difficulty" [class]="getDifficultyClass(log.difficulty)">
                         <mat-icon class="difficulty-dot">fiber_manual_record</mat-icon>
-                      </span>
-                    </div>
+                      </span> 
+                    </div> 
                   </mat-panel-title>
 
                   <!-- Kebab Menu for Log Actions -->
@@ -113,7 +114,7 @@
 
                     <mat-menu #logMenu="matMenu">
                       <button mat-menu-item (click)="editTourLog(log.id)">
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon>edit test</mat-icon>
                         <span>Edit</span>
                       </button>
                       <button mat-menu-item (click)="deleteTourLog(log.id)">
@@ -126,16 +127,16 @@
 
                 <div class="log-expanded-details">
                   <div class="log-field">
-                    <label>Duration</label>
+                    <label>Duration test</label>
                     <span>{{ log.totalTime }} mins</span>
                   </div>
                   <div class="log-field">
-                    <label>Distance</label>
+                    <label>Distance test</label>
                     <span>{{ log.totalDistance }} km</span>
                   </div>
                   <div class="field">
                       <label>Child-Friendly</label>
-                      @if(log.totalDistance < 5 && log.difficulty === Difficulty.Easy && log.totalTime < 120) {
+                      @if(log.totalDistance < 5 && log.totalTime < 120) {
                         <span>Yes</span>
                       } @else {
                         <span>No</span>
