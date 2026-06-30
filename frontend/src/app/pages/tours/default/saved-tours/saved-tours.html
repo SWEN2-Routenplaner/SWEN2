@@ -1,20 +1,20 @@
 <mat-accordion class="saved-tours-accordion" multi="false">
   @for (tour of tours(); track tour.id) {
-    <mat-expansion-panel 
+    <mat-expansion-panel
       [expanded]="activeTourId() === tour.id"
       (opened)="onPanelOpened(tour.id)"
       (closed)="onPanelClosed(tour.id)"
       hideToggle="true"
       class="tour-panel">
-      
+
       <mat-expansion-panel-header>
         <mat-panel-title class="tour-title-layout">
           <!-- Icon and Title -->
-          @if (tour.transportMode === 'bike') {
+          @if (tour.transportMode === 'BIKE') {
             <mat-icon class="transport-icon">directions_bike</mat-icon>
-          } @else if (tour.transportMode === 'car') {
+          } @else if (tour.transportMode === 'CAR') {
             <mat-icon class="transport-icon">directions_car</mat-icon>
-          } @else if (tour.transportMode === 'walk') {
+          } @else if (tour.transportMode === 'WALK') {
             <mat-icon class="transport-icon">directions_walk</mat-icon>
           }
           <span class="tour-name">{{tour.name}}</span>
@@ -22,14 +22,14 @@
 
         <!-- Kebab Menu replacing Arrow Chevron -->
         <div class="header-menu-container">
-          <button mat-icon-button 
-                  [matMenuTriggerFor]="tourMenu" 
+          <button mat-icon-button
+                  [matMenuTriggerFor]="tourMenu"
                   (click)="$event.stopPropagation()"
                   class="kebab-button"
                   aria-label="Tour options">
             <mat-icon>more_vert</mat-icon>
           </button>
-          
+
           <mat-menu #tourMenu="matMenu">
             <button mat-menu-item (click)="editTour(tour.id)">
               <mat-icon>edit</mat-icon>
@@ -100,14 +100,14 @@
 
                   <!-- Kebab Menu for Log Actions -->
                   <div class="log-menu-container">
-                    <button mat-icon-button 
-                            [matMenuTriggerFor]="logMenu" 
+                    <button mat-icon-button
+                            [matMenuTriggerFor]="logMenu"
                             (click)="$event.stopPropagation()"
                             class="log-kebab-button"
                             aria-label="Log options">
                       <mat-icon>more_vert</mat-icon>
                     </button>
-                    
+
                     <mat-menu #logMenu="matMenu">
                       <button mat-menu-item (click)="editTourLog(log.id)">
                         <mat-icon>edit</mat-icon>

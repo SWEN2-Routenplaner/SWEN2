@@ -1,4 +1,4 @@
-export type TransportMode = 'car' | 'bike' | 'walk' | null;
+export type TransportMode = 'CAR' | 'BIKE' | 'WALK' | null;
 
 export type Tour = {
   id: number;
