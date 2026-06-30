@@ -8,7 +8,7 @@
          [class.active]="activeTourLogId() === tourLog.id"
          (click)="selectTourLog(tourLog.id)">
       <div class="actions-row">
-        <span>{{ tourLog.date | date: 'dd/MM/yyyy' }}</span>
+        <span>{{ tourLog.dateTime | date: 'dd/MM/yyyy' }}</span>
         <div class="right">
           @if(tourLog.rating === 1) {
               1<img src="icons/star.png" alt="" height="18" width="18"/>

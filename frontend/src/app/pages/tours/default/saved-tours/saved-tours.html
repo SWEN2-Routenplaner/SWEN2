@@ -81,7 +81,7 @@
               <mat-expansion-panel class="log-panel" hideToggle="true">
                 <mat-expansion-panel-header class="log-panel-header" (click)="$event.stopPropagation()">
                   <mat-panel-title class="log-title-layout">
-                    <span class="log-date">{{ log.date | date: 'dd/MM/yyyy' }}</span>
+                    <span class="log-date">{{ log.dateTime | date: 'dd/MM/yyyy' }}</span>
                     <div class="log-metadata">
                       <!-- Star Rating -->
                       <span class="log-rating">

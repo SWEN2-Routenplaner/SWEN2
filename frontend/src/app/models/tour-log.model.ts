@@ -1,7 +1,7 @@
 export type TourLog = {
   id: number;
   tourId: number;
-  date: string;
+  dateTime: string;
   comment: string;
   difficulty: number;
   totalDistance: number;

@@ -7,25 +7,26 @@ import { TourLogCreateRequest, TourLogUpdateRequest } from '../models/tour-log.d
 @Injectable({ providedIn: 'root' })
 export class TourLogService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8080/api/tours';
+  private readonly toursBaseUrl = 'http://localhost:8080/api/tours';
+  private readonly logsBaseUrl = 'http://localhost:8080/api/logs';
 
   getLogs(tourId: number): Observable<TourLog[]> {
-    return this.http.get<TourLog[]>(`${this.baseUrl}/${tourId}/logs`);
+    return this.http.get<TourLog[]>(`${this.toursBaseUrl}/${tourId}/logs`, { withCredentials: true });
   }
 
-  getLogById(tourId: number, logId: number): Observable<TourLog> {
-    return this.http.get<TourLog>(`${this.baseUrl}/${tourId}/logs/${logId}`);
+  getLogById(logId: number): Observable<TourLog> {
+    return this.http.get<TourLog>(`${this.logsBaseUrl}/${logId}`, { withCredentials: true });
   }
 
   createLog(tourId: number, body: TourLogCreateRequest): Observable<TourLog> {
-    return this.http.post<TourLog>(`${this.baseUrl}/${tourId}/logs`, body);
+    return this.http.post<TourLog>(`${this.toursBaseUrl}/${tourId}/logs`, body, { withCredentials: true });
   }
 
-  updateLog(tourId: number, logId: number, body: TourLogUpdateRequest): Observable<TourLog> {
-    return this.http.put<TourLog>(`${this.baseUrl}/${tourId}/logs/${logId}`, body);
+  updateLog(logId: number, body: TourLogUpdateRequest): Observable<TourLog> {
+    return this.http.put<TourLog>(`${this.logsBaseUrl}/${logId}`, body, { withCredentials: true });
   }
 
-  deleteLog(tourId: number, logId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${tourId}/logs/${logId}`);
+  deleteLog(logId: number): Observable<void> {
+    return this.http.delete<void>(`${this.logsBaseUrl}/${logId}`, { withCredentials: true });
   }
 }

@@ -40,6 +40,8 @@ export class SavedToursComponent {
         this.activeTourStore.activeTour.set(tour);
       }
     }
+    // load this tour's logs from the backend whenever it is expanded
+    this.tourLogsStore.loadLogs(id);
   }
 
   onPanelClosed(id: number) {
