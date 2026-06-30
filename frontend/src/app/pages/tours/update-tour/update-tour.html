@@ -1,5 +1,5 @@
 <div class="update-tour" [formGroup]="tourForm">
-  
+
   <!-- Tour Name -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Tour Name</mat-label>
@@ -14,7 +14,7 @@
     <mat-label>Tour Description</mat-label>
     <textarea matInput formControlName="description" rows="3" placeholder="Enter tour description"></textarea>
   </mat-form-field>
-  
+
   <!-- From Field -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>From</mat-label>
@@ -23,29 +23,6 @@
       <mat-error>Start location is required</mat-error>
     }
   </mat-form-field>
-
-  <!-- Intermediate Stops List -->
-  <div class="stops-container">
-    @if (getStops().controls.length > 0) {
-      <span class="stops-section-title">Stops</span>
-    }
-    
-    @for (stops of getStops().controls; track $index) {
-      <div class="stop-row">
-        <mat-form-field appearance="outline" class="stop-form-field">
-          <mat-label>Stop {{ $index + 1 }}</mat-label>
-          <input matInput [formControl]="getStops().controls[$index]" placeholder="Intermediate stop" />
-          @if (getStops().controls[$index].touched && getStops().controls[$index].invalid) {
-            <mat-error>Stop location is required</mat-error>
-          }
-        </mat-form-field>
-        
-        <button mat-icon-button class="btn-remove-stop" type="button" title="Remove stop" (click)="removeStop($index)">
-          <mat-icon>remove_circle_outline</mat-icon>
-        </button>
-      </div>
-    }
-  </div>
 
   <!-- To Field -->
   <mat-form-field appearance="outline" class="full-width">
@@ -61,24 +38,24 @@
     <span class="section-label">Transport Mode</span>
     <div class="transport-buttons-row">
       <button class="transport-btn" type="button" title="Walking"
-              (click)="toggleTransportMode('walk')"
-              [class.active]="selectedMode() === 'walk'"
+              (click)="toggleTransportType('WALK')"
+              [class.active]="selectedMode() === 'WALK'"
               aria-label="Walk">
         <mat-icon>directions_walk</mat-icon>
         <span>Walk</span>
       </button>
 
       <button class="transport-btn" type="button" title="Bike"
-              (click)="toggleTransportMode('bike')"
-              [class.active]="selectedMode() === 'bike'"
+              (click)="toggleTransportType('BIKE')"
+              [class.active]="selectedMode() === 'BIKE'"
               aria-label="Bike">
         <mat-icon>directions_bike</mat-icon>
         <span>Bike</span>
       </button>
 
       <button class="transport-btn" type="button" title="Car"
-              (click)="toggleTransportMode('car')"
-              [class.active]="selectedMode() === 'car'"
+              (click)="toggleTransportType('CAR')"
+              [class.active]="selectedMode() === 'CAR'"
               aria-label="Car">
         <mat-icon>directions_car</mat-icon>
         <span>Car</span>
@@ -88,11 +65,7 @@
 
   <!-- Form Actions: Waypoint, Save, Delete -->
   <div class="form-actions-row">
-    <button mat-stroked-button class="btn-action-outline" type="button" (click)="addStop()" [disabled]="saving() || saveSuccess()" title="Add stop">
-      <mat-icon>add</mat-icon>
-      <span>Add Stop</span>
-    </button>
-    
+
     <div class="actions-right">
       @if (confirmDelete()) {
         <div class="delete-confirm-panel">

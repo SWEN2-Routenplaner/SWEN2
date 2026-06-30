@@ -1,11 +1,13 @@
-export type TransportMode = 'car' | 'bike' | 'walk' | null;
+export type TransportType = 'CAR' | 'BIKE' | 'WALK' | null;
 
 export type Tour = {
   id: number;
   from: string;
-  transportMode: TransportMode;
+  transportType: TransportType;
   to: string;
   name: string;
   description: string;
-  intermediateStops: string[];
+  distance: number;
+  estimatedDuration: number;
+  routeInformation: string;
 }

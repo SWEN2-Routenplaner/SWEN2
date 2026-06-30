@@ -1,74 +1,133 @@
-import {Injectable, computed, signal, model} from '@angular/core';
-import {Tour} from '../models/tour.model';
+import { Injectable, signal, inject } from '@angular/core';
+import { Tour } from '../models/tour.model';
+import { TourCreateRequest, TourUpdateRequest } from '../models/tour.dto';
+import { TourService } from '../services/tour.service';
+import {Observable, shareReplay, tap} from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ToursStore {
-  // Mock Tours
-  private tours = signal <Tour[]>([]);
+  private readonly tourService = inject(TourService);
+
+  private tours = signal<Tour[]>([]);
   readonly allTours = this.tours.asReadonly();
 
-  // Load mock tours on init
+  // to display loading status in the UI
+  private loading = signal<boolean>(false);
+  readonly isLoading = this.loading.asReadonly();
+
+  // to display error messages in the UI
+  private errorState = signal<string | null>(null);
+  readonly error = this.errorState.asReadonly();
+
   constructor() {
-    this.loadMockTours();
+    this.loadTours();
   }
 
-  // Original states (Model)
+  loadTours(): void {
+    this.loading.set(true);
+    this.errorState.set(null);
 
-  //Derived states (View Model/Computed)
-  addTour(tour: Tour): void {
-    this.tours.update(tours => [...tours, tour]);
-    // log whole tour
-    console.log("saved tour " + tour.id + " to tours array")
+    this.tourService.getTours().subscribe({
+      next: (tours) => {
+        this.tours.set(tours);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.errorState.set('Failed to load tours');
+        this.loading.set(false);
+        console.error(err);
+      }
+    });
   }
 
   getTourById(id: number): Tour | undefined {
+    // first fetch from backend and update local state
+   this.loading.set(true);
+   this.errorState.set(null);
+   this.tourService.getTourById(id).subscribe({
+      next: (tour) => {
+        this.tours.update(tours => {
+          const exists = tours.some(t => t.id === tour.id);
+          return exists ? tours.map(t => t.id === tour.id ? tour : t) : [...tours, tour];
+        });
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.errorState.set('Failed to load tour');
+        this.loading.set(false);
+        console.error(err);
+      }
+   })
+    // then return from up-to-date local state
     return this.tours().find(tour => tour.id === id);
   }
 
-  getTours(): Tour[] {
-    return this.tours();
+  addTour(body: TourCreateRequest): Observable<Tour> {
+    this.loading.set(true);
+    this.errorState.set(null);
+
+    const request$ = this.tourService.createTour(body).pipe(
+      tap({
+        next: (tour) => {
+          this.tours.update(tours => [...tours, tour]);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.errorState.set('Failed to create tour');
+          this.loading.set(false);
+          console.error(err);
+        }
+      }),
+      shareReplay(1)
+    );
+
+    request$.subscribe(); // ensures the store updates even if caller doesn't subscribe
+    return request$;
   }
 
-  updateTour(tour: Tour): void {
-    this.tours.update(tours => tours.map(t => t.id === tour.id ? tour : t));
+  updateTour(id: number, body: TourUpdateRequest): Observable<Tour> {
+    this.loading.set(true);
+    this.errorState.set(null);
+
+    const request$ = this.tourService.updateTour(id, body).pipe(
+      tap({
+        next: (updated) => {
+          this.tours.update(tours => tours.map(t => t.id === updated.id ? updated : t));
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.errorState.set('Failed to update tour');
+          this.loading.set(false);
+          console.error(err);
+        }
+      }),
+      shareReplay(1)
+    );
+
+    request$.subscribe();
+    return request$;
   }
 
-  deleteTour(id: number): void {
-    this.tours.update(tours => tours.filter(tour => tour.id !== id));
-  }
+  deleteTour(id: number): Observable<void> {
+    this.loading.set(true);
+    this.errorState.set(null);
 
-  //////////////////////////
-  /// MOCK DELETE LATER! ///
-  //////////////////////////
+    const request$ = this.tourService.deleteTour(id).pipe(
+      tap({
+        next: () => {
+          this.tours.update(tours => tours.filter(tour => tour.id !== id));
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.errorState.set('Failed to delete tour');
+          this.loading.set(false);
+          console.error(err);
+        }
+      }),
+      shareReplay(1)
+    );
 
-  getNextId(): number {
-    // search for the max id in the tours array
-    const maxId = Math.max(...this.tours().map(tour => tour.id));
-    return maxId + 1;
-  }
-
-  loadMockTours(): void {
-    this.tours.set([
-      {id: 1, from: 'Berlin', to: 'Munich', transportMode: "bike", name: 'Berlin-Munich', description: 'A short tour from Berlin to Munich', intermediateStops: []},
-      {id: 2, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 3, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 3', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 4, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 4', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 5, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 5', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 6, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 6', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 7, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 7', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 8, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 8', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 9, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 9', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 10, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 10', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 11, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 11', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 12, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 12', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 13, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 13', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 14, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 14', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 15, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 15', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 16, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 16', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 17, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 17', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 18, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 18', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 19, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 19', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-      {id: 20, from: 'Munich', to: 'Berlin', transportMode: "car", name: 'Munich-Berlin 20', description: 'A short tour from Munich to Berlin', intermediateStops: []},
-    ])
+    request$.subscribe();
+    return request$;
   }
 }

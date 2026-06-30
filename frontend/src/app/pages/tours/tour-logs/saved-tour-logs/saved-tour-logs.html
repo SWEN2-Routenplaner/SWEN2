@@ -8,7 +8,7 @@
          [class.active]="activeTourLogId() === tourLog.id"
          (click)="selectTourLog(tourLog.id)">
       <div class="actions-row">
-        <span>{{ tourLog.date | date: 'dd/MM/yyyy' }}</span>
+        <span>{{ tourLog.dateTime | date: 'dd/MM/yyyy' }}</span>
         <div class="right">
           @if(tourLog.rating === 1) {
               1<img src="icons/star.png" alt="" height="18" width="18"/>
@@ -22,11 +22,11 @@
               5<img src="icons/star.png" alt="" height="18" width="18"/>
             }
 
-            @if (tourLog.difficulty === Difficulty.Easy) {
+            @if (tourLog.difficulty === 1) {
               <img src="icons/green_circle.png" alt="" height="18" width="18">
-            } @else if (tourLog.difficulty === Difficulty.Medium) {
+            } @else if (tourLog.difficulty === 2) {
               <img src="icons/blue_circle.png" alt="" height="18" width="18">
-            } @else if (tourLog.difficulty === Difficulty.Hard) {
+            } @else if (tourLog.difficulty === 3) {
               <img src="icons/red_circle.png" alt="" height="18" width="18">
             }
           </div>
@@ -39,7 +39,7 @@
             <span>{{tourLog.totalTime}} minutes</span>
           </div>
           <div class="field right">
-            {{Difficulty[tourLog.difficulty]}}
+            {{[tourLog.difficulty]}}
           </div>
         </div>
         <div class="field">

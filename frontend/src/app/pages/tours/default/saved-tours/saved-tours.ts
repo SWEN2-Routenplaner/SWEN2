@@ -2,7 +2,7 @@ import {Component, computed, inject, signal} from '@angular/core';
 import {ActiveTourStore} from '../../../../states/active-tour-store';
 import {ToursStore} from '../../../../states/tours.store';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {Difficulty, TourLog} from '../../../../models/tour-log.model';
+import {TourLog} from '../../../../models/tour-log.model';
 import {Router} from '@angular/router';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatButtonModule} from '@angular/material/button';
@@ -32,8 +32,6 @@ export class SavedToursComponent {
   activeTourId = computed(() => this.activeTourStore.activeTour()?.id ?? null);
   tours = this.toursStore.allTours;
 
-  protected readonly Difficulty = Difficulty;
-
   onPanelOpened(id: number) {
     const currentActive = this.activeTourStore.activeTour();
     if (currentActive?.id !== id) {
@@ -42,6 +40,8 @@ export class SavedToursComponent {
         this.activeTourStore.activeTour.set(tour);
       }
     }
+    // load this tour's logs from the backend whenever it is expanded
+    this.tourLogsStore.loadLogs(id);
   }
 
   onPanelClosed(id: number) {
@@ -69,13 +69,13 @@ export class SavedToursComponent {
     return this.tourLogsStore.getLogsByTourId(tourId);
   }
 
-  getDifficultyClass(difficulty: Difficulty): string {
+  getDifficultyClass(difficulty: number): string {
     switch (difficulty) {
-      case Difficulty.Easy:
+      case 1:
         return 'difficulty-easy';
-      case Difficulty.Medium:
+      case 2:
         return 'difficulty-medium';
-      case Difficulty.Hard:
+      case 3:
         return 'difficulty-hard';
       default:
         return '';

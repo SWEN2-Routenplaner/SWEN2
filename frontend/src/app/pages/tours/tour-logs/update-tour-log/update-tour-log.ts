@@ -2,7 +2,8 @@ import {Component, inject, signal} from '@angular/core';
 import {ToursStore} from '../../../../states/tours.store';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TourLogsStore} from '../../../../states/tour-logs.store';
-import {Difficulty, Rating, TourLog} from '../../../../models/tour-log.model';
+import {TourLog} from '../../../../models/tour-log.model';
+import {TourLogCreateRequest, TourLogUpdateRequest} from '../../../../models/tour-log.dto';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -27,17 +28,17 @@ import {MatIconModule} from '@angular/material/icon';
 export class UpdateTourLogComponent {
 
   difficultyOptions = [
-    {value: Difficulty.Easy, label: 'Easy'},
-    {value: Difficulty.Medium, label: 'Medium'},
-    {value: Difficulty.Hard, label: 'Hard'},
+    {value: 1, label: 'Easy'},
+    {value: 2, label: 'Medium'},
+    {value: 3, label: 'Hard'},
   ];
 
   ratingOptions = [
-    {value: Rating.POOR, label: 'Poor'},
-    {value: Rating.FAIR, label: 'Fair'},
-    {value: Rating.GOOD, label: 'Good'},
-    {value: Rating.VERY_GOOD, label: 'Very Good'},
-    {value: Rating.EXCELLENT, label: 'Excellent'},
+    {value: 1, label: 'Poor'},
+    {value: 2, label: 'Fair'},
+    {value: 3, label: 'Good'},
+    {value: 4, label: 'Very Good'},
+    {value: 5, label: 'Excellent'},
   ]
 
   toursStore = inject(ToursStore);
@@ -45,6 +46,7 @@ export class UpdateTourLogComponent {
   router = inject(Router)
   toursId: number|null = null;
   logId: number|null = null;
+  private existingDateTime: string | null = null;
 
   mode = signal<'edit' | 'create' | null>(null);
   errors = signal<string[]>([]);
@@ -55,7 +57,7 @@ export class UpdateTourLogComponent {
   confirmDelete = signal(false);
 
   tourLogForm = new FormGroup({
-    difficulty: new FormControl<Difficulty | null>(null, {
+    difficulty: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true}),
     totalDistance: new FormControl<number | null>(null,{
@@ -64,7 +66,7 @@ export class UpdateTourLogComponent {
     totalTime: new FormControl<number | null>(null,{
       validators: [Validators.required],
       nonNullable: true}),
-    rating: new FormControl<Rating | null>(null, {
+    rating: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true}),
     comment: new FormControl(''),
@@ -84,6 +86,7 @@ export class UpdateTourLogComponent {
         const activeLog: TourLog | undefined = this.tourLogsStore.getTourLogById(this.logId);
         if(activeLog){
           this.toursId = activeLog.tourId;
+          this.existingDateTime = activeLog.dateTime;
           this.tourLogForm.patchValue(activeLog);
         }else{
           console.error("Tour Log not found");
@@ -101,7 +104,7 @@ export class UpdateTourLogComponent {
 
   getTourName(tourId: number|null){
     if(tourId){
-      const tour = this.toursStore.getTourById(tourId);
+      const tour = this.toursStore.allTours().find(t => t.id === tourId);
       return tour?.name;
     }else{
       return null;
@@ -112,45 +115,28 @@ export class UpdateTourLogComponent {
     this.setErrorsAndCorrects();
     if(this.tourLogForm.valid && !this.saving() && !this.saveSuccess()){
       this.saving.set(true);
-      const rawData = this.tourLogForm.getRawValue();
-
-      const tourLog: TourLog = {
-        ...rawData,
-        difficulty: Number(rawData.difficulty),
-        rating: Number(rawData.rating)
-      } as TourLog;
 
       switch (this.mode()) {
         case 'edit':
           if(this.logId && this.toursId){
-            tourLog.id = this.logId;
-            tourLog.tourId = this.toursId;
-            tourLog.date = new Date();
-            this.tourLogsStore.updateTourLog(tourLog);
-            
-            setTimeout(() => {
-              this.saving.set(false);
-              this.saveSuccess.set(true);
-              setTimeout(() => {
-                this.router.navigate(['']);
-              }, 800);
-            }, 600);
+            const body: TourLogUpdateRequest = {
+              ...this.buildRequestBody(),
+              // keep the original timestamp, fall back to now if it was missing
+              dateTime: this.existingDateTime ?? new Date().toISOString(),
+            };
+            this.tourLogsStore.updateTourLog(this.logId, body).subscribe({
+              next: () => this.onSaveSuccess(),
+              error: () => this.saving.set(false),
+            });
           }
           break;
         case 'create':
           if(this.toursId){
-            tourLog.tourId = this.toursId;
-            tourLog.id = this.tourLogsStore.getNextId();
-            tourLog.date = new Date();
-            this.tourLogsStore.addTourLog(tourLog);
-            
-            setTimeout(() => {
-              this.saving.set(false);
-              this.saveSuccess.set(true);
-              setTimeout(() => {
-                this.router.navigate(['']);
-              }, 800);
-            }, 600);
+            const body: TourLogCreateRequest = this.buildRequestBody();
+            this.tourLogsStore.addTourLog(this.toursId, body).subscribe({
+              next: () => this.onSaveSuccess(),
+              error: () => this.saving.set(false),
+            });
           }
           break;
         default:
@@ -159,6 +145,26 @@ export class UpdateTourLogComponent {
           break;
       }
     }
+  }
+
+  private buildRequestBody(): TourLogCreateRequest {
+    const rawData = this.tourLogForm.getRawValue();
+    return {
+      dateTime: new Date().toISOString(),
+      comment: rawData.comment ?? '',
+      difficulty: Number(rawData.difficulty),
+      totalDistance: Number(rawData.totalDistance),
+      totalTime: Number(rawData.totalTime),
+      rating: Number(rawData.rating),
+    };
+  }
+
+  private onSaveSuccess(){
+    this.saving.set(false);
+    this.saveSuccess.set(true);
+    setTimeout(() => {
+      this.router.navigate(['']);
+    }, 800);
   }
 
   triggerDelete(){
@@ -171,8 +177,10 @@ export class UpdateTourLogComponent {
 
   deleteTourLog(){
     if(this.logId && this.toursId){
-      this.tourLogsStore.deleteTourLog(this.logId);
-      this.router.navigate(['']);
+      this.tourLogsStore.deleteTourLog(this.logId).subscribe({
+        next: () => this.router.navigate(['']),
+        error: () => this.confirmDelete.set(false),
+      });
     }
   }
 
