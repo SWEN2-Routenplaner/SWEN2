@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoderFactory;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.client.oidc.authentication.OidcIdTokenValidator;
 import java.util.Arrays;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity

@@ -30,7 +30,6 @@ export class SavedToursComponent {
   activeTourStore = inject(ActiveTourStore);
   tourLogsStore = inject(TourLogsStore);
   router = inject(Router);
-  tourLogsStore = inject(TourLogsStore);
 
   activeTourId = computed(() => this.activeTourStore.activeTour()?.id ?? null);
   tours = this.toursStore.allTours;
@@ -102,18 +101,12 @@ export class SavedToursComponent {
   //Calculates popularity of a tour based on the number of logs associated with it
   calculatePopularity(tourId: number): string {
     const logs = this.tourLogsStore.getLogsByTourId(tourId);
-    if(logs.length === 0) {
-      return "No logs yet";
-    }
-    if(logs.length < 3) {
-      return "Not very popular";
-    }
     if(logs.length < 5) {
-      return "Somewhat popular";
+      return "😔";
     }
     if(logs.length < 10) {
-      return "Popular";
+      return "😐";
     }
-    return "Very popular";
+    return "😁";
   }
 }
