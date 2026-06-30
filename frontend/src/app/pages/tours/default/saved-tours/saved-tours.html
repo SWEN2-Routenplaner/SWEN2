@@ -10,11 +10,11 @@
       <mat-expansion-panel-header>
         <mat-panel-title class="tour-title-layout">
           <!-- Icon and Title -->
-          @if (tour.transportMode === 'BIKE') {
+          @if (tour.transportType === 'BIKE') {
             <mat-icon class="transport-icon">directions_bike</mat-icon>
-          } @else if (tour.transportMode === 'CAR') {
+          } @else if (tour.transportType === 'CAR') {
             <mat-icon class="transport-icon">directions_car</mat-icon>
-          } @else if (tour.transportMode === 'WALK') {
+          } @else if (tour.transportType === 'WALK') {
             <mat-icon class="transport-icon">directions_walk</mat-icon>
           }
           <span class="tour-name">{{tour.name}}</span>

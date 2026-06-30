@@ -38,7 +38,7 @@
     <span class="section-label">Transport Mode</span>
     <div class="transport-buttons-row">
       <button class="transport-btn" type="button" title="Walking"
-              (click)="toggleTransportMode('WALK')"
+              (click)="toggleTransportType('WALK')"
               [class.active]="selectedMode() === 'WALK'"
               aria-label="Walk">
         <mat-icon>directions_walk</mat-icon>
@@ -46,7 +46,7 @@
       </button>
 
       <button class="transport-btn" type="button" title="Bike"
-              (click)="toggleTransportMode('BIKE')"
+              (click)="toggleTransportType('BIKE')"
               [class.active]="selectedMode() === 'BIKE'"
               aria-label="Bike">
         <mat-icon>directions_bike</mat-icon>
@@ -54,7 +54,7 @@
       </button>
 
       <button class="transport-btn" type="button" title="Car"
-              (click)="toggleTransportMode('CAR')"
+              (click)="toggleTransportType('CAR')"
               [class.active]="selectedMode() === 'CAR'"
               aria-label="Car">
         <mat-icon>directions_car</mat-icon>

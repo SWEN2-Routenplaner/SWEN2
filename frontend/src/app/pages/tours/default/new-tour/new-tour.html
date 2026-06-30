@@ -38,24 +38,24 @@
     <span class="section-label">Transport Mode</span>
     <div class="transport-buttons-row">
       <button class="transport-btn" type="button" title="Walking"
-              (click)="toggleTransportMode('WALK')"
-              [class.active]="selectedMode() === 'WALK'"
+              (click)="toggleTransportType('WALK')"
+              [class.active]="selectedType() === 'WALK'"
               aria-label="Walk">
         <mat-icon>directions_walk</mat-icon>
         <span>Walk</span>
       </button>
 
       <button class="transport-btn" type="button" title="Bike"
-              (click)="toggleTransportMode('BIKE')"
-              [class.active]="selectedMode() === 'BIKE'"
+              (click)="toggleTransportType('BIKE')"
+              [class.active]="selectedType() === 'BIKE'"
               aria-label="Bike">
         <mat-icon>directions_bike</mat-icon>
         <span>Bike</span>
       </button>
 
       <button class="transport-btn" type="button" title="Car"
-              (click)="toggleTransportMode('CAR')"
-              [class.active]="selectedMode() === 'CAR'"
+              (click)="toggleTransportType('CAR')"
+              [class.active]="selectedType() === 'CAR'"
               aria-label="Car">
         <mat-icon>directions_car</mat-icon>
         <span>Car</span>
@@ -79,6 +79,8 @@
         } @else if (saving()) {
           <mat-icon class="spinning">hourglass_empty</mat-icon>
           <span>Saving</span>
+        } @else if (saveError()){
+          <mat-error>{{ saveError() }}</mat-error>
         } @else {
           <mat-icon>save</mat-icon>
           <span>Save</span>

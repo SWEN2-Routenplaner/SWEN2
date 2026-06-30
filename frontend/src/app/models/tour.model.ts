@@ -3,7 +3,7 @@ export type TransportType = 'CAR' | 'BIKE' | 'WALK' | null;
 export type Tour = {
   id: number;
   from: string;
-  TransportType: TransportType;
+  transportType: TransportType;
   to: string;
   name: string;
   description: string;
