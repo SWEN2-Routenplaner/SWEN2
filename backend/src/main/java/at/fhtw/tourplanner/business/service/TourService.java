@@ -121,11 +121,10 @@ public class TourService {
     TourImportExportService tourImportExportService;
 
     // TourService
-    public ExportResult exportTours(String owner, String format) {
-        log.info("Exporting tours for owner '{}' as '{}'", owner, format);
-        List<TourEntity> tours = tourRepository.findAllByOwner(owner);
-        List<TourLogEntity> tourLogs = tourLogRepository.searchByOwner(owner, "");
-        return tourImportExportService.export(tours, tourLogs, format);
+    public String exportTours(String owner, Long tourId, String format) {
+        log.info("Exporting tour for id '{}' as '{}'", tourId, format);
+        TourEntity tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + tourId));
+        return tourImportExportService.export(tour);
     }
 
     public ImportSummary importTours(String owner, MultipartFile file) {

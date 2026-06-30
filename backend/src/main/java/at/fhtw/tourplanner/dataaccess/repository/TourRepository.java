@@ -13,6 +13,8 @@ public interface TourRepository extends JpaRepository<TourEntity, Long> {
 
     List<TourEntity> findAllByOwner(String owner);
 
+    java.util.Optional<TourEntity> findById(Long id);
+
     /*
      * Need the casts to String/lower and Query for the search to function on more than just the description.
      */

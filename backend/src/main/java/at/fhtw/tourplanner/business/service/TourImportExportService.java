@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -21,7 +22,18 @@ public class TourImportExportService {
     TourRepository tourRepository;
     TourLogRepository tourLogRepository;
 
-    public ExportResult export(List<TourEntity> tours, List<TourLogEntity> tourLogs, String format) {
+    public String export(TourEntity tour) {
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Convert the TourEntity to JSON
+            String tourJson = mapper.writeValueAsString(tour);
+            return tourJson;
+        } catch (Exception e) {
+            log.error("Error exporting tour: {}", e.getMessage());
+        }
+       
+
         return null;
     }
 
