@@ -7,5 +7,4 @@ export type Tour = {
   to: string;
   name: string;
   description: string;
-  intermediateStops: string[];
 }

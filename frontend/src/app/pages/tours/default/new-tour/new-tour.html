@@ -24,26 +24,6 @@
     }
   </mat-form-field>
 
-  <!-- Intermediate Stops List -->
-  <div class="stops-container">
-    @if (intermediateStops().length > 0) {
-      <span class="stops-section-title">Stops</span>
-    }
-
-    @for (stops of intermediateStops(); track $index) {
-      <div class="stop-row">
-        <mat-form-field appearance="outline" class="stop-form-field">
-          <mat-label>Stop {{ $index + 1 }}</mat-label>
-          <input matInput [value]="stops" (input)="updateStop($index, $event)" placeholder="Intermediate stop" />
-        </mat-form-field>
-
-        <button mat-icon-button class="btn-remove-stop" type="button" title="Remove stop" (click)="removeStop($index)">
-          <mat-icon>remove_circle_outline</mat-icon>
-        </button>
-      </div>
-    }
-  </div>
-
   <!-- To Field -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>To</mat-label>
@@ -85,10 +65,6 @@
 
   <!-- Form Actions: Waypoint, Save -->
   <div class="form-actions-row">
-    <button mat-stroked-button class="btn-action-outline" type="button" (click)="addStop()" [disabled]="saving() || saveSuccess()" title="Add stop">
-      <mat-icon>add</mat-icon>
-      <span>Add Stop</span>
-    </button>
 
     <div class="actions-right">
       <button mat-flat-button class="btn-save-large full-width"

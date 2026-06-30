@@ -37,7 +37,6 @@ export class UpdateTourComponent{
   tourForm = new FormGroup({
     from: new FormControl('',{validators:[Validators.required], nonNullable: true}),
     to: new FormControl('',{validators:[Validators.required], nonNullable: true}),
-    intermediateStops: new FormArray<FormControl<string>>([]),
     transportMode: new FormControl<string | null>('',{validators:[Validators.required], nonNullable: true}),
     name: new FormControl('',{validators:[Validators.required], nonNullable: true}),
     description: new FormControl(''),
@@ -49,10 +48,6 @@ export class UpdateTourComponent{
     if(this.id){
       const activeTour = this.toursStore.getTourById(this.id);
       if(activeTour){
-        const stopsArray = this.tourForm.controls.intermediateStops;
-        activeTour.intermediateStops?.forEach(stop => {
-          stopsArray.push(new FormControl(stop, {validators:[Validators.required], nonNullable: true}));
-        });
         this.tourForm.patchValue(activeTour);
         this.selectedMode.set(activeTour.transportMode);
       }else{
@@ -77,19 +72,6 @@ export class UpdateTourComponent{
     }
   }
 
-  getStops(){
-    return this.tourForm.controls.intermediateStops;
-  }
-
-  removeStop(index:number){
-    if (this.saving() || this.saveSuccess()) return;
-    this.getStops().removeAt(index);
-  }
-
-  addStop(){
-    if (this.saving() || this.saveSuccess()) return;
-    this.getStops().push(new FormControl('',{validators:[Validators.required],nonNullable: true}));
-  }
 
   saveTour(){
     this.setErrorsAndCorrects();
@@ -100,7 +82,7 @@ export class UpdateTourComponent{
       if(id){
         tour.id = id;
         this.toursStore.updateTour(tour);
-        
+
         // Update active tour store if this was the active tour
         const currentActive = this.activeTourStore.activeTour();
         if (currentActive?.id === id) {
@@ -148,14 +130,6 @@ export class UpdateTourComponent{
     }
 
     this.corrects().push('description'); // always correct description (even empty)
-    // check if intermediate stops are valid
-    this.getStops().controls.forEach((control, index) => {
-      if(control.invalid) {
-        this.errors().push(`stop-${index}`);
-      }else{
-        this.corrects().push(`stop-${index}`);
-      }
-    })
   }
 
   triggerDelete(){

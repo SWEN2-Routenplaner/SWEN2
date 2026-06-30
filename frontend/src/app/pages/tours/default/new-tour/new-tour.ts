@@ -32,7 +32,6 @@ export class NewTourComponent {
   saving = signal(false);
   saveSuccess = signal(false);
   selectedMode = signal<TransportMode>(null);
-  intermediateStops = signal<string[]>([]);
 
   tourForm = new FormGroup({
     from: new FormControl('', {validators: [Validators.required], nonNullable: true}),
@@ -54,21 +53,6 @@ export class NewTourComponent {
     }
     return false;
   })
-
-  addStop(): void {
-    if (this.saving() || this.saveSuccess()) return;
-    this.intermediateStops.update(stops => [...stops, '']);
-  }
-
-  removeStop(index: number): void {
-    if (this.saving() || this.saveSuccess()) return;
-    this.intermediateStops.update(stops => stops.filter((_, i) => i !== index));
-  }
-
-  updateStop(index: number, event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.intermediateStops.update(stops => stops.map((s, i) => i === index ? value : s));
-  }
 
   toggleTransportMode(mode: TransportMode): void {
     if (this.saving() || this.saveSuccess()) return;
@@ -99,7 +83,6 @@ export class NewTourComponent {
         transportMode: this.selectedMode(),
         name: sanitize(rawData.name || 'New Tour'),
         description: sanitize(rawData.description || ''),
-        intermediateStops: this.intermediateStops().map(s => sanitize(s)).filter(s => s.length > 0),
         id: this.toursStore.getNextId()
       }
 
@@ -112,7 +95,6 @@ export class NewTourComponent {
         setTimeout(() => {
           this.tourForm.reset();
           this.selectedMode.set(null);
-          this.intermediateStops.set([]);
           this.router.navigate(['/']);
         }, 800);
       }, 600);
