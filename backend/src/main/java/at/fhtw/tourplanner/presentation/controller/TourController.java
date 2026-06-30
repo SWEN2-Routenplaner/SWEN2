@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tours")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class TourController {
 
     private final TourService tourService;
@@ -127,19 +129,28 @@ public class TourController {
     }
 
     // TODO: Implement export
-    @GetMapping("/export")
+    @GetMapping("/{tourId}/export")
     @ApiResponses({
             @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "400", description = "Unsupported format")
+            @ApiResponse(responseCode = "400", description = "Unsupported format"),
+            @ApiResponse(responseCode = "403", description = "Not your resource"),
+            @ApiResponse(responseCode = "404", description = "Tour not found")
     })
-    public ResponseEntity<Resource> exportTours(
+    public ResponseEntity<String> exportTours(
+            @PathVariable Long tourId,
             @RequestParam(defaultValue = "json") String format,
-            @AuthenticationPrincipal OidcUser principal) {
-        ExportResult result = tourService.exportTours(principal.getSubject(), format);
+            @AuthenticationPrincipal OidcUser principal) throws AccessDeniedException {
+        
+        String exportedData = tourService.exportTours(principal.getSubject(), tourId, format);
+        String filename = "tour_" + tourId + "." + format;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentDispositionFormData("attachment", filename);
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"tours." + format + "\"")
-                .contentType(result.mediaType())
-                .body((Resource) result.resource());
+        .headers(headers)
+        .body(exportedData);
     }
 
     // TODO: Implement import

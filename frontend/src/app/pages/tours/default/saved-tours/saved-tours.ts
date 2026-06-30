@@ -9,6 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {DatePipe} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 
 
 
@@ -30,6 +31,7 @@ export class SavedToursComponent {
   activeTourStore = inject(ActiveTourStore);
   tourLogsStore = inject(TourLogsStore);
   router = inject(Router);
+  http = inject(HttpClient);
 
   activeTourId = computed(() => this.activeTourStore.activeTour()?.id ?? null);
   tours = this.toursStore.allTours;
@@ -65,6 +67,30 @@ export class SavedToursComponent {
       }
       this.toursStore.deleteTour(id);
     }
+  }
+
+  downloadTour(tourId: number, name: string) {
+    this.http.get(`http://localhost:8080/api/tours/${tourId}/export`, { 
+      responseType: 'blob',
+      withCredentials: true})
+    .subscribe({next: (response: Blob) => {
+      //Create a blob from the response and create a download link
+      const blob = new Blob([response], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+
+      const filename = name.replace(/\s+/g, '_');
+      link.setAttribute('download', `${filename}.json`);
+
+      //Trigger the download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, error: (error) => {
+      console.error('Error downloading tour:', error);
+      alert('Failed to download tour. Please try again later.');
+    }
+    });
   }
 
   getTourLogs(tourId: number): TourLog[] {

@@ -40,6 +40,10 @@
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>
+            <button mat-menu-item (click)="downloadTour(tour.id, tour.name)">
+              <mat-icon>download</mat-icon>
+              <span>Download</span>
+            </button>
           </mat-menu>
 
         </div>
