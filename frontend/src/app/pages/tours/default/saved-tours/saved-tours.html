@@ -18,11 +18,9 @@
             <mat-icon class="transport-icon">directions_walk</mat-icon>
           }
           <span class="tour-name">{{tour.name}}</span>
+          <span class="tour-name">Popularity: {{calculatePopularity(tour.id)}}</span>
         </mat-panel-title>
 
-        <mat-panel-description>
-          <span>Popularity: {{calculatePopularity(tour.id)}}</span>
-        </mat-panel-description>
         <!-- Kebab Menu replacing Arrow Chevron -->
         <div class="header-menu-container">
           <button mat-icon-button
@@ -129,6 +127,14 @@
                   <div class="log-field">
                     <label>Distance</label>
                     <span>{{ log.totalDistance }} km</span>
+                  </div>
+                  <div class="field">
+                      <label>Child-Friendly</label>
+                      @if(log.totalDistance < 5 && log.difficulty === Difficulty.Easy && log.totalTime < 120) {
+                        <span>Yes</span>
+                      } @else {
+                        <span>No</span>
+                      }
                   </div>
                   <div class="log-field full-width">
                     <label>Comment</label>
