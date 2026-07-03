@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -23,18 +23,15 @@ public class TourImportExportService {
     TourLogRepository tourLogRepository;
 
     public String export(TourEntity tour) {
-        try{
-            ObjectMapper mapper = new ObjectMapper();
-
+            try{
+            JsonMapper mapper = new JsonMapper();
             // Convert the TourEntity to JSON
             String tourJson = mapper.writeValueAsString(tour);
             return tourJson;
         } catch (Exception e) {
             log.error("Error exporting tour: {}", e.getMessage());
+            throw new IllegalStateException("Export failed", e);
         }
-       
-
-        return null;
     }
 
     // TODO: Implement; Should call the functions for saving in tourRepository and tourLogRepository
