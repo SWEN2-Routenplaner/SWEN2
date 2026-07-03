@@ -1,4 +1,4 @@
-import {Component, HostListener, signal, ViewChild, inject, effect} from '@angular/core';
+import {Component, HostListener,ElementRef, signal, ViewChild, inject, effect} from '@angular/core';
 import {MapComponent} from '../../components/map/map';
 import {RouterOutlet, Router, RouterLink} from '@angular/router';
 import {MatCard} from '@angular/material/card';
@@ -7,6 +7,14 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {ActiveTourStore} from '../../states/active-tour-store';
 import {AuthStore} from '../../states/auth.store';
+import {HttpClient} from '@angular/common/http';
+import {ToursStore} from '../../states/tours.store';
+
+interface ImportSummary {
+  toursImported: number;
+  logsImported: number;
+  errors: number;
+}
 
 @Component({
   selector: 'app-tours',
@@ -19,9 +27,12 @@ export class ToursPage {
   router = inject(Router);
   activeTourStore = inject(ActiveTourStore);
   authStore = inject(AuthStore);
+  http = inject(HttpClient);
+  toursStore = inject(ToursStore);
 
   modal?: IonModal;
   isModalOpen = signal(false);
+  importing = signal(false);
 
   @ViewChild(IonModal) set modalRef(modal: IonModal | undefined) {
     this.modal = modal;
@@ -157,6 +168,39 @@ export class ToursPage {
     if (el && typeof el.setCurrentBreakpoint === 'function') {
       el.setCurrentBreakpoint(this.breakpoints[2]);
     }
+  }
+
+  @ViewChild('importInput') importInput?: ElementRef<HTMLInputElement>;
+
+  openImportPicker(): void {
+    this.importInput?.nativeElement.click();
+  }
+
+  onImportFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.importing.set(true);
+
+    this.http.post<ImportSummary>('http://localhost:8080/api/tours/import', formData, {
+      withCredentials: true
+    }).subscribe({
+      next: (summary) => {
+        this.importing.set(false);
+        this.toursStore.loadTours();
+      },
+      error: (err) => {
+        this.importing.set(false);
+        alert(err.status === 400
+          ? 'Invalid tour file.'
+          : 'Import failed. Please try again.');
+      }
+    });
   }
 }
 

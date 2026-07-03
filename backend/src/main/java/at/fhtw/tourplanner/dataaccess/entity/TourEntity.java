@@ -3,6 +3,8 @@ package at.fhtw.tourplanner.dataaccess.entity;
 import at.fhtw.tourplanner.business.model.TransportType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Data
 @Entity
 @Table(name = "tours")
+@Getter
+@Setter
 public class TourEntity {
 
     @Id
