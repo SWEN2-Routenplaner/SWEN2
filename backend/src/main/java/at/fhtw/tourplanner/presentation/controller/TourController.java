@@ -9,26 +9,38 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.core.io.ByteArrayResource;
 
 /*
  * THIS REST API IS TESTABLE WITH SWAGGER UI UNDER http://localhost:8080/swagger-ui/index.html#/
  * */
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tours")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class TourController {
 
     private final TourService tourService;
@@ -127,21 +139,33 @@ public class TourController {
     }
 
     // TODO: Implement export
-    @GetMapping("/export")
+    @GetMapping("/{tourId}/export")
     @ApiResponses({
             @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "400", description = "Unsupported format")
+            @ApiResponse(responseCode = "400", description = "Unsupported format"),
+            @ApiResponse(responseCode = "403", description = "Not your resource"),
+            @ApiResponse(responseCode = "404", description = "Tour not found")
     })
     public ResponseEntity<Resource> exportTours(
+            @PathVariable Long tourId,
             @RequestParam(defaultValue = "json") String format,
-            @AuthenticationPrincipal OidcUser principal) {
-        ExportResult result = tourService.exportTours(principal.getSubject(), format);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"tours." + format + "\"")
-                .contentType(result.mediaType())
-                .body((Resource) result.resource());
-    }
+            @AuthenticationPrincipal OidcUser principal) throws AccessDeniedException {
+        
+        String exportedData = tourService.exportTours(principal.getSubject(), tourId, format);
 
+        byte[] exportedBytes = exportedData.getBytes(StandardCharsets.UTF_8);
+        ByteArrayResource resource = new ByteArrayResource(exportedBytes);
+        String filename = "tour_" + tourId + "." + format;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", filename);
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+ 
     // TODO: Implement import
     @PostMapping(value="/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses({

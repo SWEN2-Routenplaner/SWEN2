@@ -1,3 +1,9 @@
+<input type="file"
+       #importInput
+       hidden
+       accept=".json,application/json"
+       (change)="onImportFileSelected($event)">
+
 <div class="tours-layout">
 
   @if (authStore.isAuthenticated$()) {
@@ -12,6 +18,17 @@
         @if (isDefaultRoute()) {
           <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
             <mat-icon>add</mat-icon>
+          </button>
+          <button class="btn-add-tour"
+                  (click)="openImportPicker()"
+                  [disabled]="importing()"
+                  title="Import tour from JSON"
+                  aria-label="Import tour from JSON">
+            @if (importing()) {
+              <mat-icon>hourglass_empty</mat-icon>
+            } @else {
+              <mat-icon>upload_file</mat-icon>
+            }
           </button>
         }
       </div>
@@ -60,6 +77,17 @@
         @if (isDefaultRoute()) {
           <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
             <mat-icon>add</mat-icon>
+          </button>
+          <button class="btn-add-tour"
+                  (click)="openImportPicker()"
+                  [disabled]="importing()"
+                  title="Import tour from JSON"
+                  aria-label="Import tour from JSON">
+            @if (importing()) {
+              <mat-icon>hourglass_empty</mat-icon>
+            } @else {
+              <mat-icon>upload_file</mat-icon>
+            }
           </button>
         }
       </div>

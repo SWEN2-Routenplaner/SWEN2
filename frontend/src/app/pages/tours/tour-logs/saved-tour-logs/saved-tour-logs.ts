@@ -56,4 +56,17 @@ export class SavedTourLogs {
   protected back() {
     this.router.navigate(['']);
   }
+
+  getDifficultyClass(difficulty: number): string {
+    switch (difficulty) {
+      case 1:
+        return 'difficulty-easy';
+      case 2:
+        return 'difficulty-medium';
+      case 3:
+        return 'difficulty-hard';
+      default:
+        return '';
+    }
+  }
 }

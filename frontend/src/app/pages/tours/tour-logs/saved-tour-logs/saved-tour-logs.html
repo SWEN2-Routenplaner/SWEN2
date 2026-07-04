@@ -43,8 +43,16 @@
           </div>
         </div>
         <div class="field">
-          <label>Distance</label>
+          <label>Distance test</label>
           <span>{{tourLog.totalDistance}} km</span>
+        </div>
+        <div class="field">
+          <label>Child-Friendly</label>
+          @if(tourLog.totalDistance < 5 && getDifficultyClass(tourLog.difficulty) === 'difficulty-easy' && tourLog.totalTime < 120) {
+            <span>Yes</span>
+          } @else {
+            <span>No</span>
+          }
         </div>
         <div class="field">
           <label>Description</label>

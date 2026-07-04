@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -126,14 +127,14 @@ public class TourService {
     public record ImageResource(Resource resource, String contentType) {}
 
     // TODO: implement TourImportExportService
-    TourImportExportService tourImportExportService;
+    private final TourImportExportService tourImportExportService;
 
     // TourService
-    public ExportResult exportTours(String owner, String format) {
-        log.info("Exporting tours for owner '{}' as '{}'", owner, format);
-        List<TourEntity> tours = tourRepository.findAllByOwner(owner);
-        List<TourLogEntity> tourLogs = tourLogRepository.searchByOwner(owner, "");
-        return tourImportExportService.export(tours, tourLogs, format);
+    @Transactional(readOnly = true)
+    public String exportTours(String owner, Long tourId, String format) {
+        log.info("Exporting tour for id '{}' as '{}'", tourId, format);
+        TourEntity tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + tourId));
+        return tourImportExportService.export(tour);
     }
 
     public ImportSummary importTours(String owner, MultipartFile file) {
