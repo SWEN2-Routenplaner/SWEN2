@@ -1,10 +1,12 @@
 // update-tour.ts
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal, effect, computed} from '@angular/core';
 import {ToursStore} from '../../../states/tours.store';
 import {ActiveTourStore} from '../../../states/active-tour-store';
 import {Tour, TransportType} from '../../../models/tour.model';
 import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {HttpClient} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -32,10 +34,12 @@ export class UpdateTourComponent {
   message = signal<string>('');
   saveError = signal<string | null>(null);
   router = inject(Router);
+  http = inject(HttpClient);
   saving = signal(false);
   saveSuccess = signal(false);
   confirmDelete = signal(false);
   id: number | null = null;
+  selectionTarget = computed(() => this.activeTourStore.selectionTarget());
 
   tourForm = new FormGroup({
     from: new FormControl('', {validators: [Validators.required], nonNullable: true}),
@@ -44,6 +48,8 @@ export class UpdateTourComponent {
     name: new FormControl('', {validators: [Validators.required], nonNullable: true}),
     description: new FormControl(''),
   })
+
+  private formValue = toSignal(this.tourForm.valueChanges, {initialValue: this.tourForm.value});
 
   // Load Selected Tour on init
   constructor(route: ActivatedRoute) {
@@ -64,10 +70,64 @@ export class UpdateTourComponent {
         return;
       }
     }
+
+    effect(() => {
+      const poi = this.activeTourStore.selectedPoi();
+      const target = this.activeTourStore.selectionTarget();
+      if (poi && target) {
+        if (target === 'from') {
+          this.tourForm.patchValue({from: poi.name});
+        } else if (target === 'to') {
+          this.tourForm.patchValue({to: poi.name});
+        }
+        this.activeTourStore.selectedPoi.set(null);
+        this.activeTourStore.selectionTarget.set(null);
+      }
+    });
+
+    // Reactively fetch route preview geometry when form values and transport mode are completed
+    effect(() => {
+      const form = this.formValue();
+      const mode = this.selectedMode();
+      if (form.from && form.to && mode) {
+        this.fetchRoutePreview(form.from, form.to, mode as TransportType);
+      } else {
+        this.activeTourStore.previewRouteGeometry.set(null);
+      }
+    });
+  }
+
+  toggleSelectionTarget(target: 'from' | 'to'): void {
+    if (this.activeTourStore.selectionTarget() === target) {
+      this.activeTourStore.selectionTarget.set(null);
+    } else {
+      this.activeTourStore.selectionTarget.set(target);
+    }
   }
 
   // UI variables
   selectedMode = signal<string | null>('');
+
+  private fetchRoutePreview(from: string, to: string, mode: TransportType): void {
+    const url = 'http://localhost:8080/api/routes/preview';
+    const body = {
+      from: from.trim(),
+      to: to.trim(),
+      transportType: mode
+    };
+    this.http.post<{ routeInformation: string }>(url, body, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          if (res && res.routeInformation) {
+            this.activeTourStore.previewRouteGeometry.set(res.routeInformation);
+          }
+        },
+        error: (err) => {
+          console.error('Failed to fetch route preview', err);
+          this.activeTourStore.previewRouteGeometry.set(null);
+        }
+      });
+  }
 
   toggleTransportType(mode: TransportType): void {
     if (this.saving() || this.saveSuccess()) return;
@@ -108,6 +168,7 @@ export class UpdateTourComponent {
           if (currentActive?.id === id) {
             this.activeTourStore.activeTour.set(updated);
           }
+          this.activeTourStore.previewRouteGeometry.set(null); // Clear preview geometry
 
           this.saving.set(false);
           this.saveSuccess.set(true);
@@ -169,6 +230,7 @@ export class UpdateTourComponent {
           if (currentActive?.id === this.id) {
             this.activeTourStore.activeTour.set(null);
           }
+          this.activeTourStore.previewRouteGeometry.set(null); // Clear preview geometry
           this.router.navigate(['']);
         },
         error: () => {
@@ -180,6 +242,7 @@ export class UpdateTourComponent {
   }
 
   back() {
+    this.activeTourStore.previewRouteGeometry.set(null); // Clear preview geometry
     this.router.navigate(['']);
   }
 }

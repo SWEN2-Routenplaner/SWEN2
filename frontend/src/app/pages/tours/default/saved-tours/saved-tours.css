@@ -78,7 +78,28 @@
 .empty-message {
   color: #64748b;
   font-size: 0.9rem;
-  padding: 1rem 0;
+  padding: 1rem 16px;
+}
+
+.route-stops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stop {
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.route-arrow {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  color: #64748b;
+  flex-shrink: 0;
 }
 
 .buttons {

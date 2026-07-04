@@ -16,22 +16,28 @@
   </mat-form-field>
 
   <!-- From Field -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>From</mat-label>
-    <input matInput formControlName="from" placeholder="Start location" />
+  <app-location-autocomplete
+    label="From"
+    placeholder="Start location"
+    [inputControl]="tourForm.controls.from"
+    (locationSelected)="onFromSelected($event)"
+    (focused)="activeTourStore.selectionTarget.set('from')">
     @if (tourForm.controls.from.touched && tourForm.controls.from.invalid) {
       <mat-error>Start location is required</mat-error>
     }
-  </mat-form-field>
+  </app-location-autocomplete>
 
   <!-- To Field -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>To</mat-label>
-    <input matInput formControlName="to" placeholder="End location" />
+  <app-location-autocomplete
+    label="To"
+    placeholder="End location"
+    [inputControl]="tourForm.controls.to"
+    (locationSelected)="onToSelected($event)"
+    (focused)="activeTourStore.selectionTarget.set('to')">
     @if (tourForm.controls.to.touched && tourForm.controls.to.invalid) {
       <mat-error>End location is required</mat-error>
     }
-  </mat-form-field>
+  </app-location-autocomplete>
 
   <!-- Transport Mode Selection Grid -->
   <div class="transport-section">

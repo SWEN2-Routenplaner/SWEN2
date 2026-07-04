@@ -47,21 +47,18 @@
       <div class="extra-fields">
         <div class="field">
           <label>Route</label>
-          <span>
-            {{tour.from}}
-            {{tour.to}}
-          </span>
+          <div class="route-stops">
+            <span class="stop">{{tour.from}}</span>
+            <mat-icon class="route-arrow">arrow_forward</mat-icon>
+            <span class="stop">{{tour.to}}</span>
+          </div>
         </div>
-        <div class="field">
-          <label>Description</label>
-          <span>
-            @if (tour.description === '') {
-              No description yet!
-            } @else {
-              {{tour.description}}
-            }
-          </span>
-        </div>
+        @if (tour.description) {
+          <div class="field">
+            <label>Description</label>
+            <span>{{tour.description}}</span>
+          </div>
+        }
         <!-- Tour Logs Expandable Panel -->
         <mat-expansion-panel class="logs-expansion-panel" hideToggle="true" (click)="$event.stopPropagation()">
           <mat-expansion-panel-header class="logs-expansion-header">

@@ -49,12 +49,13 @@ public class TourService {
         applyRequest(tour, request);
 
         // create the route using our routeService
-        if (tour.getDistance() == null || tour.getEstimatedTime() == null) {
-            //  TODO: adjust if routeService is working!
+        try {
+            routeService.createRoute(tour);
+        } catch (Exception e) {
+            log.warn("Failed to calculate route during tour creation: {}. Using default placeholders.", e.getMessage());
             tour.setDistance(0.0);
-            tour.setEstimatedTime(1L);
-            tour.setRouteInformation("PLACEHOLDER: route not computed (ORS integration pending)");
-            //routeService.createRoute(tour);
+            tour.setEstimatedTime(0L);
+            tour.setRouteInformation("PLACEHOLDER: route calculation failed (" + e.getMessage() + ")");
         }
 
         TourEntity saved = tourRepository.save(tour);
@@ -76,8 +77,15 @@ public class TourService {
         TourEntity existing = findAndVerifyOwner(subject, tourId);
         applyRequest(existing, request);
 
-        // Re calculate the tour TODO: Adjust once createRoute is working
-        //routeService.createRoute(existing);
+        // Re calculate the tour
+        try {
+            routeService.createRoute(existing);
+        } catch (Exception e) {
+            log.warn("Failed to calculate route during tour update: {}. Using default placeholders.", e.getMessage());
+            existing.setDistance(0.0);
+            existing.setEstimatedTime(0L);
+            existing.setRouteInformation("PLACEHOLDER: route calculation failed (" + e.getMessage() + ")");
+        }
 
         return toResponse(tourRepository.save(existing));
     }

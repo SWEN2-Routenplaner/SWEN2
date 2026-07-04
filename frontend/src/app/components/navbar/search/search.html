@@ -1,1 +1,63 @@
-<input type="search" class="search-bar" placeholder="Search..." />
+<div class="search-container">
+  <div class="search-input-wrapper mat-elevation-z3">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search tours, logs, and places..."
+      [value]="searchQuery()"
+      (input)="onInput($event)"
+    />
+    <button
+      *ngIf="searchQuery()"
+      mat-icon-button
+      class="clear-button"
+      (click)="clearSearch()"
+      type="button"
+      title="Clear search"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Search Results Dropdown Overlay -->
+  <div class="search-dropdown mat-elevation-z8" *ngIf="searchQuery().length >= 2 && hasResults()">
+    
+    <!-- 1. Tours Results Section -->
+    <div class="results-section" *ngIf="results().tours.length > 0">
+      <div class="section-header">Tours</div>
+      <div class="result-item" *ngFor="let tour of results().tours" (click)="selectTour(tour)">
+        <mat-icon class="item-icon">directions_car</mat-icon>
+        <div class="item-content">
+          <span class="item-title">{{ tour.name }}</span>
+          <span class="item-subtitle">{{ tour.from }} → {{ tour.to }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Tour Logs Results Section -->
+    <div class="results-section" *ngIf="results().logs.length > 0">
+      <div class="section-header">Tour Logs</div>
+      <div class="result-item" *ngFor="let log of results().logs" (click)="selectLog(log)">
+        <mat-icon class="item-icon">rate_review</mat-icon>
+        <div class="item-content">
+          <span class="item-title">{{ log.comment || 'Review without comment' }}</span>
+          <span class="item-subtitle">Rating: {{ log.rating }}/5 • Difficulty: {{ log.difficulty }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Places / POIs Results Section -->
+    <div class="results-section" *ngIf="results().places.length > 0">
+      <div class="section-header">Places & POIs</div>
+      <div class="result-item" *ngFor="let place of results().places" (click)="selectPlace(place)">
+        <mat-icon class="item-icon">place</mat-icon>
+        <div class="item-content">
+          <span class="item-title">{{ place.name }}</span>
+          <span class="item-subtitle" *ngIf="place.category">{{ place.category }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

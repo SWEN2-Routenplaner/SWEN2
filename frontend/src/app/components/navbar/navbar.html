@@ -1,14 +1,6 @@
 <div class="navbar-container">
   <div class="navbar-left">
-    <div class="input-container mat-elevation-z3">
-
-      <input class="input-field" placeholder="Search for Tours and Places" [(ngModel)]="searchQuery">
-      @if (searchQuery()){
-        <button mat-icon-button (click)="searchQuery.set('')"><mat-icon>close</mat-icon></button>
-      }
-      <div class="divider"></div>
-      <button mat-icon-button color="primary"><mat-icon>search</mat-icon></button>
-    </div>
+    <app-search></app-search>
   </div>
   <div class="navbar-right">
     <button mat-icon-button class="mat-elevation-z3 account-icon-button" [matMenuTriggerFor]="userMenu">

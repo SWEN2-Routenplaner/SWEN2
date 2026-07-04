@@ -17,7 +17,7 @@
 }
 
 .zoom-group {
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0px 3px 3px -2px rgba(0,0,0,.2), 0px 3px 4px 0px rgba(0,0,0,.14), 0px 1px 8px 0px rgba(0,0,0,.12);
   border-radius: 20px;
   background-color: white;
   overflow: hidden;
@@ -67,7 +67,7 @@
 }
 
 .center-button {
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+  box-shadow: 0px 3px 3px -2px rgba(0,0,0,.2), 0px 3px 4px 0px rgba(0,0,0,.14), 0px 1px 8px 0px rgba(0,0,0,.12) !important;
 }
 
 @media (max-width: 768px) {
@@ -84,4 +84,135 @@
   }
 }
 
+.selection-banner {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #3f51b5;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  animation: slideDown 0.3s ease-out;
+}
 
+.selection-banner mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.selection-banner button.cancel-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  margin-left: 5px;
+}
+
+.selection-banner button.cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideDown {
+  from {
+    top: -50px;
+    opacity: 0;
+  }
+  to {
+    top: 20px;
+    opacity: 1;
+  }
+}
+
+/* Clickable Vector Town/City Labels (apply globally to bypass Angular View Encapsulation) */
+::ng-deep .interactive-map-label {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: #2c3e50;
+  text-shadow: 
+    -2px -2px 0 #fff,  
+     2px -2px 0 #fff,
+    -2px  2px 0 #fff,
+     2px  2px 0 #fff; /* Crisp white outline for high readability on map background */
+  white-space: nowrap !important;
+  display: inline-block !important;
+  width: max-content !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  user-select: none;
+  position: absolute;
+  transform: translate(-50%, -50%); /* Centers the text perfectly on its node coordinate */
+}
+
+/* Hover highlights */
+::ng-deep .interactive-map-label:hover {
+  color: #3f51b5; /* Premium Indigo */
+  transform: translate(-50%, -50%) scale(1.1); /* Ensure scale maintains centering */
+  text-shadow: 
+    -2px -2px 0 #e8eaf6,  
+     2px -2px 0 #e8eaf6,
+    -2px  2px 0 #e8eaf6,
+     2px  2px 0 #e8eaf6;
+  font-weight: bold;
+}
+
+/* Styling hierarchies based on OSM place types */
+::ng-deep .town-label-country {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a202c;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+::ng-deep .town-label-city {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+::ng-deep .town-label-town {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+::ng-deep .town-label-village {
+  font-size: 11px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+::ng-deep .town-label-suburb {
+  font-size: 10px;
+  font-weight: 500;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Clear Leaflet's default box styling on the custom labels */
+::ng-deep .custom-town-label-marker {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+}
