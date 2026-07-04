@@ -85,18 +85,6 @@ services:
       - postgresql
       - redis
 
-  meilisearch:
-    image: getmeili/meilisearch:v1.10
-    container_name: meilisearch
-    environment:
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
-      - MEILI_NO_ANALYTICS=true
-    ports:
-      - "7700:7700"
-    volumes:
-      - ./meilisearch_data:/meili_data
-    restart: unless-stopped
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus

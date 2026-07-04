@@ -31,40 +31,7 @@ export interface LocationSuggestion {
     MatIconModule,
     MatButtonModule
   ],
-  template: `
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>{{ label }}</mat-label>
-      <input
-        matInput
-        [formControl]="inputControl"
-        [placeholder]="placeholder"
-        [matAutocomplete]="auto"
-        (focus)="onFocus()"
-      />
-      <button mat-icon-button matSuffix (click)="clear(); $event.stopPropagation()" type="button" title="Clear">
-        <mat-icon>close</mat-icon>
-      </button>
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event.option.value)">
-        @for (suggestion of suggestions(); track suggestion.label) {
-          <mat-option [value]="suggestion">
-            <mat-icon style="font-size:16px;width:16px;height:16px;line-height:16px;vertical-align:middle;margin-right:8px;color:#64748b">place</mat-icon>
-            {{ suggestion.label }}
-          </mat-option>
-        }
-        @if (loading() && inputControl.value?.length >= 2) {
-          <mat-option disabled>
-            <span style="color:#64748b;font-size:0.85rem">Searching…</span>
-          </mat-option>
-        }
-        @if (!loading() && suggestions().length === 0 && inputControl.value?.length >= 2) {
-          <mat-option disabled>
-            <span style="color:#64748b;font-size:0.85rem">No results found</span>
-          </mat-option>
-        }
-      </mat-autocomplete>
-      <ng-content select="mat-error"></ng-content>
-    </mat-form-field>
-  `,
+  templateUrl: './location-autocomplete.html',
   styles: [`
     :host { display: block; }
     .full-width { width: 100%; }

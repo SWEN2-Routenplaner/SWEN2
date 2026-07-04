@@ -12,6 +12,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {TourUpdateRequest} from '../../../models/tour.dto';
+import {
+  LocationAutocompleteComponent,
+  LocationSuggestion
+} from '../../../components/location-autocomplete/location-autocomplete';
 
 @Component({
   selector: 'app-update-tour',
@@ -21,7 +25,8 @@ import {TourUpdateRequest} from '../../../models/tour.dto';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    LocationAutocompleteComponent
   ],
   templateUrl: './update-tour.html',
   styleUrl: './update-tour.css',
@@ -244,5 +249,19 @@ export class UpdateTourComponent {
   back() {
     this.activeTourStore.previewRouteGeometry.set(null); // Clear preview geometry
     this.router.navigate(['']);
+  }
+
+  onFromSelected(suggestion: LocationSuggestion): void {
+    if (!suggestion.label) { this.tourForm.patchValue({ from: '' }); return; }
+    this.tourForm.patchValue({ from: suggestion.label });
+    this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.selectionTarget.set('from');
+  }
+
+  onToSelected(suggestion: LocationSuggestion): void {
+    if (!suggestion.label) { this.tourForm.patchValue({ to: '' }); return; }
+    this.tourForm.patchValue({ to: suggestion.label });
+    this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.selectionTarget.set('to');
   }
 }
