@@ -79,6 +79,7 @@ export class NewTourComponent {
     if (!suggestion.label) { this.tourForm.patchValue({ from: '' }); return; }
     this.tourForm.patchValue({ from: suggestion.label });
     this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.mapViewRequest.set({ lat: suggestion.lat, lon: suggestion.lon });
     this.activeTourStore.selectionTarget.set('from');
   }
 
@@ -86,6 +87,7 @@ export class NewTourComponent {
     if (!suggestion.label) { this.tourForm.patchValue({ to: '' }); return; }
     this.tourForm.patchValue({ to: suggestion.label });
     this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.mapViewRequest.set({ lat: suggestion.lat, lon: suggestion.lon });
     this.activeTourStore.selectionTarget.set('to');
   }
 

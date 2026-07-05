@@ -1,0 +1,109 @@
+.tour-panel {
+  background: white !important;
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-bottom: 0.75rem !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.tour-panel.mat-expanded {
+  margin: 0 0 1rem 0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.tour-title-layout {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.transport-icon {
+  color: #64748b;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+}
+
+.tour-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.extra-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.field label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field span {
+  color: #000000;
+}
+
+.route-stops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stop {
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.route-arrow {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.header-menu-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.kebab-button {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  color: #64748b !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.kebab-button:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  color: #1e293b !important;
+}
+
+.kebab-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}

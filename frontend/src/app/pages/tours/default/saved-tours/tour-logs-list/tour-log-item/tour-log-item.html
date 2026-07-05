@@ -1,0 +1,61 @@
+<mat-expansion-panel class="log-panel" hideToggle="true">
+  <mat-expansion-panel-header class="log-panel-header" (click)="$event.stopPropagation()">
+    <mat-panel-title class="log-title-layout">
+      <span class="log-date">{{ log.dateTime | date: 'dd/MM/yyyy' }}</span>
+      <div class="log-metadata">
+        <!-- Star Rating -->
+        <span class="log-rating">
+          {{ log.rating }}<mat-icon class="star-icon">star</mat-icon>
+        </span>
+
+        <!-- Difficulty Dot -->
+        <span class="log-difficulty" [class]="getDifficultyClass(log.difficulty)">
+          <mat-icon class="difficulty-dot">fiber_manual_record</mat-icon>
+        </span>
+      </div>
+    </mat-panel-title>
+
+    <!-- Kebab Menu for Log Actions -->
+    <div class="log-menu-container">
+      <button mat-icon-button
+              [matMenuTriggerFor]="logMenu"
+              (click)="$event.stopPropagation()"
+              class="log-kebab-button"
+              aria-label="Log options">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #logMenu="matMenu">
+        <button mat-menu-item (click)="editTourLog(log.id)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="deleteTourLog(log.id)">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="log-expanded-details">
+    <div class="log-field">
+      <label>Duration</label>
+      <span>{{ log.totalTime }} mins</span>
+    </div>
+    <div class="log-field">
+      <label>Distance</label>
+      <span>{{ log.totalDistance }} km</span>
+    </div>
+    <div class="log-field full-width">
+      <label>Comment</label>
+      <span>
+        @if (log.comment === '') {
+          No comment.
+        } @else {
+          {{ log.comment }}
+        }
+      </span>
+    </div>
+  </div>
+</mat-expansion-panel>

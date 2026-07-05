@@ -60,21 +60,26 @@ export class UpdateTourComponent {
   constructor(route: ActivatedRoute) {
     this.id = Number(route.snapshot.params['id']);
     if (this.id) {
-      const activeTour = this.toursStore.getTourById(this.id);
-      if (activeTour) {
-        this.tourForm.patchValue({
-          from: activeTour.from,
-          to: activeTour.to,
-          TransportType: activeTour.transportType,
-          name: activeTour.name,
-          description: activeTour.description,
-        });
-        this.selectedMode.set(activeTour.transportType);
-      } else {
-        console.error("Tour not found");
-        return;
-      }
+      // Trigger async load
+      this.toursStore.getTourById(this.id);
     }
+
+    // Reactively populate the form once the tour is loaded in the store
+    effect(() => {
+      if (this.id) {
+        const activeTour = this.toursStore.allTours().find(t => t.id === this.id);
+        if (activeTour) {
+          this.tourForm.patchValue({
+            from: activeTour.from,
+            to: activeTour.to,
+            TransportType: activeTour.transportType,
+            name: activeTour.name,
+            description: activeTour.description,
+          });
+          this.selectedMode.set(activeTour.transportType);
+        }
+      }
+    });
 
     effect(() => {
       const poi = this.activeTourStore.selectedPoi();
@@ -255,6 +260,7 @@ export class UpdateTourComponent {
     if (!suggestion.label) { this.tourForm.patchValue({ from: '' }); return; }
     this.tourForm.patchValue({ from: suggestion.label });
     this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.mapViewRequest.set({ lat: suggestion.lat, lon: suggestion.lon });
     this.activeTourStore.selectionTarget.set('from');
   }
 
@@ -262,6 +268,7 @@ export class UpdateTourComponent {
     if (!suggestion.label) { this.tourForm.patchValue({ to: '' }); return; }
     this.tourForm.patchValue({ to: suggestion.label });
     this.activeTourStore.selectedPoi.set({ name: suggestion.label, lat: suggestion.lat, lon: suggestion.lon });
+    this.activeTourStore.mapViewRequest.set({ lat: suggestion.lat, lon: suggestion.lon });
     this.activeTourStore.selectionTarget.set('to');
   }
 }
