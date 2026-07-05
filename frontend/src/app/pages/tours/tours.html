@@ -16,20 +16,22 @@
         }
         <h2 class="sidebar-title">{{ getSidebarTitle() }}</h2>
         @if (isDefaultRoute()) {
-          <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
-            <mat-icon>add</mat-icon>
-          </button>
-          <button class="btn-add-tour"
-                  (click)="openImportPicker()"
-                  [disabled]="importing()"
-                  title="Import tour from JSON"
-                  aria-label="Import tour from JSON">
-            @if (importing()) {
-              <mat-icon>hourglass_empty</mat-icon>
-            } @else {
-              <mat-icon>upload_file</mat-icon>
-            }
-          </button>
+          <div class="header-actions">
+            <button class="btn-add-tour"
+                    (click)="openImportPicker()"
+                    [disabled]="importing()"
+                    title="Import tour from JSON"
+                    aria-label="Import tour from JSON">
+              @if (importing()) {
+                <mat-icon>hourglass_empty</mat-icon>
+              } @else {
+                <mat-icon>upload_file</mat-icon>
+              }
+            </button>
+            <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         }
       </div>
 
@@ -75,20 +77,22 @@
         }
         <h2 class="sidebar-title">{{ getSidebarTitle() }}</h2>
         @if (isDefaultRoute()) {
-          <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
-            <mat-icon>add</mat-icon>
-          </button>
-          <button class="btn-add-tour"
-                  (click)="openImportPicker()"
-                  [disabled]="importing()"
-                  title="Import tour from JSON"
-                  aria-label="Import tour from JSON">
-            @if (importing()) {
-              <mat-icon>hourglass_empty</mat-icon>
-            } @else {
-              <mat-icon>upload_file</mat-icon>
-            }
-          </button>
+          <div class="header-actions">
+            <button class="btn-add-tour"
+                    (click)="openImportPicker()"
+                    [disabled]="importing()"
+                    title="Import tour from JSON"
+                    aria-label="Import tour from JSON">
+              @if (importing()) {
+                <mat-icon>hourglass_empty</mat-icon>
+              } @else {
+                <mat-icon>upload_file</mat-icon>
+              }
+            </button>
+            <button class="btn-add-tour" routerLink="/create" title="Create new tour" aria-label="Create new tour">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         }
       </div>
 
