@@ -31,6 +31,63 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 
 See [use-case.puml](./use-case.puml) for the PlantUML source.
 
+## App Architecture
+
+The app consists of a Spring Boot backend and an Angular frontend.
+
+### Backend
+
+The backend is split into 3 layers:
+
+- **Presentation** – REST controllers and DTOs (what the API accepts and returns)
+- **Business** – Services that contain the actual logic (e.g. `TourService`, `TourLogService`)
+- **Data Access** – JPA entities and Spring Data repositories for database access
+
+Controllers are kept thin and just call the matching service. The service handles things like checking if the user owns the tour before doing anything with it.
+
+### Frontend
+
+The frontend uses Angular with a Signal-based store pattern:
+
+- **Services** – make HTTP calls to the backend
+- **Stores** – hold the app state as Signals and call the services
+- **Pages/Components** – read from the stores and display the data
+
+## Unit Testing
+
+We only unit tested the service layer, since that's where the actual business logic lives.
+Controllers are too thin to be worth testing alone, and repositories are covered by Spring Data.
+
+We used **JUnit 5 + Mockito** and mocked all dependencies (repositories, other services)
+so no Spring context or database is needed.
+
+Tested in `TourServiceTest`:
+- listing tours with and without a search query
+- creating a tour when the route service fails (should still save with placeholder values)
+- getting/updating/deleting tours, including wrong owner and not found cases
+
+Tested in `TourLogServiceTest`:
+- listing, creating, getting, updating and deleting tour logs
+- not found cases for both tours and logs
+
+## Design Patterns
+
+**Repository Pattern**
+We use Spring Data repositories (`TourRepository`, `TourLogRepository`) so services
+never write SQL directly. This also made mocking in tests straightforward.
+
+**DTO Pattern**
+JPA entities are never returned from the API directly. We map them to response records
+(`TourResponse`, `TourLogResponse`) in the service layer, keeping the API and database schema independent.
+
+**Facade (Service Layer)**
+Controllers just figure out who the logged-in user is and call the service.
+All actual logic (ownership checks, route calculation, etc.) lives in the service.
+
+**RestControllerAdvice**
+`GlobalExceptionHandler` catches exceptions like `ResourceNotFoundException` and
+`AccessDeniedException` in one central place and turns them into proper HTTP error responses.
+
 ## UI-Flow (Wireframes)
 
 The following flow describes the typical user interaction path:
