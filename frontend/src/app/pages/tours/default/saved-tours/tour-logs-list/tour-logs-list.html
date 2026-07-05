@@ -1,0 +1,21 @@
+<mat-expansion-panel class="logs-expansion-panel" hideToggle="true" (click)="$event.stopPropagation()">
+  <mat-expansion-panel-header class="logs-expansion-header">
+    <mat-panel-title class="logs-expansion-title-layout">
+      <div class="logs-title-group">
+        <mat-icon class="expand-icon">expand_more</mat-icon>
+        <span class="logs-title">Logs ({{ getTourLogs().length }})</span>
+      </div>
+      <button mat-icon-button (click)="createTourLog($event)" aria-label="Add log" class="add-log-button">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <mat-accordion class="logs-accordion" multi="false">
+    @for (log of getTourLogs(); track log.id) {
+      <app-tour-log-item [log]="log"></app-tour-log-item>
+    } @empty {
+      <p class="empty-logs-message">No logs found for this tour.</p>
+    }
+  </mat-accordion>
+</mat-expansion-panel>

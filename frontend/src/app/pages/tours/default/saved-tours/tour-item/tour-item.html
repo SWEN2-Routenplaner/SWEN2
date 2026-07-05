@@ -1,0 +1,65 @@
+<mat-expansion-panel
+  [expanded]="activeTourId() === tour.id"
+  (opened)="onPanelOpened(tour.id)"
+  (closed)="onPanelClosed(tour.id)"
+  hideToggle="true"
+  class="tour-panel">
+
+  <mat-expansion-panel-header>
+    <mat-panel-title class="tour-title-layout">
+      <!-- Icon and Title -->
+      @if (tour.transportType === 'BIKE') {
+        <mat-icon class="transport-icon">directions_bike</mat-icon>
+      } @else if (tour.transportType === 'CAR') {
+        <mat-icon class="transport-icon">directions_car</mat-icon>
+      } @else if (tour.transportType === 'WALK') {
+        <mat-icon class="transport-icon">directions_walk</mat-icon>
+      }
+      <span class="tour-name">{{tour.name}}</span>
+      <span class="tour-name">Popularity: {{calculatePopularity(tour.id)}}</span>
+    </mat-panel-title>
+
+    <!-- Kebab Menu replacing Arrow Chevron -->
+    <div class="header-menu-container">
+      <button mat-icon-button
+              [matMenuTriggerFor]="tourMenu"
+              (click)="$event.stopPropagation()"
+              class="kebab-button"
+              aria-label="Tour options">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #tourMenu="matMenu">
+        <button mat-menu-item (click)="editTour(tour.id)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="deleteTour(tour.id)">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-expansion-panel-header>
+
+  <!-- Panel content (expanded details) -->
+  <div class="extra-fields">
+    <div class="field">
+      <label>Route</label>
+      <div class="route-stops">
+        <span class="stop">{{tour.from}}</span>
+        <mat-icon class="route-arrow">arrow_forward</mat-icon>
+        <span class="stop">{{tour.to}}</span>
+      </div>
+    </div>
+    @if (tour.description) {
+      <div class="field">
+        <label>Description</label>
+        <span>{{tour.description}}</span>
+      </div>
+    }
+    <!-- Tour Logs Expandable Panel -->
+    <app-tour-logs-list [tourId]="tour.id"></app-tour-logs-list>
+  </div>
+
+</mat-expansion-panel>

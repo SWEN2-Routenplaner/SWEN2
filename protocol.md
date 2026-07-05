@@ -7,10 +7,9 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 ## Technical Steps and Decisions
 
 ### Architecture & Frameworks
-- **Frontend Framework:** Angular (v21) was selected for its robust component-based architecture and modern features like Signals.
+- **Frontend Framework:** Angular (v21) was selected for its robust component-based architecture and modern features like Signals. For additional components Angular Material was used to simplify the frontend development and unify the design of all components.
 - **State Management:** A custom Signal-based store was implemented (e.g., `ToursStore`, `AuthStore`). This provides a reactive way to manage state without the complexity of NgRx.
-- **Testing:** `vitest` is used for unit testing, offering better performance and integration with modern JavaScript features compared to Karma.
-- **Styling:** Tailwind CSS was integrated for utility-first styling, enabling rapid UI development.
+- **Testing:** `vitest` is used for unit testing in the frontend and `Junit` in the backend.
 
 ### Design Decisions & Refactoring
 - **Routing Structure:** Refactored from a flat structure to a hierarchical one with child routes under `/tours`. This allows for better organization of nested views like tour logs and editing.
@@ -28,7 +27,7 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 
 ## UML Use Case Diagram
 
-![Use Case Diagram](use-case.png)
+![Use Case Diagram](protocol/usecase.png)
 
 See [use-case.puml](./use-case.puml) for the PlantUML source.
 
@@ -56,7 +55,10 @@ The following flow describes the typical user interaction path:
 - **Add/Edit Log:** Modal or sub-page to enter log details (date, duration, distance, etc.).
 
 ### Wireframe
-![Wireframe](wireframe.png)
+![Wireframe](protocol/wireframe.png)
+
+### Mobile View
+![Mobile View](protocol/MobileView.png)
 
 ### Authentication (Authentik)
 A functional integration between the Spring Boot backend and Authentik (OIDC) has been established. 
@@ -72,6 +74,3 @@ During the initial setup, the token exchange phase repeatedly failed with `inval
 *   **Trailing Slashes:** All `spring.security.oauth2.client.provider` URIs must explicitly match Authentik's discovery metadata, including trailing slashes.
 *   **Custom RestClient:** The `SecurityConfig.java` was updated to explicitly override the `OAuth2AccessTokenResponseClient`. It now uses a custom `RestClient` backed by the classic `SimpleClientHttpRequestFactory`. This forces Spring to use standard HTTP/1.1 requests, which Authentik's router correctly parses. 
 *   **Message Converters:** The custom `RestClient` must explicitly register `FormHttpMessageConverter` and `OAuth2AccessTokenResponseHttpMessageConverter` to prevent internal `NullPointerExceptions` during JSON parsing.
-
-## Current Project State
-The project currently has a functional frontend with state management for tours and authentication. The backend is in its initial setup phase with a basic Spring Boot application.

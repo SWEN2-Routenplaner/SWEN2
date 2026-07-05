@@ -15,6 +15,7 @@
     "test": "ng test"
   },
   "dependencies": {
+    "@angular/animations": "^21.1.5",
     "@angular/cdk": "^21.2.6",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
@@ -33,11 +34,9 @@
     "@angular/cli": "^20.3.22",
     "@angular/compiler-cli": "^21.1.0",
     "@ionic/angular-toolkit": "latest",
-    "@tailwindcss/postcss": "^4.1.12",
     "@types/leaflet": "^1.9.21",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   },
