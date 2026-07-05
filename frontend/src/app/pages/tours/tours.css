@@ -63,6 +63,13 @@ ion-modal::part(content) {
   }
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
 .btn-add-tour {
   display: flex;
   align-items: center;
@@ -76,7 +83,6 @@ ion-modal::part(content) {
   cursor: pointer;
   outline: none;
   transition: background-color 0.2s ease, color 0.2s ease;
-  margin-left: auto; /* Push the plus button to the right end of the header */
 }
 
 .btn-add-tour:hover {

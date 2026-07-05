@@ -1,5 +1,7 @@
 # TourPlanner Protocol
 
+Haider, Hochsteger, Monyk
+
 This document provides a summary of the technical decisions, features, and UI-flow for the TourPlanner project.
 
 https://github.com/SWEN2-Routenplaner/SWEN2
@@ -7,10 +9,9 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 ## Technical Steps and Decisions
 
 ### Architecture & Frameworks
-- **Frontend Framework:** Angular (v21) was selected for its robust component-based architecture and modern features like Signals.
+- **Frontend Framework:** Angular (v21) was selected for its robust component-based architecture and modern features like Signals. For additional components Angular Material was used to simplify the frontend development and unify the design of all components.
 - **State Management:** A custom Signal-based store was implemented (e.g., `ToursStore`, `AuthStore`). This provides a reactive way to manage state without the complexity of NgRx.
-- **Testing:** `vitest` is used for unit testing, offering better performance and integration with modern JavaScript features compared to Karma.
-- **Styling:** Tailwind CSS was integrated for utility-first styling, enabling rapid UI development.
+- **Testing:** `vitest` is used for unit testing in the frontend and `Junit` in the backend.
 
 ### Design Decisions & Refactoring
 - **Routing Structure:** Refactored from a flat structure to a hierarchical one with child routes under `/tours`. This allows for better organization of nested views like tour logs and editing.
@@ -28,9 +29,67 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 
 ## UML Use Case Diagram
 
-![Use Case Diagram](use-case.png)
+![Use Case Diagram](protocol/usecase.png)
 
-See [use-case.puml](./use-case.puml) for the PlantUML source.
+## App Architecture
+
+The app consists of a Spring Boot backend and an Angular frontend.
+
+### Backend
+
+The backend is split into 3 layers:
+
+- **Presentation** – REST controllers and DTOs (what the API accepts and returns)
+- **Business** – Services that contain the actual logic (e.g. `TourService`, `TourLogService`)
+- **Data Access** – JPA entities and Spring Data repositories for database access
+
+Controllers are kept thin and just call the matching service. The service handles things like checking if the user owns the tour before doing anything with it.
+
+![Class Diagram](protocol/class.png)
+*(For the full version with complete method parameters, see [class_full.png](protocol/class_full.png))*
+
+### Frontend
+
+The frontend uses Angular with a Signal-based store pattern:
+
+- **Services** – make HTTP calls to the backend
+- **Stores** – hold the app state as Signals and call the services
+- **Pages/Components** – read from the stores and display the data
+
+## Unit Testing
+
+We only unit tested the service layer, since that's where the actual business logic lives.
+Controllers are too thin to be worth testing alone, and repositories are covered by Spring Data.
+
+We used **JUnit 5 + Mockito** and mocked all dependencies (repositories, other services)
+so no Spring context or database is needed.
+
+Tested in `TourServiceTest`:
+- listing tours with and without a search query
+- creating a tour when the route service fails (should still save with placeholder values)
+- getting/updating/deleting tours, including wrong owner and not found cases
+
+Tested in `TourLogServiceTest`:
+- listing, creating, getting, updating and deleting tour logs
+- not found cases for both tours and logs
+
+## Design Patterns
+
+**Repository Pattern**
+We use Spring Data repositories (`TourRepository`, `TourLogRepository`) so services
+never write SQL directly. This also made mocking in tests straightforward.
+
+**DTO Pattern**
+JPA entities are never returned from the API directly. We map them to response records
+(`TourResponse`, `TourLogResponse`) in the service layer, keeping the API and database schema independent.
+
+**Facade (Service Layer)**
+Controllers just figure out who the logged-in user is and call the service.
+All actual logic (ownership checks, route calculation, etc.) lives in the service.
+
+**RestControllerAdvice**
+`GlobalExceptionHandler` catches exceptions like `ResourceNotFoundException` and
+`AccessDeniedException` in one central place and turns them into proper HTTP error responses.
 
 ## UI-Flow (Wireframes)
 
@@ -56,7 +115,10 @@ The following flow describes the typical user interaction path:
 - **Add/Edit Log:** Modal or sub-page to enter log details (date, duration, distance, etc.).
 
 ### Wireframe
-![Wireframe](wireframe.png)
+![Wireframe](protocol/wireframe.png)
+
+### Mobile View
+![Mobile View](protocol/MobileView.png)
 
 ### Authentication (Authentik)
 A functional integration between the Spring Boot backend and Authentik (OIDC) has been established. 
@@ -73,5 +135,18 @@ During the initial setup, the token exchange phase repeatedly failed with `inval
 *   **Custom RestClient:** The `SecurityConfig.java` was updated to explicitly override the `OAuth2AccessTokenResponseClient`. It now uses a custom `RestClient` backed by the classic `SimpleClientHttpRequestFactory`. This forces Spring to use standard HTTP/1.1 requests, which Authentik's router correctly parses. 
 *   **Message Converters:** The custom `RestClient` must explicitly register `FormHttpMessageConverter` and `OAuth2AccessTokenResponseHttpMessageConverter` to prevent internal `NullPointerExceptions` during JSON parsing.
 
-## Current Project State
-The project currently has a functional frontend with state management for tours and authentication. The backend is in its initial setup phase with a basic Spring Boot application.
+## Time Tracking
+
+* Elias Haider:
+  * Authentication (Windows/Linux related bug fixing) 7h
+  * Import/Export: 12h
+  * Family Friendly/Popularity Calculations: 4h
+* Jonas Hochsteger:
+  * Service Setup: 8h
+  * Authentication Setup: 10h
+  * UI Design: 8h
+* Tobias Monyk:
+  * UI Design: 8h
+  * API Design: 4h
+  * Database Design: 4h
+  * Backend Logic: 10h

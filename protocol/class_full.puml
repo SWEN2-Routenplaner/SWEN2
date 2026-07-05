@@ -1,0 +1,161 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package "Presentation Layer" {
+  class TourController {
+    - tourService: TourService
+    - tourImportExportService: TourImportExportService
+    + listTours(query: String, principal: OidcUser): ResponseEntity<List<TourResponse>>
+    + createTour(request: TourCreateRequest, principal: OidcUser): ResponseEntity<TourResponse>
+    + getTour(tourId: Long, principal: OidcUser): ResponseEntity<TourResponse>
+    + updateTour(tourId: Long, request: TourUpdateRequest, principal: OidcUser): ResponseEntity<TourResponse>
+    + deleteTour(tourId: Long, principal: OidcUser): ResponseEntity<Void>
+    + exportTour(tourId: Long, principal: OidcUser): ResponseEntity<Resource>
+    + importTour(file: MultipartFile, principal: OidcUser): ResponseEntity<ImportSummary>
+  }
+
+  class TourLogController {
+    - tourLogService: TourLogService
+    + listLogs(tourId: Long, principal: OidcUser): ResponseEntity<List<TourLogResponse>>
+    + createLog(tourId: Long, request: TourLogCreateRequest, principal: OidcUser): ResponseEntity<TourLogResponse>
+    + updateLog(logId: Long, request: TourLogUpdateRequest, principal: OidcUser): ResponseEntity<TourLogResponse>
+    + deleteLog(logId: Long, principal: OidcUser): ResponseEntity<Void>
+  }
+
+  class SearchController {
+    - searchService: SearchService
+    + search(query: String, principal: OidcUser): ResponseEntity<SearchResponse>
+  }
+
+  class OrsController {
+    - orsService: OrsService
+    + search(text: String): ResponseEntity<String>
+  }
+}
+
+package "Business/Service Layer" {
+  class TourService {
+    - tourRepository: TourRepository
+    - routeService: RouteService
+    - imageStorageService: ImageStorageService
+    + listTours(owner: String, query: String): List<TourResponse>
+    + createTour(owner: String, req: TourCreateRequest): TourResponse
+    + getTour(owner: String, id: Long): TourResponse
+    + updateTour(owner: String, id: Long, req: TourUpdateRequest): TourResponse
+    + deleteTour(owner: String, id: Long): void
+  }
+
+  class TourLogService {
+    - tourLogRepository: TourLogRepository
+    - tourRepository: TourRepository
+    + listLogs(owner: String, tourId: Long): List<TourLogResponse>
+    + createLog(owner: String, tourId: Long, req: TourLogCreateRequest): TourLogResponse
+    + updateLog(owner: String, logId: Long, req: TourLogUpdateRequest): TourLogResponse
+    + deleteLog(owner: String, logId: Long): void
+  }
+
+  class RouteService {
+    - restTemplate: RestTemplate
+    - orsApiKey: String
+    + fetchRoute(from: String, to: String, transportType: TransportType): RouteResponse
+  }
+
+  class SearchService {
+    - tourRepository: TourRepository
+    - tourLogRepository: TourLogRepository
+    + search(owner: String, query: String): SearchResponse
+  }
+
+  class TourImportExportService {
+    - objectMapper: ObjectMapper
+    - tourService: TourService
+    - tourLogService: TourLogService
+    + exportTour(owner: String, tourId: Long): String
+    + importTour(owner: String, fileJson: String): ImportSummary
+  }
+
+  class ImageStorageService {
+    - storageDirectory: String
+    + saveImage(imageBytes: byte[], filename: String): String
+    + loadImage(filename: String): byte[]
+  }
+
+  class OrsService {
+    - restTemplate: RestTemplate
+    - orsApiKey: String
+    + searchPlace(text: String): String
+  }
+}
+
+package "Data Access Layer" {
+  class TourEntity {
+    - id: Long
+    - name: String
+    - description: String
+    - from: String
+    - to: String
+    - transportType: TransportType
+    - distance: Double
+    - estimatedDuration: Double
+    - routeInformation: String
+    - imagePath: String
+    - owner: String
+    - logs: List<TourLogEntity>
+  }
+
+  class TourLogEntity {
+    - id: Long
+    - dateTime: LocalDateTime
+    - comment: String
+    - difficulty: Integer
+    - totalTime: Double
+    - totalDistance: Double
+    - rating: Integer
+    - tour: TourEntity
+  }
+
+  interface TourRepository {
+    + findByOwner(owner: String): List<TourEntity>
+    + findByOwnerAndQuery(owner: String, query: String): List<TourEntity>
+  }
+
+  interface TourLogRepository {
+    + findByTourId(tourId: Long): List<TourLogEntity>
+  }
+
+  enum TransportType {
+    CAR
+    WALK
+    BIKE
+  }
+}
+
+' Layout and relationships
+TourController --> TourService
+TourController --> TourImportExportService
+TourLogController --> TourLogService
+SearchController --> SearchService
+OrsController --> OrsService
+
+TourService --> TourRepository
+TourService --> RouteService
+TourService --> ImageStorageService
+
+TourLogService --> TourLogRepository
+TourLogService --> TourRepository
+
+SearchService --> TourRepository
+SearchService --> TourLogRepository
+
+TourImportExportService --> TourService
+TourImportExportService --> TourLogService
+
+TourRepository ..> TourEntity : manages
+TourLogRepository ..> TourLogEntity : manages
+
+TourEntity "1" *-- "many" TourLogEntity : contains
+TourLogEntity --> TourEntity : belongs to
+TourEntity --> TransportType
+
+@enduml
