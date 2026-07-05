@@ -47,6 +47,10 @@
       <label>Distance</label>
       <span>{{ log.totalDistance }} km</span>
     </div>
+    <div class="log-field">
+      <label>Child-Friendly</label>
+      <span>{{ isChildFriendly(log) ? 'Yes' : 'No' }}</span>
+    </div>
     <div class="log-field full-width">
       <label>Comment</label>
       <span>

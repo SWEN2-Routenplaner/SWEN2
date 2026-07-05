@@ -50,4 +50,8 @@ export class TourLogItemComponent {
       this.tourLogsStore.deleteTourLog(logId);
     }
   }
+
+  isChildFriendly(log: TourLog): boolean {
+    return log.totalDistance < 5 && log.difficulty === 1 && log.totalTime < 120;
+  }
 }
