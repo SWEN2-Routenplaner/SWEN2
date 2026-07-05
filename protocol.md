@@ -29,8 +29,6 @@ https://github.com/SWEN2-Routenplaner/SWEN2
 
 ![Use Case Diagram](protocol/usecase.png)
 
-See [use-case.puml](./use-case.puml) for the PlantUML source.
-
 ## App Architecture
 
 The app consists of a Spring Boot backend and an Angular frontend.
@@ -44,6 +42,9 @@ The backend is split into 3 layers:
 - **Data Access** – JPA entities and Spring Data repositories for database access
 
 Controllers are kept thin and just call the matching service. The service handles things like checking if the user owns the tour before doing anything with it.
+
+![Class Diagram](protocol/class.png)
+*(For the full version with complete method parameters, see [class_full.png](protocol/class_full.png))*
 
 ### Frontend
 

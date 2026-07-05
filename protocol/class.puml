@@ -1,0 +1,161 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package "Presentation Layer" {
+  class TourController {
+    - tourService: TourService
+    - tourImportExportService: TourImportExportService
+    + listTours(...)
+    + createTour(...)
+    + getTour(...)
+    + updateTour(...)
+    + deleteTour(...)
+    + exportTour(...)
+    + importTour(...)
+  }
+
+  class TourLogController {
+    - tourLogService: TourLogService
+    + listLogs(...)
+    + createLog(...)
+    + updateLog(...)
+    + deleteLog(...)
+  }
+
+  class SearchController {
+    - searchService: SearchService
+    + search(...)
+  }
+
+  class OrsController {
+    - orsService: OrsService
+    + search(...)
+  }
+}
+
+package "Business/Service Layer" {
+  class TourService {
+    - tourRepository: TourRepository
+    - routeService: RouteService
+    - imageStorageService: ImageStorageService
+    + listTours(...)
+    + createTour(...)
+    + getTour(...)
+    + updateTour(...)
+    + deleteTour(...)
+  }
+
+  class TourLogService {
+    - tourLogRepository: TourLogRepository
+    - tourRepository: TourRepository
+    + listLogs(...)
+    + createLog(...)
+    + updateLog(...)
+    + deleteLog(...)
+  }
+
+  class RouteService {
+    - restTemplate: RestTemplate
+    - orsApiKey: String
+    + fetchRoute(...)
+  }
+
+  class SearchService {
+    - tourRepository: TourRepository
+    - tourLogRepository: TourLogRepository
+    + search(...)
+  }
+
+  class TourImportExportService {
+    - objectMapper: ObjectMapper
+    - tourService: TourService
+    - tourLogService: TourLogService
+    + exportTour(...)
+    + importTour(...)
+  }
+
+  class ImageStorageService {
+    - storageDirectory: String
+    + saveImage(...)
+    + loadImage(...)
+  }
+
+  class OrsService {
+    - restTemplate: RestTemplate
+    - orsApiKey: String
+    + searchPlace(...)
+  }
+}
+
+package "Data Access Layer" {
+  class TourEntity {
+    - id: Long
+    - name: String
+    - description: String
+    - from: String
+    - to: String
+    - transportType: TransportType
+    - distance: Double
+    - estimatedDuration: Double
+    - routeInformation: String
+    - imagePath: String
+    - owner: String
+    - logs: List<TourLogEntity>
+  }
+
+  class TourLogEntity {
+    - id: Long
+    - dateTime: LocalDateTime
+    - comment: String
+    - difficulty: Integer
+    - totalTime: Double
+    - totalDistance: Double
+    - rating: Integer
+    - tour: TourEntity
+  }
+
+  interface TourRepository {
+    + findByOwner(...)
+    + findByOwnerAndQuery(...)
+  }
+
+  interface TourLogRepository {
+    + findByTourId(...)
+  }
+
+  enum TransportType {
+    CAR
+    WALK
+    BIKE
+  }
+}
+
+' Layout and relationships
+TourController --> TourService
+TourController --> TourImportExportService
+TourLogController --> TourLogService
+SearchController --> SearchService
+OrsController --> OrsService
+
+TourService --> TourRepository
+TourService --> RouteService
+TourService --> ImageStorageService
+
+TourLogService --> TourLogRepository
+TourLogService --> TourRepository
+
+SearchService --> TourRepository
+SearchService --> TourLogRepository
+
+TourImportExportService --> TourService
+TourImportExportService --> TourLogService
+
+TourRepository ..> TourEntity : manages
+TourLogRepository ..> TourLogEntity : manages
+
+TourEntity "1" *-- "many" TourLogEntity : contains
+TourLogEntity --> TourEntity : belongs to
+TourEntity --> TransportType
+
+@enduml
