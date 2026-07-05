@@ -1,5 +1,7 @@
 # TourPlanner Protocol
 
+Haider, Hochsteger, Monyk
+
 This document provides a summary of the technical decisions, features, and UI-flow for the TourPlanner project.
 
 https://github.com/SWEN2-Routenplaner/SWEN2
@@ -132,3 +134,19 @@ During the initial setup, the token exchange phase repeatedly failed with `inval
 *   **Trailing Slashes:** All `spring.security.oauth2.client.provider` URIs must explicitly match Authentik's discovery metadata, including trailing slashes.
 *   **Custom RestClient:** The `SecurityConfig.java` was updated to explicitly override the `OAuth2AccessTokenResponseClient`. It now uses a custom `RestClient` backed by the classic `SimpleClientHttpRequestFactory`. This forces Spring to use standard HTTP/1.1 requests, which Authentik's router correctly parses. 
 *   **Message Converters:** The custom `RestClient` must explicitly register `FormHttpMessageConverter` and `OAuth2AccessTokenResponseHttpMessageConverter` to prevent internal `NullPointerExceptions` during JSON parsing.
+
+## Time Tracking
+
+* Elias Haider:
+  * Authentication (Windows/Linux related bug fixing) 7h
+  * Import/Export: 12h
+  * Family Friendly/Popularity Calculations: 4h
+* Jonas Hochsteger:
+  * Service Setup: 8h
+  * Authentication Setup: 10h
+  * UI Design: 8h
+* Tobias Monyk:
+  * UI Design: 8h
+  * API Design: 4h
+  * Database Design: 4h
+  * Backend Logic: 10h
