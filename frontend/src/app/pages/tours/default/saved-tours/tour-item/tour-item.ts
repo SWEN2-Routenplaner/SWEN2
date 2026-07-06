@@ -69,6 +69,29 @@ export class TourItemComponent {
     }
   }
 
+  downloadTour(tourId: number, name: string) {
+    this.http.get(`http://localhost:8080/api/tours/${tourId}/export`, { 
+      responseType: 'blob',
+      withCredentials: true
+    })
+    .subscribe({
+      next: (response: Blob) => {
+        const blob = new Blob([response], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        const filename = name.replace(/\s+/g, '_');
+        link.setAttribute('download', `${filename}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: (error) => {
+        console.error('Error downloading tour:', error);
+        alert('Failed to download tour. Please try again later.');
+      }
+    });
+  }
+
   calculatePopularity(tourId: number): string {
     const logs = this.tourLogsStore.getLogsByTourId(tourId);
     if(logs.length < 5) {
