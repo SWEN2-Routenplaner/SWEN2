@@ -32,3 +32,129 @@ entries:
       name: "Tour Planner"
       provider: !KeyOf tourplanner-provider
       policy_engine_mode: "any"
+
+  - identifiers:
+      slug: default-enrollment-flow
+    model: authentik_flows.flow
+    id: default-enrollment-flow
+    attrs:
+      name: Default enrollment Flow
+      title: Welcome to authentik!
+      designation: enrollment
+      authentication: require_unauthenticated
+
+  - id: default-enrollment-field-username
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: default-enrollment-field-username
+    attrs:
+      field_key: username
+      label: Username
+      type: username
+      required: true
+      placeholder: Username
+      placeholder_expression: false
+      order: 0
+
+  - id: default-enrollment-field-password
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: default-enrollment-field-password
+    attrs:
+      field_key: password
+      label: Password
+      type: password
+      required: true
+      placeholder: Password
+      placeholder_expression: false
+      order: 1
+
+  - id: default-enrollment-field-password-repeat
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: default-enrollment-field-password-repeat
+    attrs:
+      field_key: password_repeat
+      label: Password (repeat)
+      type: password
+      required: true
+      placeholder: Password (repeat)
+      placeholder_expression: false
+      order: 2
+
+  - id: default-enrollment-field-name
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: default-enrollment-field-name
+    attrs:
+      field_key: name
+      label: Name
+      type: text
+      required: true
+      placeholder: Name
+      placeholder_expression: false
+      order: 3
+
+  - id: default-enrollment-field-email
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: default-enrollment-field-email
+    attrs:
+      field_key: email
+      label: Email
+      type: email
+      required: true
+      placeholder: Email
+      placeholder_expression: false
+      order: 4
+
+  - id: default-enrollment-prompt
+    model: authentik_stages_prompt.promptstage
+    identifiers:
+      name: default-enrollment-prompt
+    attrs:
+      fields:
+        - !KeyOf default-enrollment-field-username
+        - !KeyOf default-enrollment-field-password
+        - !KeyOf default-enrollment-field-password-repeat
+        - !KeyOf default-enrollment-field-name
+        - !KeyOf default-enrollment-field-email
+
+  - id: default-enrollment-user-write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: default-enrollment-user-write
+    attrs:
+      user_creation_mode: always_create
+
+  - id: default-enrollment-user-login
+    model: authentik_stages_user_login.userloginstage
+    identifiers:
+      name: default-enrollment-user-login
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !KeyOf default-enrollment-flow
+      stage: !KeyOf default-enrollment-prompt
+      order: 10
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !KeyOf default-enrollment-flow
+      stage: !KeyOf default-enrollment-user-write
+      order: 20
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !KeyOf default-enrollment-flow
+      stage: !KeyOf default-enrollment-user-login
+      order: 100
+  - model: authentik_stages_identification.identificationstage
+    id: default-authentication-identification
+    identifiers:
+      name: default-authentication-identification
+    attrs:
+      user_fields:
+        - email
+        - username
+      enrollment_flow: !Find [authentik_flows.flow, [slug, default-enrollment-flow]]
